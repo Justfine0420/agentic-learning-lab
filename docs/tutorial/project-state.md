@@ -11,6 +11,8 @@
 - 最近生成课程：无
 - 开源仓库名：`agentic-learning-lab`
 - 仓库 README：`README.md`
+- 当前 Git 分支：`developer`
+- 自归档授权：允许在 `developer` 分支自归档；禁止往 `master` 分支提交、打 tag 或推送；未明确要求 push 时只本地 commit。
 - 真实代码项目路径：`ai-learning-assistant/`
 - 真实代码项目状态：尚未创建
 - 教程总纲：[ai-learning-assistant-course-plan.md](./ai-learning-assistant-course-plan.md)
