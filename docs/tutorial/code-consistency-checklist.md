@@ -110,7 +110,7 @@
 格式：
 
 ```text
-<type>(<scope>): <summary>
+<type>(<scope>): <中文描述>
 ```
 
 允许的 `type`：
@@ -135,21 +135,22 @@
 示例：
 
 ```text
-docs(readme): describe open source tutorial roadmap
-docs(git): document developer-only archive policy
-course(stage-0): add lesson 0.1 development environment
-course(stage-0): complete initialization lessons
-code(project): add health check script
-fix(stage-0): correct virtual environment command
-chore(git): ignore local agent workflow files
+docs(readme): 说明开源教程路线
+docs(git): 记录 developer 分支归档规则
+course(stage-0): 新增第 0.1 课开发环境准备
+course(stage-0): 完成初始化阶段课程
+code(project): 添加健康检查脚本
+fix(stage-0): 修正虚拟环境创建命令
+chore(git): 忽略本地 agent 工作流文件
 ```
 
 规则：
 
-- `summary` 使用英文祈使句或简洁英文描述，首字母小写，不以句号结尾。
+- `type` 和 `scope` 保留英文，冒号后的描述使用中文。
+- 中文描述要简洁具体，不以句号结尾。
 - 一个 commit 只表达一个完整归档单元。
 - 课程正文和真实项目代码混在同一课交付时，优先使用 `course(stage-X)`；如果只改真实代码，使用 `code(project)`。
-- 阶段完成提交使用 `course(stage-X): complete <stage name>`。
+- 阶段完成提交使用 `course(stage-X): 完成<阶段名>`。
 - 不使用含糊信息，例如 `update`、`changes`、`misc`。
 
 推荐 tag 粒度：

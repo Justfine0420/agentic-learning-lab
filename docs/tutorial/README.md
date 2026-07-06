@@ -26,7 +26,7 @@
 - 不强制每个小节 commit 或打 tag；每小节必须记录变更，代码里程碑和阶段完成时再建议 commit / tag。
 - 需要 commit、tag、push 或其它归档性 Git 操作时，必须先提示用户确认；只有用户明确授权“后续自归档”并写清触发条件和范围后，才可自动执行。
 - 当前已授权后续自归档，但仅限 `developer` 分支；允许 commit、tag 并 push 到 `origin developer`。禁止往 `master` 分支提交、打 tag 或推送。
-- Commit message 使用 `<type>(<scope>): <summary>` 格式，详见 [代码一致性检查清单](./code-consistency-checklist.md)。
+- Commit message 使用 `<type>(<scope>): <中文描述>` 格式，详见 [代码一致性检查清单](./code-consistency-checklist.md)。
 - 到 LangChain、LangGraph、Deep Agents 阶段时，生成课程前必须核对当前官方文档，避免使用过时 API。
 
 ## 2. 推荐目录结构
