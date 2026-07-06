@@ -121,7 +121,7 @@ docs/tutorial/reviews/
 - 每课如果涉及代码，必须同步更新真实项目代码、教程小节、教程索引、项目状态快照和一致性检查结果。
 - 每课必须有“本课变更清单”。
 - 不强制每个小节 commit 或打 tag；代码里程碑和阶段完成时再建议归档。
-- 当前已授权后续自归档，但仅限 `developer` 分支；禁止往 `master` 分支提交、打 tag 或推送。未明确要求 push 时，只本地 commit，不推送远端。
+- 当前已授权后续自归档，但仅限 `developer` 分支；允许 commit、tag 并 push 到 `origin developer`。禁止往 `master` 分支提交、打 tag 或推送。
 
 治理文档：
 

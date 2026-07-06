@@ -101,9 +101,9 @@
 - 需要回滚演示或教学对照的关键课：可以打 lesson tag，但这是例外，不是默认动作。
 - 需要提交到仓库、创建 tag、推送远端或执行任何归档性 Git 操作时，必须先提示用户确认；只有用户明确授权“后续自归档”或指定自动归档规则后，才可按授权范围自动执行。
 - 自归档授权必须写清触发条件、操作范围、tag / commit 命名规则和是否允许 push；没有写清时，默认只提示不执行。
-- 当前仓库已授权后续自归档：当教程治理文档、课程正文或 `ai-learning-assistant/` 真实代码项目推进到可归档节点时，可以自动提交到 `developer` 分支。
+- 当前仓库已授权后续自归档：当教程治理文档、课程正文或 `ai-learning-assistant/` 真实代码项目推进到可归档节点时，可以在 `developer` 分支 commit、tag 并 push 到 `origin developer`。
 - 自归档分支限制：只允许在 `developer` 分支执行 commit / tag / push；禁止往 `master` 分支提交、打 tag 或推送。若当前分支不是 `developer`，必须停止并提示用户切换或确认处理方式。
-- 当前自归档命名规则：commit message 使用 `docs: ...`、`course: ...`、`code: ...`、`chore: ...` 前缀；阶段 tag 使用 `stage-X-complete`，里程碑 tag 使用 `milestone-<name>`。是否 push 需要根据本次任务是否明确要求远端同步决定；未明确要求 push 时，只本地 commit，不 push。
+- 当前自归档命名规则：commit message 使用 `docs: ...`、`course: ...`、`code: ...`、`chore: ...` 前缀；阶段 tag 使用 `stage-X-complete`，里程碑 tag 使用 `milestone-<name>`。归档时 push 目标只允许是 `origin developer`；禁止使用 `git push origin master` 或等价操作。
 
 推荐 tag 粒度：
 
@@ -147,4 +147,4 @@ git tag stage-1-complete
 归档判断：
 
 - 本课是纯环境教程小节，无代码里程碑，不打 tag。
-- 可在 `developer` 分支进行本地 commit 归档；未明确要求 push，不推送远端。
+- 可在 `developer` 分支进行 commit 并 push 到 `origin developer` 归档；禁止推送到 `master`。
