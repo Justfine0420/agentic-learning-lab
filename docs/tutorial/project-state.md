@@ -6,9 +6,9 @@
 
 ## 1. 当前进度
 
-- 当前阶段：规划阶段
-- 当前小节：尚未开始
-- 最近生成课程：无
+- 当前阶段：阶段 0：环境与项目初始化
+- 当前小节：0.1 开发环境准备
+- 最近生成课程：第 0.1 课：开发环境准备
 - 开源仓库名：`agentic-learning-lab`
 - 仓库 README：`README.md`
 - 当前 Git 分支：`developer`
@@ -19,7 +19,10 @@
 
 ## 2. 已实现能力
 
-暂无。当前只完成教程规划和治理规则落盘。
+当前已完成：
+
+- 教程规划和治理规则落盘。
+- 第 0.1 课开发环境准备文档。
 
 仓库治理能力：
 
@@ -35,7 +38,10 @@ docs/tutorial/
 ├── ai-learning-assistant-course-plan.md
 ├── README.md
 ├── project-state.md
-└── code-consistency-checklist.md
+├── code-consistency-checklist.md
+└── lessons/
+    └── stage-0/
+        └── 00-01-dev-environment.md
 ```
 
 真实代码项目目标结构，正式开始第 0 阶段后创建：
@@ -61,6 +67,7 @@ ai-learning-assistant/
 - `docs/tutorial/README.md`
 - `docs/tutorial/project-state.md`
 - `docs/tutorial/code-consistency-checklist.md`
+- `docs/tutorial/lessons/stage-0/00-01-dev-environment.md`
 
 真实项目代码文件：
 
@@ -72,17 +79,22 @@ ai-learning-assistant/
 
 ## 6. 已确认运行命令
 
-暂无。第 0.1 课应先确认 Python 版本和虚拟环境命令。
+已确认：
+
+- `python --version` -> `Python 3.11.6`
+- `py --version` -> `Python 3.13.3`
+
+第 0.2 课创建虚拟环境时，优先使用 `py -3.13`。
 
 ## 7. 已知限制
 
-- 课程正文尚未生成。
+- 仅生成了第 0.1 课，后续课程正文尚未生成。
 - 真实代码项目尚未创建。
 - LangChain、LangGraph、Deep Agents 相关课程生成前必须重新核对官方文档。
 
 ## 8. 下一课基线
 
-下一课：第 0.1 课：开发环境准备
+下一课：第 0.2 课：项目目录设计
 
 生成前必须读取：
 
@@ -93,7 +105,7 @@ ai-learning-assistant/
 
 生成后必须更新：
 
-- 第 0.1 课文档
+- 第 0.2 课文档
 - `docs/tutorial/README.md`
 - `docs/tutorial/project-state.md`
 - `docs/tutorial/code-consistency-checklist.md`

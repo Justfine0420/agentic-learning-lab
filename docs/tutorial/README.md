@@ -64,7 +64,7 @@ ai-learning-assistant/
 
 | 阶段 | 小节 | 标题 | 文档路径 | 状态 | 验收 |
 | --- | --- | --- | --- | --- | --- |
-| 0 | 0.1 | 开发环境准备 | `docs/tutorial/lessons/stage-0/00-01-dev-environment.md` | 未生成 | 未验证 |
+| 0 | 0.1 | 开发环境准备 | `docs/tutorial/lessons/stage-0/00-01-dev-environment.md` | 已生成 | 已验证 |
 | 0 | 0.2 | 项目目录设计 | `docs/tutorial/lessons/stage-0/00-02-project-structure.md` | 未生成 | 未验证 |
 | 0 | 0.3 | 第一个健康检查脚本 | `docs/tutorial/lessons/stage-0/00-03-health-check.md` | 未生成 | 未验证 |
 
@@ -75,6 +75,16 @@ ai-learning-assistant/
 生成每课后，在本节追加记录：
 
 ```text
+2026-07-06
+- 课程：第 0.1 课：开发环境准备
+- 文档：docs/tutorial/lessons/stage-0/00-01-dev-environment.md
+- 新增代码：无
+- 修改代码：无
+- 新增依赖：无
+- 验收命令：python --version；py --version
+- 验收结果：python -> 3.11.6；py -> 3.13.3
+- 下一课：第 0.2 课：项目目录设计
+
 YYYY-MM-DD
 - 课程：
 - 文档：
@@ -88,9 +98,9 @@ YYYY-MM-DD
 
 ## 5. 当前进度
 
-- 当前阶段：规划阶段
-- 当前课程：尚未开始第 0.1 课
+- 当前阶段：阶段 0：环境与项目初始化
+- 当前课程：第 0.1 课已生成
 - 开源仓库名：`agentic-learning-lab`
 - 根目录 README：已创建
 - 真实代码项目：尚未创建
-- 下一步建议：生成第 0.1 课并创建初始项目目录
+- 下一步建议：生成第 0.2 课并创建初始项目目录

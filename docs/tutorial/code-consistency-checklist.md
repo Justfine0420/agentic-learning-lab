@@ -115,3 +115,36 @@ git tag stage-1-complete
 ```
 
 如果未启用 git，则必须依靠每课变更清单、`project-state.md` 和阶段 review 保留可追踪记录。
+
+## 7. 检查记录
+
+### 2026-07-06：第 0.1 课
+
+课前检查：
+
+- [x] 已读取 `docs/tutorial/ai-learning-assistant-course-plan.md`。
+- [x] 已读取 `docs/tutorial/README.md`。
+- [x] 已读取 `docs/tutorial/project-state.md`。
+- [x] 已读取 `docs/tutorial/code-consistency-checklist.md`。
+- [x] 已确认当前真实代码项目路径是 `ai-learning-assistant/`。
+- [x] 已确认本课不创建真实代码项目，不创建重复代码副本。
+- [x] 已核对 Python 官方下载页和源码发布页。
+
+课后检查：
+
+- [x] 本课文档已落到 `docs/tutorial/lessons/stage-0/00-01-dev-environment.md`。
+- [x] 本课文档包含固定章节和本课变更清单。
+- [x] 真实代码项目尚未创建，符合第 0.1 课范围。
+- [x] 未新增依赖。
+- [x] 已更新 `docs/tutorial/README.md`。
+- [x] 已更新 `docs/tutorial/project-state.md`。
+
+验证结果：
+
+- `python --version` -> `Python 3.11.6`
+- `py --version` -> `Python 3.13.3`
+
+归档判断：
+
+- 本课是纯环境教程小节，无代码里程碑，不打 tag。
+- 可在 `developer` 分支进行本地 commit 归档；未明确要求 push，不推送远端。
