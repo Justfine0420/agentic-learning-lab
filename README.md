@@ -122,6 +122,7 @@ docs/tutorial/reviews/
 - 每课必须有“本课变更清单”。
 - 不强制每个小节 commit 或打 tag；代码里程碑和阶段完成时再建议归档。
 - 当前已授权后续自归档，但仅限 `developer` 分支；允许 commit、tag 并 push 到 `origin developer`。禁止往 `master` 分支提交、打 tag 或推送。
+- Commit message 使用 `<type>(<scope>): <summary>` 格式，例如 `course(stage-0): add lesson 0.1 development environment`。
 
 治理文档：
 

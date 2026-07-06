@@ -90,7 +90,7 @@
 - 
 ```
 
-## 6. Git 建议
+## 6. Git 与 Commit 规范
 
 不要强制每个小节都提交代码或打 tag。每小节必须有变更清单，但 Git 节点按实际代码价值控制：
 
@@ -103,7 +103,54 @@
 - 自归档授权必须写清触发条件、操作范围、tag / commit 命名规则和是否允许 push；没有写清时，默认只提示不执行。
 - 当前仓库已授权后续自归档：当教程治理文档、课程正文或 `ai-learning-assistant/` 真实代码项目推进到可归档节点时，可以在 `developer` 分支 commit、tag 并 push 到 `origin developer`。
 - 自归档分支限制：只允许在 `developer` 分支执行 commit / tag / push；禁止往 `master` 分支提交、打 tag 或推送。若当前分支不是 `developer`，必须停止并提示用户切换或确认处理方式。
-- 当前自归档命名规则：commit message 使用 `docs: ...`、`course: ...`、`code: ...`、`chore: ...` 前缀；阶段 tag 使用 `stage-X-complete`，里程碑 tag 使用 `milestone-<name>`。归档时 push 目标只允许是 `origin developer`；禁止使用 `git push origin master` 或等价操作。
+- 当前自归档命名规则遵循下方 Commit Message 规范；阶段 tag 使用 `stage-X-complete`，里程碑 tag 使用 `milestone-<name>`。归档时 push 目标只允许是 `origin developer`；禁止使用 `git push origin master` 或等价操作。
+
+### Commit Message 规范
+
+格式：
+
+```text
+<type>(<scope>): <summary>
+```
+
+允许的 `type`：
+
+- `docs`：根 README、教程治理文档、开源说明、非课程正文文档。
+- `course`：课程小节、阶段复盘、教程索引和学习状态推进。
+- `code`：`ai-learning-assistant/` 真实项目代码、测试、配置或依赖。
+- `chore`：仓库维护、忽略规则、非功能性整理。
+- `fix`：修复已生成课程或代码中的错误。
+- `review`：审查记录、验收记录、阶段质量复盘。
+
+推荐 `scope`：
+
+- `tutorial`
+- `stage-0`
+- `stage-1`
+- `project`
+- `governance`
+- `git`
+- `readme`
+
+示例：
+
+```text
+docs(readme): describe open source tutorial roadmap
+docs(git): document developer-only archive policy
+course(stage-0): add lesson 0.1 development environment
+course(stage-0): complete initialization lessons
+code(project): add health check script
+fix(stage-0): correct virtual environment command
+chore(git): ignore local agent workflow files
+```
+
+规则：
+
+- `summary` 使用英文祈使句或简洁英文描述，首字母小写，不以句号结尾。
+- 一个 commit 只表达一个完整归档单元。
+- 课程正文和真实项目代码混在同一课交付时，优先使用 `course(stage-X)`；如果只改真实代码，使用 `code(project)`。
+- 阶段完成提交使用 `course(stage-X): complete <stage name>`。
+- 不使用含糊信息，例如 `update`、`changes`、`misc`。
 
 推荐 tag 粒度：
 
