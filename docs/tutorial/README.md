@@ -66,8 +66,8 @@ ai-learning-assistant/
 | 阶段 | 小节 | 标题 | 文档路径 | 状态 | 验收 |
 | --- | --- | --- | --- | --- | --- |
 | 0 | 0.1 | 开发环境准备 | `docs/tutorial/lessons/stage-0/00-01-dev-environment.md` | 已生成 | 已验证 |
-| 0 | 0.2 | 项目目录设计 | `docs/tutorial/lessons/stage-0/00-02-project-structure.md` | 未生成 | 未验证 |
-| 0 | 0.3 | 第一个健康检查脚本 | `docs/tutorial/lessons/stage-0/00-03-health-check.md` | 未生成 | 未验证 |
+| 0 | 0.2 | 项目目录设计 | `docs/tutorial/lessons/stage-0/00-02-project-structure.md` | 已生成 | 已验证 |
+| 0 | 0.3 | 第一个健康检查脚本 | `docs/tutorial/lessons/stage-0/00-03-health-check.md` | 已生成 | 已验证 |
 
 后续课程生成时，把新小节追加到本表；不要只依赖聊天记录。
 
@@ -86,6 +86,26 @@ ai-learning-assistant/
 - 验收结果：python -> 3.11.6；py -> 3.13.3
 - 下一课：第 0.2 课：项目目录设计
 
+2026-07-06
+- 课程：第 0.2 课：项目目录设计
+- 文档：docs/tutorial/lessons/stage-0/00-02-project-structure.md
+- 新增代码：ai-learning-assistant/ 项目骨架
+- 修改代码：无
+- 新增依赖：无
+- 验收命令：Test-Path ai-learning-assistant；Test-Path ai-learning-assistant/app；Test-Path ai-learning-assistant/requirements.txt；Test-Path ai-learning-assistant/.env.example
+- 验收结果：全部返回 True
+- 下一课：第 0.3 课：第一个健康检查脚本
+
+2026-07-06
+- 课程：第 0.3 课：第一个健康检查脚本
+- 文档：docs/tutorial/lessons/stage-0/00-03-health-check.md
+- 新增代码：ai-learning-assistant/app/main.py
+- 修改代码：无
+- 新增依赖：无
+- 验收命令：在 ai-learning-assistant/ 下运行 py -3.13 app/main.py
+- 验收结果：成功输出项目名、Python 路径、Python 版本和环境状态
+- 下一课：阶段 0 复盘 / 第 1.1 课
+
 YYYY-MM-DD
 - 课程：
 - 文档：
@@ -99,9 +119,10 @@ YYYY-MM-DD
 
 ## 5. 当前进度
 
-- 当前阶段：阶段 0：环境与项目初始化
-- 当前课程：第 0.1 课已生成
+- 当前阶段：阶段 0 已完成
+- 当前课程：第 0.3 课已生成并验证
 - 开源仓库名：`agentic-learning-lab`
 - 根目录 README：已创建
-- 真实代码项目：尚未创建
-- 下一步建议：生成第 0.2 课并创建初始项目目录
+- 真实代码项目：`ai-learning-assistant/` 已创建
+- 阶段复盘：`docs/tutorial/reviews/stage-0-review.md`
+- 下一步建议：进入第 1.1 课，或先人工阅读 Stage 0

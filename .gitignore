@@ -3,3 +3,8 @@
 AGENTS.md
 Agent-Guideline.md
 使用说明.md
+ai-learning-assistant/.venv/
+ai-learning-assistant/.env
+__pycache__/
+*.py[cod]
+.pytest_cache/

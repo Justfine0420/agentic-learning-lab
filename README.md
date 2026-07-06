@@ -69,25 +69,37 @@ AI 学习助教
 
 ## 5. 仓库结构
 
-当前治理文档结构：
+当前教程文档结构：
 
 ```text
 docs/tutorial/
 ├── ai-learning-assistant-course-plan.md
 ├── README.md
 ├── project-state.md
-└── code-consistency-checklist.md
+├── code-consistency-checklist.md
+├── lessons/
+│   └── stage-0/
+│       ├── 00-01-dev-environment.md
+│       ├── 00-02-project-structure.md
+│       └── 00-03-health-check.md
+└── reviews/
+    └── stage-0-review.md
 ```
 
-正式开始第 0 阶段后，会创建真实代码项目：
+真实代码项目：
 
 ```text
 ai-learning-assistant/
 ├── app/
+│   └── main.py
 ├── data/
+│   └── .gitkeep
 ├── materials/
+│   └── .gitkeep
 ├── outputs/
+│   └── .gitkeep
 ├── tests/
+│   └── .gitkeep
 ├── requirements.txt
 ├── .env.example
 └── README.md
@@ -152,15 +164,15 @@ docs/tutorial/reviews/
 
 - 仓库名：`agentic-learning-lab`
 - 贯穿项目：`AI 学习助教`
-- 真实代码项目：尚未创建
-- 教程正文：尚未开始生成
-- 当前阶段：规划和治理文档已落盘
+- 真实代码项目：`ai-learning-assistant/` 已创建
+- 教程正文：阶段 0 已生成并验证
+- 当前阶段：阶段 0 已完成
 
-下一步建议：生成第 0.1 课：开发环境准备。
+下一步建议：进入第 1.1 课：变量与输入输出，或先人工阅读 Stage 0。
 
 ## 9. 开源治理说明
 
-当前仓库仍处于教程规划阶段。正式开源前建议补齐：
+当前仓库仍处于教程早期阶段。正式开源前建议补齐：
 
 - License
 - 贡献指南
@@ -168,4 +180,4 @@ docs/tutorial/reviews/
 - 代码风格说明
 - 安全说明，尤其是 API Key 和 `.env` 使用规则
 
-这些内容不在当前规划阶段强行创建，避免把开源治理模板写成空壳。
+这些内容不在当前阶段强行创建，避免把开源治理模板写成空壳。

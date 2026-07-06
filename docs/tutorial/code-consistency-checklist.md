@@ -196,3 +196,70 @@ git tag stage-1-complete
 
 - 本课是纯环境教程小节，无代码里程碑，不打 tag。
 - 可在 `developer` 分支进行 commit 并 push 到 `origin developer` 归档；禁止推送到 `master`。
+
+### 2026-07-06：第 0.2 课
+
+课前检查：
+
+- [x] 已读取课程总纲、教程索引、项目状态快照和一致性检查清单。
+- [x] 已读取第 0.1 课。
+- [x] 已确认当前分支是 `developer`。
+- [x] 已确认本课只创建 `ai-learning-assistant/` 主线项目骨架，不创建课程代码副本。
+
+课后检查：
+
+- [x] 本课文档已落到 `docs/tutorial/lessons/stage-0/00-02-project-structure.md`。
+- [x] 本课文档包含固定章节和本课变更清单。
+- [x] 已创建 `ai-learning-assistant/` 项目骨架。
+- [x] 已更新 `.gitignore`，忽略 `ai-learning-assistant/.venv/`。
+- [x] 未安装第三方依赖。
+- [x] 已更新 `docs/tutorial/README.md`。
+- [x] 已更新 `docs/tutorial/project-state.md`。
+
+验证结果：
+
+- `Test-Path ai-learning-assistant` -> `True`
+- `Test-Path ai-learning-assistant/app` -> `True`
+- `Test-Path ai-learning-assistant/requirements.txt` -> `True`
+- `Test-Path ai-learning-assistant/.env.example` -> `True`
+
+### 2026-07-06：第 0.3 课
+
+课前检查：
+
+- [x] 已确认第 0.2 课项目骨架存在。
+- [x] 已确认 `py -3.13` 可用。
+- [x] 已确认本课只创建健康检查脚本，不实现 CLI 学习助手。
+
+课后检查：
+
+- [x] 本课文档已落到 `docs/tutorial/lessons/stage-0/00-03-health-check.md`。
+- [x] 本课文档包含固定章节和本课变更清单。
+- [x] 已创建 `ai-learning-assistant/app/main.py`。
+- [x] 健康检查脚本已实际运行。
+- [x] 未新增第三方依赖。
+- [x] 未进入 Stage 1。
+
+验证结果：
+
+- `py -3.13 app/main.py` 在 `ai-learning-assistant/` 下运行成功。
+- 输出包含 `Project: AI Learning Assistant`。
+- 输出包含 `Python version: 3.13.3`。
+- 输出包含 `Status: environment ready`。
+
+### 2026-07-06：阶段 0
+
+阶段结束检查：
+
+- [x] 阶段 0 所有小节文档都已生成。
+- [x] 阶段 0 代码变更能运行健康检查。
+- [x] 阶段验收命令已运行。
+- [x] 阶段新增概念已反映在 `project-state.md`。
+- [x] 已生成 `docs/tutorial/reviews/stage-0-review.md`。
+- [x] 已列出下一阶段依赖的代码文件、命令和概念。
+
+归档判断：
+
+- 阶段 0 是可运行初始化里程碑。
+- 应在 `developer` 分支提交，commit message 使用 `course(stage-0): 完成初始化阶段课程`。
+- 应创建并推送 tag：`stage-0-complete`。
