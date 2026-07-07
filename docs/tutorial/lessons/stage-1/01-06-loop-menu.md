@@ -439,4 +439,4 @@ Stage 1 到这里结束。你已经具备了后续需要的最小基础：
 
 下一课依赖：
 
-- 第 2.1 课会进入 Python 工程化，把当前 `main.py` 拆分成 `cli.py`、`storage.py` 等模块。
+- 第 2.1 课会进入 Python 工程化，把当前 `main.py` 拆分成 `cli.py`、`student_state.py` 等模块。

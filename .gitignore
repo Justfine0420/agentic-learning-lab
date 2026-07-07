@@ -5,6 +5,7 @@ Agent-Guideline.md
 使用说明.md
 ai-learning-assistant/.venv/
 ai-learning-assistant/.env
+ai-learning-assistant/data/student.json
 __pycache__/
 *.py[cod]
 .pytest_cache/

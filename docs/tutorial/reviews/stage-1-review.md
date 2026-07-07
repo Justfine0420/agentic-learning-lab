@@ -97,4 +97,4 @@ py -3.13 -m py_compile app/main.py
 
 下一阶段：Stage 2，Python 工程化。
 
-先做第 2.1 课：模块拆分，把当前 `app/main.py` 中的职责拆到 `cli.py`、`storage.py` 等文件里。
+先做第 2.1 课：模块拆分，把当前 `app/main.py` 中的职责拆到 `cli.py`、`student_state.py` 等文件里；随后第 2.2 课再引入 `storage.py` 做 JSON 文件读写。

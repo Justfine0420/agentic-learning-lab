@@ -1,4 +1,5 @@
-from app.student_state import student
+from app.storage import load_student, save_student
+from app.student_state import replace_student, student
 
 
 PROJECT_NAME = "AI Learning Assistant"
@@ -14,11 +15,13 @@ def ask_profile() -> None:
     student["name"] = input("请输入你的名字：")
     student["goal"] = input("请输入你的学习目标：")
     student["python_level"] = input("请输入你的 Python 水平 beginner / basic / intermediate：")
+    save_student(student)
 
 
 def add_note() -> None:
     note = input("请输入一条学习笔记：")
     student["notes"].append(note)
+    save_student(student)
     print("已保存。")
 
 
@@ -52,7 +55,12 @@ def suggest_next_step() -> None:
 
 def run_cli() -> None:
     show_header()
-    ask_profile()
+    replace_student(load_student())
+
+    if student["name"] == "":
+        ask_profile()
+    else:
+        print(f"已加载学习档案：{student['name']}")
 
     while True:
         print()
@@ -71,6 +79,7 @@ def run_cli() -> None:
         elif choice == "3":
             suggest_next_step()
         elif choice == "4":
+            save_student(student)
             print(f"{student['name']}，下次继续学习。")
             break
         else:

@@ -88,7 +88,8 @@ docs/tutorial/
 │   │   ├── 01-05-conditional-suggestion.md
 │   │   └── 01-06-loop-menu.md
 │   └── stage-2/
-│       └── 02-01-module-split.md
+│       ├── 02-01-module-split.md
+│       └── 02-02-json-file-io.md
 └── reviews/
     ├── stage-0-review.md
     └── stage-1-review.md
@@ -102,6 +103,7 @@ ai-learning-assistant/
 │   ├── __init__.py
 │   ├── cli.py
 │   ├── main.py
+│   ├── storage.py
 │   └── student_state.py
 ├── data/
 │   └── .gitkeep
@@ -176,9 +178,9 @@ docs/tutorial/reviews/
 - 真实代码项目：`ai-learning-assistant/` 已创建
 - 教程正文：阶段 0 和阶段 1 已完成，阶段 2 已开始
 - 当前阶段：阶段 2 进行中
-- 当前课程：第 2.1 课已生成并验证
+- 当前课程：第 2.2 课已生成并验证
 
-下一步建议：进入第 2.2 课：JSON 文件读写。
+下一步建议：进入第 2.3 课：异常处理。
 
 ## 9. 开源治理说明
 
