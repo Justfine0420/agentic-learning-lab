@@ -76,10 +76,12 @@ docs/tutorial/
 ├── ai-learning-assistant-course-plan.md
 ├── README.md
 ├── lessons/
-│   └── stage-0/
-│       ├── 00-01-dev-environment.md
-│       ├── 00-02-project-structure.md
-│       └── 00-03-health-check.md
+│   ├── stage-0/
+│   │   ├── 00-01-dev-environment.md
+│   │   ├── 00-02-project-structure.md
+│   │   └── 00-03-health-check.md
+│   └── stage-1/
+│       └── 01-01-variables-input-output.md
 └── reviews/
     └── stage-0-review.md
 ```
@@ -160,10 +162,10 @@ docs/tutorial/reviews/
 - 仓库名：`agentic-learning-lab`
 - 贯穿项目：`AI 学习助教`
 - 真实代码项目：`ai-learning-assistant/` 已创建
-- 教程正文：阶段 0 已生成并验证
-- 当前阶段：阶段 0 已完成
+- 教程正文：阶段 0 已完成，第 1.1 课已生成并验证
+- 当前阶段：阶段 1 进行中
 
-下一步建议：进入第 1.1 课：变量与输入输出，或先人工阅读 Stage 0。
+下一步建议：学习第 1.1 课，完成练习后进入第 1.2 课：字典保存状态。
 
 ## 9. 开源治理说明
 
