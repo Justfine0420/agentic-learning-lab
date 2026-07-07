@@ -1,2 +1,2 @@
-# 阶段 0 暂无第三方依赖。
+# 阶段 2.1 暂无第三方依赖。
 # 后续课程会逐步加入 FastAPI、LangChain、LangGraph、Deep Agents 等依赖。

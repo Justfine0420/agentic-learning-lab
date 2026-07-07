@@ -80,13 +80,15 @@ docs/tutorial/
 │   │   ├── 00-01-dev-environment.md
 │   │   ├── 00-02-project-structure.md
 │   │   └── 00-03-health-check.md
-│   └── stage-1/
-│       ├── 01-01-variables-input-output.md
-│       ├── 01-02-dictionary-state.md
-│       ├── 01-03-lists-and-notes.md
-│       ├── 01-04-function-extraction.md
-│       ├── 01-05-conditional-suggestion.md
-│       └── 01-06-loop-menu.md
+│   ├── stage-1/
+│   │   ├── 01-01-variables-input-output.md
+│   │   ├── 01-02-dictionary-state.md
+│   │   ├── 01-03-lists-and-notes.md
+│   │   ├── 01-04-function-extraction.md
+│   │   ├── 01-05-conditional-suggestion.md
+│   │   └── 01-06-loop-menu.md
+│   └── stage-2/
+│       └── 02-01-module-split.md
 └── reviews/
     ├── stage-0-review.md
     └── stage-1-review.md
@@ -97,7 +99,10 @@ docs/tutorial/
 ```text
 ai-learning-assistant/
 ├── app/
-│   └── main.py
+│   ├── __init__.py
+│   ├── cli.py
+│   ├── main.py
+│   └── student_state.py
 ├── data/
 │   └── .gitkeep
 ├── materials/
@@ -117,6 +122,7 @@ ai-learning-assistant/
 docs/tutorial/lessons/
 ├── stage-0/
 ├── stage-1/
+├── stage-2/
 └── ...
 ```
 
@@ -168,10 +174,11 @@ docs/tutorial/reviews/
 - 仓库名：`agentic-learning-lab`
 - 贯穿项目：`AI 学习助教`
 - 真实代码项目：`ai-learning-assistant/` 已创建
-- 教程正文：阶段 0 和阶段 1 已完成
-- 当前阶段：阶段 2 待开始
+- 教程正文：阶段 0 和阶段 1 已完成，阶段 2 已开始
+- 当前阶段：阶段 2 进行中
+- 当前课程：第 2.1 课已生成并验证
 
-下一步建议：阅读阶段 1 复盘，然后进入第 2.1 课：模块拆分。
+下一步建议：进入第 2.2 课：JSON 文件读写。
 
 ## 9. 开源治理说明
 

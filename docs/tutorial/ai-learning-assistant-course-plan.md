@@ -3,7 +3,7 @@
 ## 0. 文档状态
 
 - 版本：v0.1
-- 最近更新：2026-07-06
+- 最近更新：2026-07-07
 - 用途：作为“从 Python 到 LangChain / LangGraph / Deep Agents”的系统学习路线总纲。
 - 范围：只规划课程链路、项目结构、阶段产物和验收标准；不包含每一课的完整正文。
 
@@ -95,7 +95,7 @@ ai-learning-assistant/
 | 1.4 | 函数拆分 | `ask_profile()`、`add_note()` | CLI 功能模块化 |
 | 1.5 | 条件判断 | `if/elif/else` | 生成学习建议 |
 | 1.6 | 循环菜单 | `while True`、退出条件 | 完整 CLI 助手 |
-| 2.1 | 模块拆分 | `cli.py`、`storage.py` | 代码不再堆一个文件 |
+| 2.1 | 模块拆分 | `cli.py`、`student_state.py` | 代码不再堆一个文件 |
 | 2.2 | JSON 文件读写 | `json.load`、`json.dump` | 数据重启不丢 |
 | 2.3 | 异常处理 | 文件不存在、JSON 错误 | 程序更稳 |
 | 2.4 | 类型标注 | `dict[str, str]`、`list[str]` | 为 Pydantic 和 State 铺路 |
