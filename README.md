@@ -136,7 +136,7 @@ docs/tutorial/reviews/
 - 再按 [教程索引](docs/tutorial/README.md) 从第 0 阶段开始逐课学习。
 - 每个小节都有独立文档，阶段结束后有阶段复盘。
 - 代码只维护一份真实主线项目：`ai-learning-assistant/`。
-- 需要回看某个阶段时，优先使用 Git tag，例如 `stage-0-complete`。
+- 需要回看某个阶段时，优先使用 Git tag，例如 `stage-0`。
 - 本地 `.venv/`、`.env`、IDE 配置和密钥文件不要提交。
 
 核心入口：
