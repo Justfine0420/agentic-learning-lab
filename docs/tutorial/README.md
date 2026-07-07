@@ -58,6 +58,7 @@ ai-learning-assistant/
 | 0 | 0.2 | 项目目录设计 | `docs/tutorial/lessons/stage-0/00-02-project-structure.md` | 已生成 | 已验证 |
 | 0 | 0.3 | 第一个健康检查脚本 | `docs/tutorial/lessons/stage-0/00-03-health-check.md` | 已生成 | 已验证 |
 | 1 | 1.1 | 变量与输入输出 | `docs/tutorial/lessons/stage-1/01-01-variables-input-output.md` | 已生成 | 已验证 |
+| 1 | 1.2 | 字典保存状态 | `docs/tutorial/lessons/stage-1/01-02-dictionary-state.md` | 已生成 | 已验证 |
 
 ## 3. 阶段复盘
 
@@ -68,8 +69,8 @@ ai-learning-assistant/
 ## 4. 当前学习位置
 
 - 当前阶段：阶段 1 进行中
-- 当前课程：第 1.1 课已生成并验证
+- 当前课程：第 1.2 课已生成并验证
 - 开源仓库名：`agentic-learning-lab`
 - 真实代码项目：`ai-learning-assistant/` 已创建
 - 阶段复盘：`docs/tutorial/reviews/stage-0-review.md`
-- 下一步建议：学习第 1.1 课，完成练习后进入第 1.2 课：字典保存状态
+- 下一步建议：学习第 1.2 课，完成练习后进入第 1.3 课：列表与笔记

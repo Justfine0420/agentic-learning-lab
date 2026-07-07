@@ -81,7 +81,8 @@ docs/tutorial/
 │   │   ├── 00-02-project-structure.md
 │   │   └── 00-03-health-check.md
 │   └── stage-1/
-│       └── 01-01-variables-input-output.md
+│       ├── 01-01-variables-input-output.md
+│       └── 01-02-dictionary-state.md
 └── reviews/
     └── stage-0-review.md
 ```
@@ -162,10 +163,10 @@ docs/tutorial/reviews/
 - 仓库名：`agentic-learning-lab`
 - 贯穿项目：`AI 学习助教`
 - 真实代码项目：`ai-learning-assistant/` 已创建
-- 教程正文：阶段 0 已完成，第 1.1 课已生成并验证
+- 教程正文：阶段 0 已完成，第 1.2 课已生成并验证
 - 当前阶段：阶段 1 进行中
 
-下一步建议：学习第 1.1 课，完成练习后进入第 1.2 课：字典保存状态。
+下一步建议：学习第 1.2 课，完成练习后进入第 1.3 课：列表与笔记。
 
 ## 9. 开源治理说明
 
