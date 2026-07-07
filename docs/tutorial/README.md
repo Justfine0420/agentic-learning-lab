@@ -11,32 +11,21 @@
 先读：
 
 - [课程总纲](./ai-learning-assistant-course-plan.md)
-- [项目状态快照](./project-state.md)
-- [代码一致性检查清单](./code-consistency-checklist.md)
+- [阶段 0 复盘](./reviews/stage-0-review.md)
 
-后续每生成一课，都必须更新本索引和项目状态快照。
+学习方式：
 
-## 1. 生成规则
+- 按下方课程索引逐课阅读。
+- 每课都在 `ai-learning-assistant/` 中运行对应命令。
+- 阶段结束后阅读阶段复盘。
+- 需要回看阶段代码时，使用仓库 tag。
 
-- 每个小节单独归档到 `docs/tutorial/lessons/stage-X/`。
-- 每个阶段结束后单独生成 `docs/tutorial/reviews/stage-X-review.md`。
-- 代码只维护一份真实主线项目：`ai-learning-assistant/`。
-- 不创建 `lesson-01-code/`、`lesson-02-code/` 这类课程代码副本。
-- 每课如果涉及代码，必须同步更新真实项目代码、教程小节、本索引、项目状态快照和一致性检查结果。
-- 不强制每个小节 commit 或打 tag；每小节必须记录变更，代码里程碑和阶段完成时再建议 commit / tag。
-- 需要 commit、tag、push 或其它归档性 Git 操作时，必须先提示用户确认；只有用户明确授权“后续自归档”并写清触发条件和范围后，才可自动执行。
-- 当前已授权后续自归档，但仅限 `developer` 分支；允许 commit、tag 并 push 到 `origin developer`。禁止往 `master` 分支提交、打 tag 或推送。
-- Commit message 使用 `<type>(<scope>): <中文描述>` 格式，详见 [代码一致性检查清单](./code-consistency-checklist.md)。
-- 到 LangChain、LangGraph、Deep Agents 阶段时，生成课程前必须核对当前官方文档，避免使用过时 API。
-
-## 2. 推荐目录结构
+## 1. 目录结构
 
 ```text
 docs/tutorial/
 ├── ai-learning-assistant-course-plan.md
 ├── README.md
-├── project-state.md
-├── code-consistency-checklist.md
 ├── lessons/
 │   ├── stage-0/
 │   ├── stage-1/
@@ -61,7 +50,7 @@ ai-learning-assistant/
 └── README.md
 ```
 
-## 3. 课程索引
+## 2. 课程索引
 
 | 阶段 | 小节 | 标题 | 文档路径 | 状态 | 验收 |
 | --- | --- | --- | --- | --- | --- |
@@ -69,60 +58,17 @@ ai-learning-assistant/
 | 0 | 0.2 | 项目目录设计 | `docs/tutorial/lessons/stage-0/00-02-project-structure.md` | 已生成 | 已验证 |
 | 0 | 0.3 | 第一个健康检查脚本 | `docs/tutorial/lessons/stage-0/00-03-health-check.md` | 已生成 | 已验证 |
 
-后续课程生成时，把新小节追加到本表；不要只依赖聊天记录。
+## 3. 阶段复盘
 
-## 4. 每课更新记录模板
+| 阶段 | 文档 |
+| --- | --- |
+| 0 | [阶段 0 复盘：环境与项目初始化](./reviews/stage-0-review.md) |
 
-生成每课后，在本节追加记录：
-
-```text
-2026-07-06
-- 课程：第 0.1 课：开发环境准备
-- 文档：docs/tutorial/lessons/stage-0/00-01-dev-environment.md
-- 新增代码：无
-- 修改代码：无
-- 新增依赖：无
-- 验收命令：python --version；py --version
-- 验收结果：python -> 3.11.6；py -> 3.13.3
-- 下一课：第 0.2 课：项目目录设计
-
-2026-07-06
-- 课程：第 0.2 课：项目目录设计
-- 文档：docs/tutorial/lessons/stage-0/00-02-project-structure.md
-- 新增代码：ai-learning-assistant/ 项目骨架
-- 修改代码：无
-- 新增依赖：无
-- 验收命令：Test-Path ai-learning-assistant；Test-Path ai-learning-assistant/app；Test-Path ai-learning-assistant/requirements.txt；Test-Path ai-learning-assistant/.env.example
-- 验收结果：全部返回 True
-- 下一课：第 0.3 课：第一个健康检查脚本
-
-2026-07-06
-- 课程：第 0.3 课：第一个健康检查脚本
-- 文档：docs/tutorial/lessons/stage-0/00-03-health-check.md
-- 新增代码：ai-learning-assistant/app/main.py
-- 修改代码：无
-- 新增依赖：无
-- 验收命令：在 ai-learning-assistant/ 下运行 py -3.13 app/main.py
-- 验收结果：成功输出项目名、Python 路径、Python 版本和环境状态
-- 下一课：阶段 0 复盘 / 第 1.1 课
-
-YYYY-MM-DD
-- 课程：
-- 文档：
-- 新增代码：
-- 修改代码：
-- 新增依赖：
-- 验收命令：
-- 验收结果：
-- 下一课：
-```
-
-## 5. 当前进度
+## 4. 当前学习位置
 
 - 当前阶段：阶段 0 已完成
 - 当前课程：第 0.3 课已生成并验证
 - 开源仓库名：`agentic-learning-lab`
-- 根目录 README：已创建
 - 真实代码项目：`ai-learning-assistant/` 已创建
 - 阶段复盘：`docs/tutorial/reviews/stage-0-review.md`
 - 下一步建议：进入第 1.1 课，或先人工阅读 Stage 0

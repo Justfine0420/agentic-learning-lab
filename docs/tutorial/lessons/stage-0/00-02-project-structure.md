@@ -206,7 +206,7 @@ docs/tutorial/lessons/
 
 ### 创建多个代码副本
 
-不要为了保存每课代码创建多个项目副本。需要回顾时，用课程文档、commit 和 tag。
+不要为了保存每课代码创建多个项目副本。需要回顾时，用课程文档和仓库提供的 Git checkpoint。
 
 ### 提交 `.venv/`
 
@@ -279,8 +279,6 @@ ai-learning-assistant/.venv/
 
 - `.gitignore`
 - `docs/tutorial/README.md`
-- `docs/tutorial/project-state.md`
-- `docs/tutorial/code-consistency-checklist.md`
 
 新增依赖：
 

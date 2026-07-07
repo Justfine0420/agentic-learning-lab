@@ -195,54 +195,13 @@ ai-learning-assistant/
 | 10 | 一个 API 服务串起所有能力 |
 | 11 | 有测试、README、运行说明 |
 
-## 9. 后续使用方式
+## 9. 学习方式
 
-用户可以按以下方式请求后续内容：
+建议按以下节奏学习：
 
-```text
-开始第 0.1 课
-继续下一课
-生成第 3 阶段 FastAPI 课程
-复习 LangGraph 阶段
-给我第 5 阶段练习题
-```
-
-每次生成课程正文时，应先核对本规划，并根据当前官方文档确认 LangChain、LangGraph、Deep Agents 的推荐 API，避免使用过时写法。
-
-## 10. 生成、回顾和代码主线规则
-
-后续教程生成必须依赖以下治理文档：
-
-- [教程索引](./README.md)
-- [项目状态快照](./project-state.md)
-- [代码一致性检查清单](./code-consistency-checklist.md)
-
-生成规则：
-
-- 每个小节单独归档到 `docs/tutorial/lessons/stage-X/`。
-- 每个阶段结束后生成 `docs/tutorial/reviews/stage-X-review.md`。
-- 代码只维护一份真实主线项目：`ai-learning-assistant/`。
-- 不创建 `lesson-01-code/`、`lesson-02-code/` 这类课程代码副本。
-- 每课如果涉及代码，必须同步更新真实项目代码、教程小节、教程索引、项目状态快照和一致性检查结果。
-- 每课文档必须包含“本课变更清单”，记录新增文件、修改文件、新增依赖、验证命令、验证结果和下一课依赖。
-- 不强制每个小节 commit 或打 tag；纯文档小节只记录变更，代码里程碑和阶段完成时再建议 commit / tag。
-- 需要 commit、tag、push 或其它归档性 Git 操作时，必须先提示用户确认；只有用户明确授权“后续自归档”并写清触发条件、范围和命名规则后，才可自动执行。
-- 当前已授权后续自归档：教程治理文档、课程正文或 `ai-learning-assistant/` 真实代码项目推进到可归档节点时，可在 `developer` 分支 commit、tag 并 push 到 `origin developer`。禁止往 `master` 分支提交、打 tag 或推送；如果当前分支不是 `developer`，必须停止并提示用户。
-- Commit message 使用 `<type>(<scope>): <中文描述>` 格式；具体 type、scope 和示例以 `docs/tutorial/code-consistency-checklist.md` 为准。
-
-生成一课前必须读取：
-
-1. 本课程总纲。
-2. `docs/tutorial/README.md`。
-3. `docs/tutorial/project-state.md`。
-4. `docs/tutorial/code-consistency-checklist.md`。
-5. 上一课文档；如果是阶段第一课，则读取上一阶段 review。
-
-生成一课后必须更新：
-
-1. 本课 Markdown 文档。
-2. `docs/tutorial/README.md` 的课程索引和更新记录。
-3. `docs/tutorial/project-state.md` 的当前进度、目录结构、文件清单、依赖和运行命令。
-4. `docs/tutorial/code-consistency-checklist.md` 中与本课相关的检查结果或遗留风险。
-
-阶段结束后必须生成阶段复盘，说明本阶段新增能力、代码是否连贯、实际运行过的命令、常见错误、遗留问题和是否可以进入下一阶段。
+1. 先读课程总纲，知道每个阶段要解决什么问题。
+2. 按教程索引逐课阅读，不跳过前置阶段。
+3. 每课都在 `ai-learning-assistant/` 中运行对应命令。
+4. 做完练习后，再进入下一课。
+5. 阶段结束时阅读阶段复盘，确认自己能解释本阶段新增能力。
+6. 需要回看旧代码时，使用仓库提供的 Git tag。

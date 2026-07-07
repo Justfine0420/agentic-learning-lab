@@ -75,8 +75,6 @@ AI 学习助教
 docs/tutorial/
 ├── ai-learning-assistant-course-plan.md
 ├── README.md
-├── project-state.md
-├── code-consistency-checklist.md
 ├── lessons/
 │   └── stage-0/
 │       ├── 00-01-dev-environment.md
@@ -120,27 +118,24 @@ docs/tutorial/lessons/
 docs/tutorial/reviews/
 ```
 
-## 6. 教程生成规则
+## 6. 如何使用本教程
 
-本仓库强调可持续学习和可回顾，不靠聊天上下文硬撑。
+本仓库强调可持续学习和可回顾。学习者不需要理解教程生成流程，只需要沿着课程索引、真实代码和 Git checkpoint 学习。
 
-核心规则：
+建议方式：
 
-- 每个小节单独归档。
-- 每个阶段单独复盘。
+- 先阅读 [课程总纲](docs/tutorial/ai-learning-assistant-course-plan.md)，理解完整路线。
+- 再按 [教程索引](docs/tutorial/README.md) 从第 0 阶段开始逐课学习。
+- 每个小节都有独立文档，阶段结束后有阶段复盘。
 - 代码只维护一份真实主线项目：`ai-learning-assistant/`。
-- 不创建 `lesson-01-code/`、`lesson-02-code/` 这类课程代码副本。
-- 每课如果涉及代码，必须同步更新真实项目代码、教程小节、教程索引、项目状态快照和一致性检查结果。
-- 每课必须有“本课变更清单”。
-- 不强制每个小节 commit 或打 tag；代码里程碑和阶段完成时再建议归档。
-- 当前已授权后续自归档，但仅限 `developer` 分支；允许 commit、tag 并 push 到 `origin developer`。禁止往 `master` 分支提交、打 tag 或推送。
-- Commit message 使用 `<type>(<scope>): <中文描述>` 格式，例如 `course(stage-0): 新增第 0.1 课开发环境准备`。
+- 需要回看某个阶段时，优先使用 Git tag，例如 `stage-0-complete`。
+- 本地 `.venv/`、`.env`、IDE 配置和密钥文件不要提交。
 
-治理文档：
+核心入口：
 
 - [教程索引](docs/tutorial/README.md)
-- [项目状态快照](docs/tutorial/project-state.md)
-- [代码一致性检查清单](docs/tutorial/code-consistency-checklist.md)
+- [课程总纲](docs/tutorial/ai-learning-assistant-course-plan.md)
+- [阶段 0 复盘](docs/tutorial/reviews/stage-0-review.md)
 
 ## 7. 每课固定格式
 

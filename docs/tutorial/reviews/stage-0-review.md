@@ -34,13 +34,6 @@
 - `ai-learning-assistant/outputs/.gitkeep`
 - `ai-learning-assistant/tests/.gitkeep`
 
-治理文件更新：
-
-- `.gitignore`
-- `docs/tutorial/README.md`
-- `docs/tutorial/project-state.md`
-- `docs/tutorial/code-consistency-checklist.md`
-
 ## 4. 当前项目结构
 
 ```text
@@ -142,16 +135,14 @@ Status: environment ready
 
 这些限制符合阶段 0 范围。
 
-## 7. 是否可以进入 Stage 1
+## 7. Stage 1 学习准备
 
-可以进入 Stage 1。
-
-进入 Stage 1 前应继续保持：
+进入 Stage 1 前，先确认：
 
 - 只维护 `ai-learning-assistant/` 一份真实代码项目。
 - 优先使用 `py -3.13`。
-- 每课同步更新教程索引、项目状态快照和一致性检查记录。
 - 不把 `.venv/`、本地 agent 工作流文件或密钥文件提交进公开仓库。
+- 能在 `ai-learning-assistant/` 下运行 `py -3.13 app/main.py`。
 
 ## 8. 下一步建议
 

@@ -246,8 +246,6 @@ Status: environment ready
 修改文件：
 
 - `docs/tutorial/README.md`
-- `docs/tutorial/project-state.md`
-- `docs/tutorial/code-consistency-checklist.md`
 
 新增依赖：
 
