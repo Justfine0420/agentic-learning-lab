@@ -1,10 +1,11 @@
 import json
 from pathlib import Path
 
+from app.models import Student
 
 DATA_FILE = Path("data/student.json")
 BROKEN_DATA_FILE = Path("data/student.broken.json")
-DEFAULT_STUDENT = {
+DEFAULT_STUDENT: Student = {
     "name": "",
     "goal": "",
     "python_level": "",
@@ -12,7 +13,7 @@ DEFAULT_STUDENT = {
 }
 
 
-def create_default_student() -> dict:
+def create_default_student() -> Student:
     return {
         "name": DEFAULT_STUDENT["name"],
         "goal": DEFAULT_STUDENT["goal"],
@@ -38,7 +39,7 @@ def is_valid_student(data: object) -> bool:
     )
 
 
-def normalize_student(data: object) -> dict:
+def normalize_student(data: object) -> Student:
     if not isinstance(data, dict):
         return create_default_student()
 
@@ -61,7 +62,7 @@ def backup_broken_data() -> None:
         DATA_FILE.replace(BROKEN_DATA_FILE)
 
 
-def load_student() -> dict:
+def load_student() -> Student:
     if not DATA_FILE.exists():
         return create_default_student()
 
@@ -80,7 +81,7 @@ def load_student() -> dict:
     return normalize_student(data)
 
 
-def save_student(student: dict) -> None:
+def save_student(student: Student) -> None:
     DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
 
     with DATA_FILE.open("w", encoding="utf-8") as file:

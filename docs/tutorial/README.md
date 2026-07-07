@@ -67,6 +67,7 @@ ai-learning-assistant/
 | 2 | 2.1 | 模块拆分 | `docs/tutorial/lessons/stage-2/02-01-module-split.md` | 已生成 | 已验证 |
 | 2 | 2.2 | JSON 文件读写 | `docs/tutorial/lessons/stage-2/02-02-json-file-io.md` | 已生成 | 已验证 |
 | 2 | 2.3 | 异常处理 | `docs/tutorial/lessons/stage-2/02-03-exception-handling.md` | 已生成 | 已验证 |
+| 2 | 2.4 | 类型标注 | `docs/tutorial/lessons/stage-2/02-04-type-hints.md` | 已生成 | 已验证 |
 
 ## 3. 阶段复盘
 
@@ -78,8 +79,8 @@ ai-learning-assistant/
 ## 4. 当前学习位置
 
 - 当前阶段：阶段 2 进行中
-- 当前课程：第 2.3 课已生成并验证
+- 当前课程：第 2.4 课已生成并验证
 - 开源仓库名：`agentic-learning-lab`
 - 真实代码项目：`ai-learning-assistant/` 已创建
 - 阶段复盘：`docs/tutorial/reviews/stage-0-review.md`、`docs/tutorial/reviews/stage-1-review.md`
-- 下一步建议：进入第 2.4 课：类型标注
+- 下一步建议：进入第 2.5 课：简单 pytest
