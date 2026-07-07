@@ -61,6 +61,7 @@ ai-learning-assistant/
 | 1 | 1.2 | 字典保存状态 | `docs/tutorial/lessons/stage-1/01-02-dictionary-state.md` | 已生成 | 已验证 |
 | 1 | 1.3 | 列表与笔记 | `docs/tutorial/lessons/stage-1/01-03-lists-and-notes.md` | 已生成 | 已验证 |
 | 1 | 1.4 | 函数拆分 | `docs/tutorial/lessons/stage-1/01-04-function-extraction.md` | 已生成 | 已验证 |
+| 1 | 1.5 | 条件判断 | `docs/tutorial/lessons/stage-1/01-05-conditional-suggestion.md` | 已生成 | 已验证 |
 
 ## 3. 阶段复盘
 
@@ -71,8 +72,8 @@ ai-learning-assistant/
 ## 4. 当前学习位置
 
 - 当前阶段：阶段 1 进行中
-- 当前课程：第 1.4 课已生成并验证
+- 当前课程：第 1.5 课已生成并验证
 - 开源仓库名：`agentic-learning-lab`
 - 真实代码项目：`ai-learning-assistant/` 已创建
 - 阶段复盘：`docs/tutorial/reviews/stage-0-review.md`
-- 下一步建议：学习第 1.4 课，完成练习后进入第 1.5 课：条件判断
+- 下一步建议：学习第 1.5 课，完成练习后进入第 1.6 课：循环菜单

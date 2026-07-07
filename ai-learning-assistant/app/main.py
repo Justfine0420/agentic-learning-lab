@@ -38,11 +38,24 @@ def show_profile() -> None:
         print(f"{index}. {saved_note}")
 
 
+def suggest_next_step() -> None:
+    print()
+    print("=== 今日学习建议 ===")
+
+    if student["python_level"] == "beginner":
+        print("建议：今天学习变量、函数、字典。")
+    elif student["python_level"] == "basic":
+        print("建议：今天学习类、文件读写、异常处理。")
+    else:
+        print("建议：今天开始学习 LangChain 的 agent。")
+
+
 def main() -> None:
     show_header()
     ask_profile()
     add_note()
     show_profile()
+    suggest_next_step()
     print(f"{student['name']}，欢迎开始你的 AI 学习助教项目。")
 
 
