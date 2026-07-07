@@ -33,6 +33,7 @@ docs/tutorial/
 │   ├── stage-0/
 │   ├── stage-1/
 │   ├── stage-2/
+│   ├── stage-3/
 │   └── ...
 └── reviews/
     ├── stage-0-review.md
@@ -74,6 +75,7 @@ ai-learning-assistant/
 | 2 | 2.3 | 异常处理 | `docs/tutorial/lessons/stage-2/02-03-exception-handling.md` | 已生成 | 已验证 |
 | 2 | 2.4 | 类型标注 | `docs/tutorial/lessons/stage-2/02-04-type-hints.md` | 已生成 | 已验证 |
 | 2 | 2.5 | 简单 pytest | `docs/tutorial/lessons/stage-2/02-05-simple-pytest.md` | 已生成 | 已验证 |
+| 3 | 3.1 | FastAPI 入门 | `docs/tutorial/lessons/stage-3/03-01-fastapi-first-api.md` | 已生成 | 已验证 |
 
 ## 3. 补充学习资料
 
@@ -91,10 +93,10 @@ ai-learning-assistant/
 
 ## 5. 当前学习位置
 
-- 当前阶段：阶段 2 已完成
-- 当前课程：第 2.5 课已生成并验证
+- 当前阶段：阶段 3 进行中
+- 当前课程：第 3.1 课已生成并验证
 - 开源仓库名：`agentic-learning-lab`
 - 真实代码项目：`ai-learning-assistant/` 已创建
 - 阶段复盘：`docs/tutorial/reviews/stage-0-review.md`、`docs/tutorial/reviews/stage-1-review.md`、`docs/tutorial/reviews/stage-2-review.md`
 - 补充资料：`ai-learning-assistant/materials/stage-2.md`
-- 下一步建议：进入阶段 3，第 3.1 课 FastAPI 入门
+- 下一步建议：继续阶段 3，第 3.2 课 Pydantic 模型

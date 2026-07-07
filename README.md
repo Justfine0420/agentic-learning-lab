@@ -93,6 +93,8 @@ docs/tutorial/
 │       ├── 02-03-exception-handling.md
 │       ├── 02-04-type-hints.md
 │       └── 02-05-simple-pytest.md
+│   └── stage-3/
+│       └── 03-01-fastapi-first-api.md
 └── reviews/
     ├── stage-0-review.md
     ├── stage-1-review.md
@@ -105,6 +107,7 @@ docs/tutorial/
 ai-learning-assistant/
 ├── app/
 │   ├── __init__.py
+│   ├── api.py
 │   ├── cli.py
 │   ├── main.py
 │   ├── models.py
@@ -119,6 +122,7 @@ ai-learning-assistant/
 │   └── .gitkeep
 ├── tests/
 │   ├── .gitkeep
+│   ├── test_api.py
 │   └── test_storage.py
 ├── requirements.txt
 ├── .env.example
@@ -186,11 +190,11 @@ docs/tutorial/reviews/
 - 仓库名：`agentic-learning-lab`
 - 贯穿项目：`AI 学习助教`
 - 真实代码项目：`ai-learning-assistant/` 已创建
-- 教程正文：阶段 0、阶段 1 和阶段 2 已完成
-- 当前阶段：阶段 2 已完成
-- 当前课程：第 2.5 课已生成并验证
+- 教程正文：阶段 0、阶段 1 和阶段 2 已完成，阶段 3 已开始
+- 当前阶段：阶段 3 进行中
+- 当前课程：第 3.1 课已生成并验证
 
-下一步建议：进入阶段 3，第 3.1 课 FastAPI 入门。
+下一步建议：继续阶段 3，第 3.2 课 Pydantic 模型。
 
 ## 9. 开源治理说明
 

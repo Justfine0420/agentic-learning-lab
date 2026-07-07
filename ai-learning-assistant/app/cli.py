@@ -3,7 +3,7 @@ from app.student_state import replace_student, student
 
 
 PROJECT_NAME = "AI Learning Assistant"
-COURSE_STAGE = "Stage 2"
+COURSE_STAGE = "Stage 3"
 
 
 def show_header() -> None:

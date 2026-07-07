@@ -2,7 +2,7 @@
 
 这是 Agentic Learning Lab 的贯穿教学项目。
 
-当前阶段：阶段 2，Python 工程化已完成。
+当前阶段：阶段 3，FastAPI 基础。
 
 ## 当前能力
 
@@ -19,6 +19,9 @@
 - 使用 `TypedDict` 描述 `Student` 数据结构，为后续 Pydantic 和 LangGraph State 铺路。
 - 已为存储模块添加第一批 pytest 单元测试。
 - 已补充 Stage 2 学习资料：`materials/stage-2.md`。
+- 已新增最小 FastAPI 应用：`app/api.py`。
+- 已提供健康检查接口：`GET /health`。
+- 已为 `/health` 添加 API 测试：`tests/test_api.py`。
 
 ## 推荐运行方式
 
@@ -45,6 +48,8 @@ tests/      测试代码
 ## 依赖说明
 
 阶段 2.5 引入 pytest 作为测试依赖。
+阶段 3.1 引入 FastAPI 作为 Web API 框架，并固定到本课已验证版本。
+同时引入 `fastapi-cli`、`uvicorn[standard]` 和 `httpx`，用于开发服务器和 API 测试。
 
 后续课程会逐步把依赖写入 `requirements.txt`。
 
@@ -58,4 +63,16 @@ py -3.13 -m pip install -r requirements.txt
 
 ```powershell
 py -3.13 -m pytest
+```
+
+启动 API：
+
+```powershell
+py -3.13 -m uvicorn app.api:app --reload
+```
+
+健康检查：
+
+```text
+GET http://127.0.0.1:8000/health
 ```
