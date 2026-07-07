@@ -23,6 +23,7 @@ def ask_profile() -> None:
 def add_note() -> None:
     note = input("请输入一条学习笔记：")
     student["notes"].append(note)
+    print("已保存。")
 
 
 def show_profile() -> None:
@@ -34,8 +35,11 @@ def show_profile() -> None:
 
     print()
     print("=== 学习笔记 ===")
-    for index, saved_note in enumerate(student["notes"], start=1):
-        print(f"{index}. {saved_note}")
+    if len(student["notes"]) == 0:
+        print("暂无笔记")
+    else:
+        for index, saved_note in enumerate(student["notes"], start=1):
+            print(f"{index}. {saved_note}")
 
 
 def suggest_next_step() -> None:
@@ -53,10 +57,28 @@ def suggest_next_step() -> None:
 def main() -> None:
     show_header()
     ask_profile()
-    add_note()
-    show_profile()
-    suggest_next_step()
-    print(f"{student['name']}，欢迎开始你的 AI 学习助教项目。")
+
+    while True:
+        print()
+        print("请选择操作：")
+        print("1. 添加学习笔记")
+        print("2. 查看学习信息")
+        print("3. 生成今日学习建议")
+        print("4. 退出")
+
+        choice = input("输入选项：")
+
+        if choice == "1":
+            add_note()
+        elif choice == "2":
+            show_profile()
+        elif choice == "3":
+            suggest_next_step()
+        elif choice == "4":
+            print(f"{student['name']}，下次继续学习。")
+            break
+        else:
+            print("无效选项，请重新输入。")
 
 
 if __name__ == "__main__":

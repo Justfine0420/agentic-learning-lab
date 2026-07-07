@@ -62,18 +62,20 @@ ai-learning-assistant/
 | 1 | 1.3 | 列表与笔记 | `docs/tutorial/lessons/stage-1/01-03-lists-and-notes.md` | 已生成 | 已验证 |
 | 1 | 1.4 | 函数拆分 | `docs/tutorial/lessons/stage-1/01-04-function-extraction.md` | 已生成 | 已验证 |
 | 1 | 1.5 | 条件判断 | `docs/tutorial/lessons/stage-1/01-05-conditional-suggestion.md` | 已生成 | 已验证 |
+| 1 | 1.6 | 循环菜单 | `docs/tutorial/lessons/stage-1/01-06-loop-menu.md` | 已生成 | 已验证 |
 
 ## 3. 阶段复盘
 
 | 阶段 | 文档 |
 | --- | --- |
 | 0 | [阶段 0 复盘：环境与项目初始化](./reviews/stage-0-review.md) |
+| 1 | [阶段 1 复盘：Python 基础与 CLI 学习助手](./reviews/stage-1-review.md) |
 
 ## 4. 当前学习位置
 
-- 当前阶段：阶段 1 进行中
-- 当前课程：第 1.5 课已生成并验证
+- 当前阶段：阶段 1 已完成，阶段 2 待开始
+- 当前课程：第 1.6 课已生成并验证
 - 开源仓库名：`agentic-learning-lab`
 - 真实代码项目：`ai-learning-assistant/` 已创建
-- 阶段复盘：`docs/tutorial/reviews/stage-0-review.md`
-- 下一步建议：学习第 1.5 课，完成练习后进入第 1.6 课：循环菜单
+- 阶段复盘：`docs/tutorial/reviews/stage-0-review.md`、`docs/tutorial/reviews/stage-1-review.md`
+- 下一步建议：阅读阶段 1 复盘，然后进入第 2.1 课：模块拆分

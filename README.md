@@ -85,9 +85,11 @@ docs/tutorial/
 │       ├── 01-02-dictionary-state.md
 │       ├── 01-03-lists-and-notes.md
 │       ├── 01-04-function-extraction.md
-│       └── 01-05-conditional-suggestion.md
+│       ├── 01-05-conditional-suggestion.md
+│       └── 01-06-loop-menu.md
 └── reviews/
-    └── stage-0-review.md
+    ├── stage-0-review.md
+    └── stage-1-review.md
 ```
 
 真实代码项目：
@@ -166,10 +168,10 @@ docs/tutorial/reviews/
 - 仓库名：`agentic-learning-lab`
 - 贯穿项目：`AI 学习助教`
 - 真实代码项目：`ai-learning-assistant/` 已创建
-- 教程正文：阶段 0 已完成，第 1.5 课已生成并验证
-- 当前阶段：阶段 1 进行中
+- 教程正文：阶段 0 和阶段 1 已完成
+- 当前阶段：阶段 2 待开始
 
-下一步建议：学习第 1.5 课，完成练习后进入第 1.6 课：循环菜单。
+下一步建议：阅读阶段 1 复盘，然后进入第 2.1 课：模块拆分。
 
 ## 9. 开源治理说明
 
