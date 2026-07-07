@@ -2,7 +2,7 @@
 
 这是 Agentic Learning Lab 的贯穿教学项目。
 
-当前阶段：阶段 2，Python 工程化。
+当前阶段：阶段 2，Python 工程化已完成。
 
 ## 当前能力
 
@@ -18,6 +18,7 @@
 - 可以处理文件不存在、JSON 损坏和字段缺失等基础存储异常。
 - 使用 `TypedDict` 描述 `Student` 数据结构，为后续 Pydantic 和 LangGraph State 铺路。
 - 已为存储模块添加第一批 pytest 单元测试。
+- 已补充 Stage 2 学习资料：`materials/stage-2.md`。
 
 ## 推荐运行方式
 
@@ -37,8 +38,24 @@ outputs/    生成的学习计划和总结
 tests/      测试代码
 ```
 
+## 学习资料
+
+- `materials/stage-2.md`：阶段 2 补充学习资料，覆盖模块导入、`Path`、JSON 文件读写、异常处理、pytest 基础和当前数据流。
+
 ## 依赖说明
 
 阶段 2.5 引入 pytest 作为测试依赖。
 
 后续课程会逐步把依赖写入 `requirements.txt`。
+
+安装依赖：
+
+```powershell
+py -3.13 -m pip install -r requirements.txt
+```
+
+运行测试：
+
+```powershell
+py -3.13 -m pytest
+```
