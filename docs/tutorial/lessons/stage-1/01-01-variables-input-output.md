@@ -342,7 +342,11 @@ TODAY_TOPIC = "变量、输入和输出"
 
 验证命令：
 
-- 在 `ai-learning-assistant/` 下运行：`"Alice`nLearn Python and LangChain" | py -3.13 app/main.py`
+在 `ai-learning-assistant/` 下运行：
+
+```powershell
+"Alice`nLearn Python and LangChain" | py -3.13 app/main.py
+```
 
 验证结果：
 
