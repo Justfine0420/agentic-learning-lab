@@ -17,6 +17,7 @@
 - 可以把学员资料和学习笔记保存到 `data/student.json`，下次运行时自动加载。
 - 可以处理文件不存在、JSON 损坏和字段缺失等基础存储异常。
 - 使用 `TypedDict` 描述 `Student` 数据结构，为后续 Pydantic 和 LangGraph State 铺路。
+- 已为存储模块添加第一批 pytest 单元测试。
 
 ## 推荐运行方式
 
@@ -38,6 +39,6 @@ tests/      测试代码
 
 ## 依赖说明
 
-阶段 2.4 暂不安装第三方依赖。
+阶段 2.5 引入 pytest 作为测试依赖。
 
 后续课程会逐步把依赖写入 `requirements.txt`。

@@ -91,7 +91,8 @@ docs/tutorial/
 │       ├── 02-01-module-split.md
 │       ├── 02-02-json-file-io.md
 │       ├── 02-03-exception-handling.md
-│       └── 02-04-type-hints.md
+│       ├── 02-04-type-hints.md
+│       └── 02-05-simple-pytest.md
 └── reviews/
     ├── stage-0-review.md
     └── stage-1-review.md
@@ -115,7 +116,8 @@ ai-learning-assistant/
 ├── outputs/
 │   └── .gitkeep
 ├── tests/
-│   └── .gitkeep
+│   ├── .gitkeep
+│   └── test_storage.py
 ├── requirements.txt
 ├── .env.example
 └── README.md
@@ -181,9 +183,9 @@ docs/tutorial/reviews/
 - 真实代码项目：`ai-learning-assistant/` 已创建
 - 教程正文：阶段 0 和阶段 1 已完成，阶段 2 已开始
 - 当前阶段：阶段 2 进行中
-- 当前课程：第 2.4 课已生成并验证
+- 当前课程：第 2.5 课已生成并验证
 
-下一步建议：进入第 2.5 课：简单 pytest。
+下一步建议：等待阶段 2 复盘与阶段归档确认。
 
 ## 9. 开源治理说明
 

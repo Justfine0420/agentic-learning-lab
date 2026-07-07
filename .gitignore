@@ -10,4 +10,5 @@ ai-learning-assistant/data/student.broken.json
 __pycache__/
 *.py[cod]
 .pytest_cache/
+**/.pytest_cache/
 .idea/

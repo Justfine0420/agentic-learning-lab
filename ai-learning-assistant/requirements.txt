@@ -1,2 +1,3 @@
-# 阶段 2.4 暂无第三方依赖。
+pytest>=8.0.0
+
 # 后续课程会逐步加入 FastAPI、LangChain、LangGraph、Deep Agents 等依赖。
