@@ -40,3 +40,19 @@ class NoteResponse(BaseModel):
 class SuggestionResponse(BaseModel):
     python_level: str = ""
     suggestion: str
+
+
+class LearningSuggestionItem(BaseModel):
+    title: str = Field(min_length=1, description="学习建议标题")
+    description: str = Field(min_length=1, description="具体要做什么")
+    estimated_minutes: int = Field(ge=5, le=180, description="预计学习分钟数")
+
+
+class StructuredLearningSuggestion(BaseModel):
+    summary: str = Field(min_length=1, description="今日学习建议摘要")
+    suggestions: list[LearningSuggestionItem] = Field(
+        min_length=1,
+        max_length=3,
+        description="1 到 3 条可执行学习建议",
+    )
+    next_checkpoint: str = Field(min_length=1, description="下一次学习前要确认的检查点")

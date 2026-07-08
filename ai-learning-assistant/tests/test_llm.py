@@ -6,9 +6,12 @@ from app.llm import (
     build_chat_completions_url,
     build_learning_suggestion_input,
     build_learning_suggestion_messages,
+    build_structured_learning_suggestion_messages,
     call_chat_completion,
     generate_learning_suggestion,
+    generate_structured_learning_suggestion,
     parse_chat_completion_text,
+    parse_structured_learning_suggestion,
 )
 from app.models import Student
 
@@ -115,6 +118,22 @@ def test_call_chat_completion_posts_openai_compatible_payload():
     assert client.request["json"]["temperature"] == 0.2
 
 
+def test_call_chat_completion_can_request_json_object_response():
+    client = FakeLLMClient({"choices": [{"message": {"content": "{\"summary\":\"ok\"}"}}]})
+    messages = [{"role": "user", "content": "hello"}]
+
+    result = call_chat_completion(
+        messages,
+        settings=make_settings(),
+        client=client,
+        response_format={"type": "json_object"},
+    )
+
+    assert result == "{\"summary\":\"ok\"}"
+    assert client.request is not None
+    assert client.request["json"]["response_format"] == {"type": "json_object"}
+
+
 def test_generate_learning_suggestion_uses_student_context():
     client = FakeLLMClient({"choices": [{"message": {"content": "建议：完成一个 LangChain 小练习。"}}]})
 
@@ -125,3 +144,86 @@ def test_generate_learning_suggestion_uses_student_context():
     user_message = client.request["json"]["messages"][1]["content"]
     assert "学习 LangChain" in user_message
     assert "Pydantic 可以校验请求体" in user_message
+
+
+def test_build_structured_learning_suggestion_messages_contains_schema():
+    messages = build_structured_learning_suggestion_messages(make_student())
+
+    assert messages[0]["role"] == "system"
+    assert messages[1]["role"] == "user"
+    assert "只返回一个 JSON 对象" in messages[1]["content"]
+    assert "summary" in messages[1]["content"]
+    assert "suggestions" in messages[1]["content"]
+    assert "estimated_minutes" in messages[1]["content"]
+
+
+def test_parse_structured_learning_suggestion_returns_pydantic_model():
+    content = """
+    {
+      "summary": "今天重点补齐 FastAPI 到 LangChain 的连接。",
+      "suggestions": [
+        {
+          "title": "复习 FastAPI route",
+          "description": "重新阅读 /profile 和 /suggestion 的实现。",
+          "estimated_minutes": 25
+        }
+      ],
+      "next_checkpoint": "能解释 API 如何调用模型层。"
+    }
+    """
+
+    result = parse_structured_learning_suggestion(content)
+
+    assert result.summary == "今天重点补齐 FastAPI 到 LangChain 的连接。"
+    assert result.suggestions[0].title == "复习 FastAPI route"
+    assert result.suggestions[0].estimated_minutes == 25
+    assert result.next_checkpoint == "能解释 API 如何调用模型层。"
+
+
+def test_parse_structured_learning_suggestion_rejects_invalid_json():
+    with pytest.raises(ValueError, match="valid structured learning suggestion"):
+        parse_structured_learning_suggestion("建议：今天复习 FastAPI。")
+
+
+def test_parse_structured_learning_suggestion_rejects_schema_mismatch():
+    content = """
+    {
+      "summary": "缺少建议列表",
+      "suggestions": [],
+      "next_checkpoint": "继续学习"
+    }
+    """
+
+    with pytest.raises(ValueError, match="valid structured learning suggestion"):
+        parse_structured_learning_suggestion(content)
+
+
+def test_generate_structured_learning_suggestion_uses_json_mode_and_schema():
+    client = FakeLLMClient(
+        {
+            "choices": [
+                {
+                    "message": {
+                        "content": (
+                            "{\"summary\":\"今天做一个结构化输出练习。\","
+                            "\"suggestions\":[{\"title\":\"写 schema\","
+                            "\"description\":\"用 Pydantic 描述返回结构。\","
+                            "\"estimated_minutes\":20}],"
+                            "\"next_checkpoint\":\"能解释 model_validate_json。\"}"
+                        )
+                    }
+                }
+            ]
+        }
+    )
+
+    result = generate_structured_learning_suggestion(make_student(), settings=make_settings(), client=client)
+
+    assert result.summary == "今天做一个结构化输出练习。"
+    assert result.suggestions[0].title == "写 schema"
+    assert result.next_checkpoint == "能解释 model_validate_json。"
+    assert client.request is not None
+    assert client.request["json"]["response_format"] == {"type": "json_object"}
+    user_message = client.request["json"]["messages"][1]["content"]
+    assert "JSON 必须符合下面的 schema" in user_message
+    assert "estimated_minutes" in user_message

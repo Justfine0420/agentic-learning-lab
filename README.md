@@ -104,7 +104,8 @@ docs/tutorial/
 │   └── stage-4/
 │       ├── 04-01-llm-basic-concepts.md
 │       ├── 04-02-configure-api-key.md
-│       └── 04-03-first-llm-call.md
+│       ├── 04-03-first-llm-call.md
+│       └── 04-04-structured-output.md
 └── reviews/
     ├── stage-0-review.md
     ├── stage-1-review.md
@@ -214,9 +215,9 @@ docs/tutorial/reviews/
 - 真实代码项目：`ai-learning-assistant/` 已创建
 - 教程正文：阶段 0、阶段 1、阶段 2 和阶段 3 已完成，阶段 4 已开始
 - 当前阶段：阶段 4 进行中
-- 当前课程：第 4.3 课已生成并验证
+- 当前课程：第 4.4 课已生成并验证
 
-下一步建议：继续阶段 4，第 4.4 课结构化输出。
+下一步建议：继续阶段 4，第 4.5 课 AI 建议 API 与降级边界。
 
 ## 9. 开源治理说明
 

@@ -1,9 +1,10 @@
+import json
 from typing import Any
 
 import httpx
 
 from app.config import LLMSettings, get_llm_settings, require_llm_api_key
-from app.models import Student
+from app.models import StructuredLearningSuggestion, Student
 
 
 SYSTEM_INSTRUCTIONS = (
@@ -44,6 +45,27 @@ def build_learning_suggestion_messages(student: Student) -> list[dict[str, str]]
     ]
 
 
+def build_structured_learning_suggestion_messages(student: Student) -> list[dict[str, str]]:
+    schema = json.dumps(
+        StructuredLearningSuggestion.model_json_schema(),
+        ensure_ascii=False,
+        indent=2,
+    )
+    user_content = "\n\n".join(
+        [
+            build_learning_suggestion_input(student),
+            "请只返回一个 JSON 对象，不要返回 Markdown，不要返回代码块。",
+            "JSON 必须符合下面的 schema：",
+            schema,
+        ]
+    )
+
+    return [
+        {"role": "system", "content": SYSTEM_INSTRUCTIONS},
+        {"role": "user", "content": user_content},
+    ]
+
+
 def parse_chat_completion_text(response_data: dict[str, Any]) -> str:
     try:
         content = response_data["choices"][0]["message"]["content"]
@@ -61,6 +83,7 @@ def call_chat_completion(
     *,
     settings: LLMSettings | None = None,
     client: httpx.Client | None = None,
+    response_format: dict[str, str] | None = None,
     timeout: float = 30.0,
 ) -> str:
     current_settings = require_llm_api_key(settings or get_llm_settings())
@@ -70,6 +93,9 @@ def call_chat_completion(
         "messages": messages,
         "temperature": 0.2,
     }
+    if response_format is not None:
+        payload["response_format"] = response_format
+
     headers = {
         "Authorization": f"Bearer {current_settings.api_key}",
         "Content-Type": "application/json",
@@ -94,3 +120,26 @@ def generate_learning_suggestion(
 ) -> str:
     messages = build_learning_suggestion_messages(student)
     return call_chat_completion(messages, settings=settings, client=client)
+
+
+def parse_structured_learning_suggestion(content: str) -> StructuredLearningSuggestion:
+    try:
+        return StructuredLearningSuggestion.model_validate_json(content)
+    except ValueError as error:
+        raise ValueError("LLM response was not a valid structured learning suggestion.") from error
+
+
+def generate_structured_learning_suggestion(
+    student: Student,
+    *,
+    settings: LLMSettings | None = None,
+    client: httpx.Client | None = None,
+) -> StructuredLearningSuggestion:
+    messages = build_structured_learning_suggestion_messages(student)
+    content = call_chat_completion(
+        messages,
+        settings=settings,
+        client=client,
+        response_format={"type": "json_object"},
+    )
+    return parse_structured_learning_suggestion(content)
