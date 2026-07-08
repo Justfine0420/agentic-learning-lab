@@ -26,6 +26,9 @@
 - 已提供请求体/响应模型示例接口：`POST /profile/preview`。
 - 已提供学员资料接口：`GET /profile`、`POST /profile`。
 - `POST /profile` 会保存学员资料，并保留已有学习笔记。
+- 已新增学习笔记模型：`NoteCreate` 和 `NotesResponse`。
+- 已提供学习笔记接口：`GET /notes`、`POST /notes`。
+- `POST /notes` 会追加学习笔记，并保留已有学员资料。
 
 ## 推荐运行方式
 
@@ -92,4 +95,11 @@ POST http://127.0.0.1:8000/profile/preview
 ```text
 GET  http://127.0.0.1:8000/profile
 POST http://127.0.0.1:8000/profile
+```
+
+学习笔记 API：
+
+```text
+GET  http://127.0.0.1:8000/notes
+POST http://127.0.0.1:8000/notes
 ```

@@ -21,3 +21,12 @@ class StudentProfileResponse(BaseModel):
     goal: str = ""
     python_level: str = ""
     note_count: int = 0
+
+
+class NoteCreate(BaseModel):
+    content: str = Field(min_length=1)
+
+
+class NotesResponse(BaseModel):
+    notes: list[str] = Field(default_factory=list)
+    note_count: int = 0

@@ -1,6 +1,12 @@
 from fastapi import FastAPI
 
-from app.models import Student, StudentProfile, StudentProfileResponse
+from app.models import (
+    NoteCreate,
+    NotesResponse,
+    Student,
+    StudentProfile,
+    StudentProfileResponse,
+)
 from app.storage import load_student, save_student
 
 
@@ -48,4 +54,26 @@ def update_profile(profile: StudentProfile) -> StudentProfileResponse:
         goal=updated_student["goal"],
         python_level=updated_student["python_level"],
         note_count=len(updated_student["notes"]),
+    )
+
+
+@app.get("/notes", response_model=NotesResponse)
+def get_notes() -> NotesResponse:
+    student = load_student()
+
+    return NotesResponse(
+        notes=student["notes"],
+        note_count=len(student["notes"]),
+    )
+
+
+@app.post("/notes", response_model=NotesResponse)
+def add_note(note: NoteCreate) -> NotesResponse:
+    student = load_student()
+    student["notes"].append(note.content)
+    save_student(student)
+
+    return NotesResponse(
+        notes=student["notes"],
+        note_count=len(student["notes"]),
     )
