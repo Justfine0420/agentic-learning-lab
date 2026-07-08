@@ -14,7 +14,9 @@
 - [阶段 0 复盘](./reviews/stage-0-review.md)
 - [阶段 1 复盘](./reviews/stage-1-review.md)
 - [阶段 2 复盘](./reviews/stage-2-review.md)
+- [阶段 3 复盘](./reviews/stage-3-review.md)
 - [阶段 2 补充学习资料](../../ai-learning-assistant/materials/stage-2.md)
+- [阶段 3 补充学习资料](../../ai-learning-assistant/materials/stage-3.md)
 
 学习方式：
 
@@ -49,7 +51,8 @@ ai-learning-assistant/
 ├── app/
 ├── data/
 ├── materials/
-│   └── stage-2.md
+│   ├── stage-2.md
+│   └── stage-3.md
 ├── outputs/
 ├── tests/
 ├── requirements.txt
@@ -88,6 +91,7 @@ ai-learning-assistant/
 | 阶段 | 资料 | 路径 | 用途 |
 | --- | --- | --- | --- |
 | 2 | Stage 2 补充学习资料：模块导入与 JSON 文件保存 | `ai-learning-assistant/materials/stage-2.md` | 回顾模块导入、`Path`、JSON、异常处理、pytest 基础和当前数据流 |
+| 3 | Stage 3 补充学习资料：FastAPI、Pydantic 与接口测试 | `ai-learning-assistant/materials/stage-3.md` | 回顾 FastAPI route、Pydantic 模型、状态码、`TestClient`、虚拟环境和 API 数据流 |
 
 ## 4. 阶段复盘
 
@@ -96,13 +100,14 @@ ai-learning-assistant/
 | 0 | [阶段 0 复盘：环境与项目初始化](./reviews/stage-0-review.md) |
 | 1 | [阶段 1 复盘：Python 基础与 CLI 学习助手](./reviews/stage-1-review.md) |
 | 2 | [阶段 2 复盘：Python 工程化与文件持久化](./reviews/stage-2-review.md) |
+| 3 | [阶段 3 复盘：FastAPI 基础与学习助手 API](./reviews/stage-3-review.md) |
 
 ## 5. 当前学习位置
 
-- 当前阶段：阶段 3 进行中
-- 当前课程：第 3.7 课已生成并验证
+- 当前阶段：阶段 3 已完成，准备进入阶段 4
+- 当前课程：第 3.7 课已生成并验证，阶段 3 复盘已生成
 - 开源仓库名：`agentic-learning-lab`
 - 真实代码项目：`ai-learning-assistant/` 已创建
-- 阶段复盘：`docs/tutorial/reviews/stage-0-review.md`、`docs/tutorial/reviews/stage-1-review.md`、`docs/tutorial/reviews/stage-2-review.md`
-- 补充资料：`ai-learning-assistant/materials/stage-2.md`
-- 下一步建议：先记录阶段 3 补充笔记；确认后再生成阶段 3 复盘
+- 阶段复盘：`docs/tutorial/reviews/stage-0-review.md`、`docs/tutorial/reviews/stage-1-review.md`、`docs/tutorial/reviews/stage-2-review.md`、`docs/tutorial/reviews/stage-3-review.md`
+- 补充资料：`ai-learning-assistant/materials/stage-2.md`、`ai-learning-assistant/materials/stage-3.md`
+- 下一步建议：进入阶段 4，第 4.1 课 LLM 基础概念

@@ -104,7 +104,8 @@ docs/tutorial/
 └── reviews/
     ├── stage-0-review.md
     ├── stage-1-review.md
-    └── stage-2-review.md
+    ├── stage-2-review.md
+    └── stage-3-review.md
 ```
 
 真实代码项目：
@@ -123,7 +124,8 @@ ai-learning-assistant/
 │   └── .gitkeep
 ├── materials/
 │   ├── .gitkeep
-│   └── stage-2.md
+│   ├── stage-2.md
+│   └── stage-3.md
 ├── outputs/
 │   └── .gitkeep
 ├── tests/
@@ -171,7 +173,9 @@ docs/tutorial/reviews/
 - [阶段 0 复盘](docs/tutorial/reviews/stage-0-review.md)
 - [阶段 1 复盘](docs/tutorial/reviews/stage-1-review.md)
 - [阶段 2 复盘](docs/tutorial/reviews/stage-2-review.md)
+- [阶段 3 复盘](docs/tutorial/reviews/stage-3-review.md)
 - [阶段 2 补充学习资料](ai-learning-assistant/materials/stage-2.md)
+- [阶段 3 补充学习资料](ai-learning-assistant/materials/stage-3.md)
 
 ## 7. 每课固定格式
 
@@ -196,11 +200,11 @@ docs/tutorial/reviews/
 - 仓库名：`agentic-learning-lab`
 - 贯穿项目：`AI 学习助教`
 - 真实代码项目：`ai-learning-assistant/` 已创建
-- 教程正文：阶段 0、阶段 1 和阶段 2 已完成，阶段 3 已开始
-- 当前阶段：阶段 3 进行中
-- 当前课程：第 3.7 课已生成并验证
+- 教程正文：阶段 0、阶段 1、阶段 2 和阶段 3 已完成
+- 当前阶段：阶段 3 已完成，准备进入阶段 4
+- 当前课程：第 3.7 课已生成并验证，阶段 3 复盘已生成
 
-下一步建议：先记录阶段 3 补充笔记；确认后再生成阶段 3 复盘。
+下一步建议：进入阶段 4，第 4.1 课 LLM 基础概念。
 
 ## 9. 开源治理说明
 

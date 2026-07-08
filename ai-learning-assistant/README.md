@@ -2,7 +2,7 @@
 
 这是 Agentic Learning Lab 的贯穿教学项目。
 
-当前阶段：阶段 3，FastAPI 基础。
+当前阶段：阶段 3 已完成，准备进入阶段 4，LLM 基础。
 
 ## 当前能力
 
@@ -36,6 +36,7 @@
 - 已新增单条学习笔记查询接口：`GET /notes/{note_index}`。
 - 已为学习笔记 API 增加基础业务错误处理：笔记不存在返回 `404`，空白笔记返回 `400`。
 - 已明确当前阶段的存储边界：继续使用 `data/student.json`，后续再按需要迁移到 SQLite / PostgreSQL。
+- 已补充 Stage 3 学习资料：`materials/stage-3.md`。
 
 ## 推荐运行方式
 
@@ -58,6 +59,7 @@ tests/      测试代码
 ## 学习资料
 
 - `materials/stage-2.md`：阶段 2 补充学习资料，覆盖模块导入、`Path`、JSON 文件读写、异常处理、pytest 基础和当前数据流。
+- `materials/stage-3.md`：阶段 3 补充学习资料，覆盖 FastAPI route、Pydantic 模型、状态码、`TestClient`、虚拟环境和 API 数据流。
 
 ## 依赖说明
 
