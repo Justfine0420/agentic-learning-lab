@@ -16,5 +16,8 @@ class StudentProfile(BaseModel):
     python_level: str = Field(pattern="^(beginner|basic|intermediate)$")
 
 
-class StudentProfileResponse(StudentProfile):
+class StudentProfileResponse(BaseModel):
+    name: str = ""
+    goal: str = ""
+    python_level: str = ""
     note_count: int = 0

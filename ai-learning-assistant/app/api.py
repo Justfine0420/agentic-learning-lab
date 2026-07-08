@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
-from app.models import StudentProfile, StudentProfileResponse
+from app.models import Student, StudentProfile, StudentProfileResponse
+from app.storage import load_student, save_student
 
 
 app = FastAPI(title="AI Learning Assistant")
@@ -17,3 +18,34 @@ def health_check() -> dict[str, str]:
 @app.post("/profile/preview", response_model=StudentProfileResponse)
 def preview_profile(profile: StudentProfile) -> StudentProfileResponse:
     return StudentProfileResponse(**profile.model_dump(), note_count=0)
+
+
+@app.get("/profile", response_model=StudentProfileResponse)
+def get_profile() -> StudentProfileResponse:
+    student = load_student()
+
+    return StudentProfileResponse(
+        name=student["name"],
+        goal=student["goal"],
+        python_level=student["python_level"],
+        note_count=len(student["notes"]),
+    )
+
+
+@app.post("/profile", response_model=StudentProfileResponse)
+def update_profile(profile: StudentProfile) -> StudentProfileResponse:
+    current_student = load_student()
+    updated_student: Student = {
+        "name": profile.name,
+        "goal": profile.goal,
+        "python_level": profile.python_level,
+        "notes": current_student["notes"],
+    }
+    save_student(updated_student)
+
+    return StudentProfileResponse(
+        name=updated_student["name"],
+        goal=updated_student["goal"],
+        python_level=updated_student["python_level"],
+        note_count=len(updated_student["notes"]),
+    )

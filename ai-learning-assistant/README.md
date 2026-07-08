@@ -24,6 +24,8 @@
 - 已为 `/health` 添加 API 测试：`tests/test_api.py`。
 - 已新增 Pydantic 模型：`StudentProfile` 和 `StudentProfileResponse`。
 - 已提供请求体/响应模型示例接口：`POST /profile/preview`。
+- 已提供学员资料接口：`GET /profile`、`POST /profile`。
+- `POST /profile` 会保存学员资料，并保留已有学习笔记。
 
 ## 推荐运行方式
 
@@ -83,4 +85,11 @@ GET http://127.0.0.1:8000/health
 
 ```text
 POST http://127.0.0.1:8000/profile/preview
+```
+
+学员资料 API：
+
+```text
+GET  http://127.0.0.1:8000/profile
+POST http://127.0.0.1:8000/profile
 ```
