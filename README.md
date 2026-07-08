@@ -103,7 +103,8 @@ docs/tutorial/
 │       └── 03-07-storage-boundary-database-preview.md
 │   └── stage-4/
 │       ├── 04-01-llm-basic-concepts.md
-│       └── 04-02-configure-api-key.md
+│       ├── 04-02-configure-api-key.md
+│       └── 04-03-first-llm-call.md
 └── reviews/
     ├── stage-0-review.md
     ├── stage-1-review.md
@@ -120,6 +121,8 @@ ai-learning-assistant/
 │   ├── api.py
 │   ├── cli.py
 │   ├── config.py
+│   ├── llm.py
+│   ├── llm_demo.py
 │   ├── main.py
 │   ├── models.py
 │   ├── suggestions.py
@@ -137,6 +140,8 @@ ai-learning-assistant/
 │   ├── .gitkeep
 │   ├── test_api.py
 │   ├── test_config.py
+│   ├── test_llm.py
+│   ├── test_llm_demo.py
 │   ├── test_suggestions.py
 │   └── test_storage.py
 ├── requirements.txt
@@ -209,9 +214,9 @@ docs/tutorial/reviews/
 - 真实代码项目：`ai-learning-assistant/` 已创建
 - 教程正文：阶段 0、阶段 1、阶段 2 和阶段 3 已完成，阶段 4 已开始
 - 当前阶段：阶段 4 进行中
-- 当前课程：第 4.2 课已生成并验证
+- 当前课程：第 4.3 课已生成并验证
 
-下一步建议：继续阶段 4，第 4.3 课第一次真实模型调用。
+下一步建议：继续阶段 4，第 4.4 课结构化输出。
 
 ## 9. 开源治理说明
 
