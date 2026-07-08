@@ -93,7 +93,7 @@ docs/tutorial/
 │       ├── 02-03-exception-handling.md
 │       ├── 02-04-type-hints.md
 │       └── 02-05-simple-pytest.md
-│   └── stage-3/
+│   ├── stage-3/
 │       ├── 03-01-fastapi-first-api.md
 │       ├── 03-02-pydantic-models.md
 │       ├── 03-03-profile-api.md
@@ -101,6 +101,8 @@ docs/tutorial/
 │       ├── 03-05-suggestion-api.md
 │       ├── 03-06-api-error-handling.md
 │       └── 03-07-storage-boundary-database-preview.md
+│   └── stage-4/
+│       └── 04-01-llm-basic-concepts.md
 └── reviews/
     ├── stage-0-review.md
     ├── stage-1-review.md
@@ -118,6 +120,7 @@ ai-learning-assistant/
 │   ├── cli.py
 │   ├── main.py
 │   ├── models.py
+│   ├── suggestions.py
 │   ├── storage.py
 │   └── student_state.py
 ├── data/
@@ -131,6 +134,7 @@ ai-learning-assistant/
 ├── tests/
 │   ├── .gitkeep
 │   ├── test_api.py
+│   ├── test_suggestions.py
 │   └── test_storage.py
 ├── requirements.txt
 ├── .env.example
@@ -200,11 +204,11 @@ docs/tutorial/reviews/
 - 仓库名：`agentic-learning-lab`
 - 贯穿项目：`AI 学习助教`
 - 真实代码项目：`ai-learning-assistant/` 已创建
-- 教程正文：阶段 0、阶段 1、阶段 2 和阶段 3 已完成
-- 当前阶段：阶段 3 已完成，准备进入阶段 4
-- 当前课程：第 3.7 课已生成并验证，阶段 3 复盘已生成
+- 教程正文：阶段 0、阶段 1、阶段 2 和阶段 3 已完成，阶段 4 已开始
+- 当前阶段：阶段 4 进行中
+- 当前课程：第 4.1 课已生成并验证
 
-下一步建议：进入阶段 4，第 4.1 课 LLM 基础概念。
+下一步建议：继续阶段 4，第 4.2 课配置 API Key。
 
 ## 9. 开源治理说明
 
