@@ -20,7 +20,7 @@ py -3.13 -m app.llm_demo
 人能读，程序不好处理。
 ```
 
-本课要把模型输出升级为结构化结果：
+本课要把模型输出里的“业务内容”升级为结构化结果：
 
 ```text
 Student
@@ -53,7 +53,7 @@ tests/test_llm.py
 tests/test_structured_llm_demo.py
 ```
 
-新增结构化结果模型：
+新增结构化业务结果模型：
 
 ```text
 StructuredLearningSuggestion
@@ -88,7 +88,7 @@ result.next_checkpoint
 py -3.13 -m app.structured_llm_demo
 ```
 
-它会读取 `data/student.json`，调用结构化模型入口，并把结构化建议打印成 JSON。
+它会读取 `data/student.json`，调用结构化模型入口，并把结构化学习建议打印成 JSON。
 
 ## 3. 前置知识
 
@@ -108,7 +108,7 @@ StructuredLearningSuggestion.model_json_schema()
 StructuredLearningSuggestion.model_validate_json(content)
 ```
 
-前者生成 JSON Schema，用来告诉模型应该返回什么结构。
+前者生成 JSON Schema，用来告诉模型的 `message.content` 应该返回什么业务结构。
 后者把模型返回的 JSON 字符串解析并校验成 Pydantic 对象。
 
 ## 4. 核心概念
@@ -158,6 +158,65 @@ text.split("建议：")
 
 程序可以直接处理这个对象。
 
+### 通用响应外壳和业务内容
+
+这里要分清两层结构。
+
+第一层是 provider 的通用响应外壳。
+第 4.3 课已经解析过它：
+
+```text
+choices[0].message.content
+```
+
+类似 OpenAI-compatible `chat/completions` 的响应通常长这样：
+
+```json
+{
+  "id": "响应 ID",
+  "object": "chat.completion",
+  "model": "模型名",
+  "choices": [
+    {
+      "message": {
+        "role": "assistant",
+        "content": "模型生成的内容"
+      }
+    }
+  ]
+}
+```
+
+这叫 provider 响应结构。
+它由模型服务定义，不是我们的业务模型。
+
+第二层才是本课要控制的业务内容：
+
+```text
+choices[0].message.content
+```
+
+我们希望这个 `content` 里面不是一段随意自然语言，而是一个学习建议 JSON：
+
+```json
+{
+  "summary": "今天重点补齐 FastAPI 到 LangChain 的连接。",
+  "suggestions": [
+    {
+      "title": "复习 FastAPI route",
+      "description": "重新阅读 /profile 和 /suggestion 的实现。",
+      "estimated_minutes": 25
+    }
+  ],
+  "next_checkpoint": "能解释 API 如何调用模型层。"
+}
+```
+
+所以 `StructuredLearningSuggestion` 不是通用 LLM 响应模型。
+它只是本项目“学习建议”这个业务场景的输出 schema。
+
+后续如果做“出题”“批改”“学习计划”，应该定义新的业务输出模型，而不是把所有模型结果都塞进 `StructuredLearningSuggestion`。
+
 ### schema 是输出契约
 
 本课会把结构定义放在 `app/models.py`：
@@ -170,9 +229,9 @@ class StructuredLearningSuggestion(BaseModel):
 它有两层作用：
 
 1. 给程序校验模型输出。
-2. 给模型说明应该返回什么字段。
+2. 给模型说明 `message.content` 里应该返回什么字段。
 
-也就是说，它既是 Python 类型，也是输出契约。
+也就是说，它既是 Python 类型，也是学习建议业务内容的输出契约。
 
 后面进入 LangChain 时，你会看到类似概念：
 
@@ -224,7 +283,7 @@ prompt 中放 schema
 
 ## 5. 代码实现
 
-### 第一步：新增结构化建议模型
+### 第一步：新增学习建议业务输出模型
 
 打开：
 
@@ -241,7 +300,7 @@ class LearningSuggestionItem(BaseModel):
     estimated_minutes: int = Field(ge=5, le=180, description="预计学习分钟数")
 ```
 
-这个模型表示一条具体建议。
+这个模型表示一条具体学习建议。
 
 字段说明：
 
@@ -264,7 +323,11 @@ class StructuredLearningSuggestion(BaseModel):
     next_checkpoint: str = Field(min_length=1, description="下一次学习前要确认的检查点")
 ```
 
-这就是 AI 建议的完整结构。
+这就是 AI 学习建议的业务输出结构。
+
+再次强调：它不是通用模型响应结构。
+通用响应外壳仍然由 provider 返回，代码仍然从 `choices[0].message.content` 里取内容。
+这个 Pydantic 模型只约束 `content` 里的业务 JSON。
 
 它要求：
 
@@ -295,7 +358,7 @@ from app.models import StructuredLearningSuggestion, Student
 
 `json` 用来把 schema 转成适合放进 prompt 的字符串。
 
-### 第三步：构造结构化输出 messages
+### 第三步：构造结构化业务输出 messages
 
 新增函数：
 
@@ -310,7 +373,8 @@ def build_structured_learning_suggestion_messages(student: Student) -> list[dict
         [
             build_learning_suggestion_input(student),
             "请只返回一个 JSON 对象，不要返回 Markdown，不要返回代码块。",
-            "JSON 必须符合下面的 schema：",
+            "这个 JSON 是学习建议业务结果，不是 chat/completions 的完整响应外壳。",
+            "业务结果 JSON 必须符合下面的 schema：",
             schema,
         ]
     )
@@ -335,13 +399,13 @@ build_learning_suggestion_input(student)
 不要返回 Markdown，不要返回代码块。
 ```
 
-第三，把 Pydantic schema 放进 prompt：
+第三，把业务输出 Pydantic schema 放进 prompt：
 
 ```python
 StructuredLearningSuggestion.model_json_schema()
 ```
 
-这能让模型知道字段名、嵌套结构和基本约束。
+这能让模型知道 `message.content` 里的字段名、嵌套结构和基本约束。
 
 ### 第四步：让模型调用支持 `response_format`
 
@@ -388,7 +452,7 @@ def parse_structured_learning_suggestion(content: str) -> StructuredLearningSugg
 这个函数只做一件事：
 
 ```text
-把模型返回的 JSON 字符串变成 Pydantic 对象。
+把 choices[0].message.content 里的 JSON 字符串变成 Pydantic 对象。
 ```
 
 如果模型返回普通文本：
@@ -481,7 +545,7 @@ ai-learning-assistant/tests/test_structured_llm_demo.py
 本课新增测试覆盖：
 
 - `call_chat_completion()` 可以传入 `response_format`。
-- 结构化 messages 包含 schema。
+- 结构化 messages 包含业务输出 schema。
 - 有效 JSON 可以解析成 Pydantic 对象。
 - 普通文本会被拒绝。
 - schema 不匹配会被拒绝。
@@ -492,7 +556,7 @@ ai-learning-assistant/tests/test_structured_llm_demo.py
 重点是测试我们的程序边界：
 
 ```text
-只接受符合 schema 的结构化结果。
+只接受符合业务 schema 的 message.content。
 ```
 
 ## 6. 运行方式
@@ -613,13 +677,16 @@ py -3.13 -m app.structured_llm_demo
 
 练习 5：解释为什么 `response_format={"type": "json_object"}` 不能替代 Pydantic 校验。
 
-练习 6：在 provider 可用时运行 `py -3.13 -m app.structured_llm_demo`，观察输出 JSON 是否包含 `summary`、`suggestions` 和 `next_checkpoint`。
+练习 6：画出两层结构：provider 响应外壳中的 `choices[0].message.content`，以及 `content` 内部的学习建议业务 JSON。
+
+练习 7：在 provider 可用时运行 `py -3.13 -m app.structured_llm_demo`，观察输出 JSON 是否包含 `summary`、`suggestions` 和 `next_checkpoint`。
 
 ## 9. 验收标准
 
 完成本课后，你应该能做到：
 
 - 解释为什么普通文本不适合长期作为程序输入。
+- 解释 provider 通用响应外壳和业务输出 schema 的区别。
 - 解释结构化输出和 JSON mode 的区别。
 - 解释 Pydantic schema 在 prompt 和校验中的双重作用。
 - 看懂 `LearningSuggestionItem` 和 `StructuredLearningSuggestion`。

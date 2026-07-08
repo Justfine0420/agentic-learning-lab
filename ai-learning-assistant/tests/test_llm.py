@@ -225,5 +225,5 @@ def test_generate_structured_learning_suggestion_uses_json_mode_and_schema():
     assert client.request is not None
     assert client.request["json"]["response_format"] == {"type": "json_object"}
     user_message = client.request["json"]["messages"][1]["content"]
-    assert "JSON 必须符合下面的 schema" in user_message
+    assert "业务结果 JSON 必须符合下面的 schema" in user_message
     assert "estimated_minutes" in user_message

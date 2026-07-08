@@ -55,7 +55,8 @@ def build_structured_learning_suggestion_messages(student: Student) -> list[dict
         [
             build_learning_suggestion_input(student),
             "请只返回一个 JSON 对象，不要返回 Markdown，不要返回代码块。",
-            "JSON 必须符合下面的 schema：",
+            "这个 JSON 是学习建议业务结果，不是 chat/completions 的完整响应外壳。",
+            "业务结果 JSON 必须符合下面的 schema：",
             schema,
         ]
     )
