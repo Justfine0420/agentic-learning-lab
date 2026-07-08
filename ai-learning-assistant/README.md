@@ -52,7 +52,7 @@
 - 已为结构化输出新增成功路径和失败路径测试。
 - 已新增 AI 建议接口：`POST /ai/suggestion`。
 - `POST /ai/suggestion` 返回结构化 AI 建议，provider 不可用或模型输出无效时返回 `503`。
-- CLI 已新增 `5. 生成 AI 学习建议`，复用结构化 AI 建议能力。
+- CLI 已新增 `4. 生成 AI 学习建议`，复用结构化 AI 建议能力；`3` 保留为离线规则建议。
 - `GET /suggestion` 仍保留为稳定规则建议接口。
 
 ## 推荐运行方式
@@ -149,7 +149,7 @@ POST http://127.0.0.1:8000/ai/suggestion
 CLI 中也可以选择：
 
 ```text
-5. 生成 AI 学习建议
+4. 生成 AI 学习建议
 ```
 
 CLI 不通过 HTTP 调本地 API，而是直接复用 `generate_structured_learning_suggestion()`。
@@ -178,7 +178,7 @@ py -3.13 -m app.llm_demo
 
 这条命令需要在 `ai-learning-assistant/` 目录下运行，并且需要 `.env` 中的 provider 配置可用。
 
-当前 `GET /suggestion` 仍返回规则建议；AI 建议已经接入 `POST /ai/suggestion` 和 CLI 选项 `5`。
+当前 `GET /suggestion` 仍返回规则建议；AI 建议已经接入 `POST /ai/suggestion` 和 CLI 选项 `4`。
 
 手动跑普通文本模型调用：
 

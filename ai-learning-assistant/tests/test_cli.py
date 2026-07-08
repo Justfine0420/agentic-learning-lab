@@ -88,10 +88,39 @@ def test_suggest_with_ai_prints_provider_failure(monkeypatch, capsys) -> None:
     output = capsys.readouterr().out
     assert "AI 建议暂不可用。" in output
     assert "原因：AI provider 请求失败。" in output
-    assert "你可以先使用选项 3 获取规则建议。" in output
+    assert "你可以先使用选项 3 获取离线规则建议。" in output
 
 
-def test_run_cli_routes_choice_5_to_ai_suggestion(monkeypatch, capsys) -> None:
+def test_run_cli_routes_choice_3_to_rule_suggestion(monkeypatch, capsys) -> None:
+    saved_students = []
+    calls = {"rule_suggestion": 0}
+    loaded_student = {
+        "name": "Alice",
+        "goal": "学习 LangChain",
+        "python_level": "basic",
+        "notes": ["Rule suggestion remains available"],
+    }
+    choices = iter(["3", "5"])
+
+    def fake_show_rule_suggestion() -> None:
+        calls["rule_suggestion"] += 1
+        print("Rule suggestion branch called")
+
+    monkeypatch.setattr(cli, "load_student", lambda: loaded_student)
+    monkeypatch.setattr(cli, "save_student", lambda current_student: saved_students.append(dict(current_student)))
+    monkeypatch.setattr(cli, "show_rule_suggestion", fake_show_rule_suggestion)
+    monkeypatch.setattr("builtins.input", lambda _prompt: next(choices))
+
+    cli.run_cli()
+
+    output = capsys.readouterr().out
+    assert "3. 查看离线规则建议" in output
+    assert "Rule suggestion branch called" in output
+    assert calls["rule_suggestion"] == 1
+    assert saved_students[-1]["name"] == "Alice"
+
+
+def test_run_cli_routes_choice_4_to_ai_suggestion(monkeypatch, capsys) -> None:
     saved_students = []
     calls = {"ai_suggestion": 0}
     loaded_student = {
@@ -100,7 +129,7 @@ def test_run_cli_routes_choice_5_to_ai_suggestion(monkeypatch, capsys) -> None:
         "python_level": "basic",
         "notes": ["CLI menu should expose AI suggestions"],
     }
-    choices = iter(["5", "4"])
+    choices = iter(["4", "5"])
 
     def fake_suggest_with_ai() -> None:
         calls["ai_suggestion"] += 1
@@ -114,7 +143,9 @@ def test_run_cli_routes_choice_5_to_ai_suggestion(monkeypatch, capsys) -> None:
     cli.run_cli()
 
     output = capsys.readouterr().out
-    assert "5. 生成 AI 学习建议" in output
+    assert "3. 查看离线规则建议" in output
+    assert "4. 生成 AI 学习建议" in output
+    assert "5. 退出" in output
     assert "AI suggestion branch called" in output
     assert calls["ai_suggestion"] == 1
     assert saved_students[-1]["name"] == "Alice"

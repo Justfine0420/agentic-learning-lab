@@ -17,7 +17,7 @@ app/structured_llm_demo.py
 
 ```text
 POST /ai/suggestion
-CLI 选项 5：生成 AI 学习建议
+CLI 选项 4：生成 AI 学习建议
 ```
 
 你要学会：
@@ -68,15 +68,15 @@ POST /ai/suggestion
 新增 CLI 菜单：
 
 ```text
-5. 生成 AI 学习建议
+4. 生成 AI 学习建议
 ```
 
 原来的菜单编号保持不变：
 
 ```text
-3. 生成今日学习建议   -> 规则建议
-4. 退出
-5. 生成 AI 学习建议   -> AI 建议
+3. 查看离线规则建议   -> 规则建议
+4. 生成 AI 学习建议   -> AI 建议
+5. 退出
 ```
 
 成功时返回：
@@ -235,7 +235,7 @@ FastAPI route
 -> generate_structured_learning_suggestion(student)
 -> AISuggestionResponse
 
-CLI 选项 5
+CLI 选项 4
 -> 当前 student
 -> generate_structured_learning_suggestion(student)
 -> 打印结构化建议
@@ -488,15 +488,15 @@ def suggest_with_ai() -> None:
     except RuntimeError as error:
         print("AI 建议暂不可用。")
         print(f"原因：{error}")
-        print("你可以先使用选项 3 获取规则建议。")
+        print("你可以先使用选项 3 获取离线规则建议。")
     except httpx.HTTPError:
         print("AI 建议暂不可用。")
         print("原因：AI provider 请求失败。")
-        print("你可以先使用选项 3 获取规则建议。")
+        print("你可以先使用选项 3 获取离线规则建议。")
     except ValueError as error:
         print("AI 建议暂不可用。")
         print(f"原因：{error}")
-        print("你可以先使用选项 3 获取规则建议。")
+        print("你可以先使用选项 3 获取离线规则建议。")
     else:
         for line in format_ai_suggestion(suggestion):
             print(line)
@@ -505,9 +505,9 @@ def suggest_with_ai() -> None:
 最后在菜单中保留旧编号，并追加新选项：
 
 ```python
-print("3. 生成今日学习建议")
-print("4. 退出")
-print("5. 生成 AI 学习建议")
+print("3. 查看离线规则建议")
+print("4. 生成 AI 学习建议")
+print("5. 退出")
 ```
 
 对应分支：
@@ -565,7 +565,7 @@ py -3.13 -m app.main
 菜单中会出现：
 
 ```text
-5. 生成 AI 学习建议
+4. 生成 AI 学习建议
 ```
 
 启动 API：
@@ -588,7 +588,7 @@ POST http://127.0.0.1:8000/ai/suggestion
 
 如果 provider 配置不可用，`POST /ai/suggestion` 会返回 `503`。
 这时你仍然可以调用 `GET /suggestion` 获取规则建议。
-CLI 中也一样：如果 AI 建议不可用，可以先使用选项 `3` 获取规则建议。
+CLI 中也一样：如果 AI 建议不可用，可以先使用选项 `3` 获取离线规则建议。
 
 ## 7. 常见错误
 
@@ -640,7 +640,7 @@ POST /ai/suggestion
 同时新增 CLI 入口：
 
 ```text
-5. 生成 AI 学习建议
+4. 生成 AI 学习建议
 ```
 
 ### 让 CLI 通过 HTTP 调本地 API
@@ -673,7 +673,7 @@ HTTP route 只是对外服务边界，不是项目内部唯一调用方式。
 
 练习 5：启动 API，在 provider 可用时手动请求 `POST /ai/suggestion`。
 
-练习 6：运行 CLI，选择 `5`，观察 provider 可用和不可用时分别会打印什么。
+练习 6：运行 CLI，选择 `4`，观察 provider 可用和不可用时分别会打印什么。
 
 ## 9. 验收标准
 
@@ -734,7 +734,7 @@ Stage 5 进入 LangChain 后，模型调用会从手写 `llm.py` 逐步升级为
 
 - 新增 `AISuggestionResponse`。
 - 新增 `POST /ai/suggestion`。
-- 新增 CLI 选项 `5. 生成 AI 学习建议`。
+- 新增 CLI 选项 `4. 生成 AI 学习建议`。
 - 新增 AI 建议 API 成功测试。
 - 新增 provider 配置缺失时的 `503` 测试。
 - 新增 provider 请求失败时的 `503` 测试。

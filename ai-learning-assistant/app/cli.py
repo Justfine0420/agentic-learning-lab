@@ -46,9 +46,9 @@ def show_profile() -> None:
             print(f"{index}. {saved_note}")
 
 
-def suggest_next_step() -> None:
+def show_rule_suggestion() -> None:
     print()
-    print("=== 今日学习建议 ===")
+    print("=== 离线规则学习建议 ===")
     print(build_suggestion(student["python_level"]))
 
 
@@ -76,15 +76,15 @@ def suggest_with_ai() -> None:
     except RuntimeError as error:
         print("AI 建议暂不可用。")
         print(f"原因：{error}")
-        print("你可以先使用选项 3 获取规则建议。")
+        print("你可以先使用选项 3 获取离线规则建议。")
     except httpx.HTTPError:
         print("AI 建议暂不可用。")
         print("原因：AI provider 请求失败。")
-        print("你可以先使用选项 3 获取规则建议。")
+        print("你可以先使用选项 3 获取离线规则建议。")
     except ValueError as error:
         print("AI 建议暂不可用。")
         print(f"原因：{error}")
-        print("你可以先使用选项 3 获取规则建议。")
+        print("你可以先使用选项 3 获取离线规则建议。")
     else:
         for line in format_ai_suggestion(suggestion):
             print(line)
@@ -104,9 +104,9 @@ def run_cli() -> None:
         print("请选择操作：")
         print("1. 添加学习笔记")
         print("2. 查看学习信息")
-        print("3. 生成今日学习建议")
-        print("4. 退出")
-        print("5. 生成 AI 学习建议")
+        print("3. 查看离线规则建议")
+        print("4. 生成 AI 学习建议")
+        print("5. 退出")
 
         choice = input("输入选项：")
 
@@ -115,12 +115,12 @@ def run_cli() -> None:
         elif choice == "2":
             show_profile()
         elif choice == "3":
-            suggest_next_step()
+            show_rule_suggestion()
         elif choice == "4":
+            suggest_with_ai()
+        elif choice == "5":
             save_student(student)
             print(f"{student['name']}，下次继续学习。")
             break
-        elif choice == "5":
-            suggest_with_ai()
         else:
             print("无效选项，请重新输入。")
