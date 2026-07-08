@@ -395,12 +395,12 @@ py -3.13 -m uvicorn app.api:app --reload
 
 不要在仓库根目录直接运行这个命令，否则路径会对不上。
 
-### `fastapi dev` 在 Windows 终端输出乱码或报编码错误
+### FastAPI CLI 在 Windows 终端输出乱码或报编码错误
 
 FastAPI 官方快速开始会使用：
 
 ```powershell
-py -3.13 -m uvicorn app.api:app --reload
+fastapi dev app/api.py
 ```
 
 在某些 Windows 终端里，CLI 的彩色输出可能遇到本地编码问题。

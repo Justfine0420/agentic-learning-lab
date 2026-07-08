@@ -22,6 +22,8 @@
 - 已新增最小 FastAPI 应用：`app/api.py`。
 - 已提供健康检查接口：`GET /health`。
 - 已为 `/health` 添加 API 测试：`tests/test_api.py`。
+- 已新增 Pydantic 模型：`StudentProfile` 和 `StudentProfileResponse`。
+- 已提供请求体/响应模型示例接口：`POST /profile/preview`。
 
 ## 推荐运行方式
 
@@ -75,4 +77,10 @@ py -3.13 -m uvicorn app.api:app --reload
 
 ```text
 GET http://127.0.0.1:8000/health
+```
+
+学员资料预览：
+
+```text
+POST http://127.0.0.1:8000/profile/preview
 ```
