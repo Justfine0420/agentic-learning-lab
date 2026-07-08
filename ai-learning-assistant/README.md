@@ -2,7 +2,7 @@
 
 这是 Agentic Learning Lab 的贯穿教学项目。
 
-当前阶段：阶段 4 进行中，已完成第 4.5 课 AI 建议 API、CLI 入口与降级边界。
+当前阶段：阶段 4 已复盘，已完成 LLM 基础、结构化输出与 AI 建议入口。
 
 ## 当前能力
 
@@ -37,7 +37,8 @@
 - 已为学习笔记 API 增加基础业务错误处理：笔记不存在返回 `404`，空白笔记返回 `400`。
 - 已明确当前阶段的存储边界：继续使用 `data/student.json`，后续再按需要迁移到 SQLite / PostgreSQL。
 - 已补充 Stage 3 学习资料：`materials/stage-3.md`。
-- 已进入 Stage 4：先理解 LLM 调用中的 `model`、prompt、message、instructions、input 和 token，暂不新增真实模型调用代码。
+- 已补充 Stage 4 学习资料：`materials/stage-4.md`。
+- 已进入 Stage 4：理解 LLM 调用中的 `model`、prompt、message、instructions、input 和 token。
 - 已新增 LLM Provider 配置层：`app/config.py`。
 - 已支持通过 `LLM_PROVIDER` 在火山引擎 Ark Agent Plan、DeepSeek 和 Ollama 本地模型之间切换。
 - 已更新 `.env.example`，提供云端模型和本地 Ollama 的配置模板。
@@ -77,6 +78,7 @@ tests/      测试代码
 
 - `materials/stage-2.md`：阶段 2 补充学习资料，覆盖模块导入、`Path`、JSON 文件读写、异常处理、pytest 基础和当前数据流。
 - `materials/stage-3.md`：阶段 3 补充学习资料，覆盖 FastAPI route、Pydantic 模型、状态码、`TestClient`、虚拟环境和 API 数据流。
+- `materials/stage-4.md`：阶段 4 补充学习资料，覆盖 LLM provider 配置、模型调用、结构化输出、CLI/API AI 建议入口和当前数据流。
 
 ## 依赖说明
 

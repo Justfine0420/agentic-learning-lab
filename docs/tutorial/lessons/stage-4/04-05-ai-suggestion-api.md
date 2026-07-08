@@ -36,7 +36,7 @@ CLI 选项 4：生成 AI 学习建议
 ```text
 GET  /suggestion     -> 规则建议，稳定、离线可用
 POST /ai/suggestion  -> AI 建议，需要 provider 可用
-CLI 5                -> AI 建议，直接复用 LLM 业务函数
+CLI 4                -> AI 建议，直接复用 LLM 业务函数
 ```
 
 ## 2. 你会新增什么项目能力
@@ -71,7 +71,7 @@ POST /ai/suggestion
 4. 生成 AI 学习建议
 ```
 
-原来的菜单编号保持不变：
+当前建议菜单分工：
 
 ```text
 3. 查看离线规则建议   -> 规则建议
@@ -502,7 +502,7 @@ def suggest_with_ai() -> None:
             print(line)
 ```
 
-最后在菜单中保留旧编号，并追加新选项：
+最后在菜单中把规则建议和 AI 建议分开：
 
 ```python
 print("3. 查看离线规则建议")
@@ -513,13 +513,14 @@ print("5. 退出")
 对应分支：
 
 ```python
-elif choice == "5":
+elif choice == "4":
     suggest_with_ai()
 ```
 
 这样做有两个好处：
 
-- 旧课程里输入 `3` 和 `4` 的脚本仍然可用。
+- `3` 的语义明确是离线规则建议。
+- `4` 的语义明确是 AI 建议。
 - CLI 和 API 共享模型调用能力，但不要求 CLI 依赖本地 API 服务。
 
 ### 第七步：补充 CLI 测试
