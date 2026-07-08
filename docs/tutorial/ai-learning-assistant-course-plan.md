@@ -112,7 +112,7 @@ ai-learning-assistant/
 | 4.2 | 配置 LLM Provider 和 API Key | `.env`、环境变量、云端和本地模型 provider | 安全加载配置 |
 | 4.3 | 第一次模型调用 | 封装 `llm.py` | AI 生成建议 |
 | 4.4 | 结构化输出 | JSON schema / Pydantic | 稳定返回学习建议 |
-| 4.5 | AI 建议 API 与降级边界 | AI 建议接口、provider 不可用时的错误和降级策略 | API 可选择调用 AI 建议 |
+| 4.5 | AI 建议 API、CLI 入口与降级边界 | AI 建议接口、CLI AI 入口、provider 不可用时的错误和降级策略 | API 和 CLI 可选择调用 AI 建议 |
 | 5.1 | LangChain 定位 | `create_agent`、agent harness | 理解框架边界 |
 | 5.2 | 创建第一个 Agent | model + prompt | AI 助手入口 |
 | 5.3 | Python 函数变工具 | tool 思路 | 查询学员资料工具 |

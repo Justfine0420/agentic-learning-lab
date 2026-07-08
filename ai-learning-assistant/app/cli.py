@@ -1,10 +1,14 @@
+import httpx
+
+from app.llm import generate_structured_learning_suggestion
+from app.models import StructuredLearningSuggestion
 from app.storage import load_student, save_student
 from app.student_state import replace_student, student
 from app.suggestions import build_suggestion
 
 
 PROJECT_NAME = "AI Learning Assistant"
-COURSE_STAGE = "Stage 3"
+COURSE_STAGE = "Stage 4"
 
 
 def show_header() -> None:
@@ -48,6 +52,44 @@ def suggest_next_step() -> None:
     print(build_suggestion(student["python_level"]))
 
 
+def format_ai_suggestion(suggestion: StructuredLearningSuggestion) -> list[str]:
+    lines = [
+        "=== AI 学习建议 ===",
+        f"摘要：{suggestion.summary}",
+        "",
+        "行动建议：",
+    ]
+
+    for index, item in enumerate(suggestion.suggestions, start=1):
+        lines.append(f"{index}. {item.title}（约 {item.estimated_minutes} 分钟）")
+        lines.append(f"   {item.description}")
+
+    lines.extend(["", f"下一检查点：{suggestion.next_checkpoint}"])
+    return lines
+
+
+def suggest_with_ai() -> None:
+    print()
+
+    try:
+        suggestion = generate_structured_learning_suggestion(student)
+    except RuntimeError as error:
+        print("AI 建议暂不可用。")
+        print(f"原因：{error}")
+        print("你可以先使用选项 3 获取规则建议。")
+    except httpx.HTTPError:
+        print("AI 建议暂不可用。")
+        print("原因：AI provider 请求失败。")
+        print("你可以先使用选项 3 获取规则建议。")
+    except ValueError as error:
+        print("AI 建议暂不可用。")
+        print(f"原因：{error}")
+        print("你可以先使用选项 3 获取规则建议。")
+    else:
+        for line in format_ai_suggestion(suggestion):
+            print(line)
+
+
 def run_cli() -> None:
     show_header()
     replace_student(load_student())
@@ -64,6 +106,7 @@ def run_cli() -> None:
         print("2. 查看学习信息")
         print("3. 生成今日学习建议")
         print("4. 退出")
+        print("5. 生成 AI 学习建议")
 
         choice = input("输入选项：")
 
@@ -77,5 +120,7 @@ def run_cli() -> None:
             save_student(student)
             print(f"{student['name']}，下次继续学习。")
             break
+        elif choice == "5":
+            suggest_with_ai()
         else:
             print("无效选项，请重新输入。")

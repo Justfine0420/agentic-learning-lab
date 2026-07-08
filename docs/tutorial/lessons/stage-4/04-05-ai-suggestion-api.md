@@ -1,4 +1,4 @@
-# 第 4.5 课：AI 建议 API 与降级边界
+# 第 4.5 课：AI 建议 API、CLI 入口与降级边界
 
 ## 1. 本课目标
 
@@ -13,10 +13,11 @@ app/llm_demo.py
 app/structured_llm_demo.py
 ```
 
-本课要把结构化 AI 建议接入 FastAPI：
+本课要把结构化 AI 建议接入 FastAPI 和 CLI：
 
 ```text
 POST /ai/suggestion
+CLI 选项 5：生成 AI 学习建议
 ```
 
 你要学会：
@@ -24,15 +25,18 @@ POST /ai/suggestion
 - 为什么不直接改掉已有 `GET /suggestion`。
 - 为什么 AI 接口应该和规则接口分开。
 - 如何把结构化 LLM 调用接入 FastAPI route。
+- 如何让 CLI 复用同一个 AI 建议核心函数。
+- 为什么 CLI 不需要通过 HTTP 调用自己本地的 API。
 - 如何把 provider 不可用、网络失败、模型输出错误转换成 API 错误。
 - 为什么本课用 `503 Service Unavailable`。
 - 为什么“降级”不等于在服务端偷偷返回规则建议。
 
-本课完成后，项目会同时拥有两个建议接口：
+本课完成后，项目会同时拥有两个 API 建议接口和一个 CLI AI 建议入口：
 
 ```text
 GET  /suggestion     -> 规则建议，稳定、离线可用
 POST /ai/suggestion  -> AI 建议，需要 provider 可用
+CLI 5                -> AI 建议，直接复用 LLM 业务函数
 ```
 
 ## 2. 你会新增什么项目能力
@@ -42,7 +46,9 @@ POST /ai/suggestion  -> AI 建议，需要 provider 可用
 ```text
 app/models.py
 app/api.py
+app/cli.py
 tests/test_api.py
+tests/test_cli.py
 ```
 
 新增响应模型：
@@ -57,6 +63,20 @@ class AISuggestionResponse(BaseModel):
 
 ```text
 POST /ai/suggestion
+```
+
+新增 CLI 菜单：
+
+```text
+5. 生成 AI 学习建议
+```
+
+原来的菜单编号保持不变：
+
+```text
+3. 生成今日学习建议   -> 规则建议
+4. 退出
+5. 生成 AI 学习建议   -> AI 建议
 ```
 
 成功时返回：
@@ -102,9 +122,10 @@ POST /ai/suggestion
 - `generate_structured_learning_suggestion()` 会调用 provider 并返回 Pydantic 对象。
 - FastAPI 可以用 `response_model` 定义响应结构。
 - FastAPI 可以用 `HTTPException` 返回错误状态码。
+- CLI 可以直接复用业务函数，不一定要通过 HTTP 请求本地 API。
 - provider 调用可能失败，模型输出也可能不符合 schema。
 
-本课会用到两个错误边界：
+本课会用到三个错误边界：
 
 ```python
 RuntimeError
@@ -192,6 +213,43 @@ GET /suggestion
 | `GET /suggestion` | 稳定规则建议 |
 | `POST /ai/suggestion` | AI 结构化建议 |
 | 客户端或后续业务层 | 决定是否从 AI 降级到规则 |
+
+### API 和 CLI 复用同一个业务函数
+
+`POST /ai/suggestion` 是 HTTP 入口。
+CLI 菜单是命令行入口。
+
+这两个入口不应该各写一套模型调用逻辑。
+
+本课的共用核心是：
+
+```text
+generate_structured_learning_suggestion(student)
+```
+
+所以最终结构是：
+
+```text
+FastAPI route
+-> load_student()
+-> generate_structured_learning_suggestion(student)
+-> AISuggestionResponse
+
+CLI 选项 5
+-> 当前 student
+-> generate_structured_learning_suggestion(student)
+-> 打印结构化建议
+```
+
+注意，CLI 不需要这样做：
+
+```text
+CLI
+-> HTTP POST http://127.0.0.1:8000/ai/suggestion
+```
+
+否则每次使用 CLI AI 建议前，都必须先启动 `uvicorn`。
+这会把命令行工具变成 API 服务的客户端，反而增加学习者的运行负担。
 
 ### 为什么是 503
 
@@ -383,6 +441,101 @@ def test_post_ai_suggestion_returns_503_when_model_output_is_invalid(...):
 AI 失败时，不伪装成成功。
 ```
 
+### 第六步：给 CLI 新增 AI 建议入口
+
+打开：
+
+```text
+ai-learning-assistant/app/cli.py
+```
+
+新增导入：
+
+```python
+import httpx
+
+from app.llm import generate_structured_learning_suggestion
+from app.models import StructuredLearningSuggestion
+```
+
+新增格式化函数：
+
+```python
+def format_ai_suggestion(suggestion: StructuredLearningSuggestion) -> list[str]:
+    lines = [
+        "=== AI 学习建议 ===",
+        f"摘要：{suggestion.summary}",
+        "",
+        "行动建议：",
+    ]
+
+    for index, item in enumerate(suggestion.suggestions, start=1):
+        lines.append(f"{index}. {item.title}（约 {item.estimated_minutes} 分钟）")
+        lines.append(f"   {item.description}")
+
+    lines.extend(["", f"下一检查点：{suggestion.next_checkpoint}"])
+    return lines
+```
+
+再新增 CLI AI 建议函数：
+
+```python
+def suggest_with_ai() -> None:
+    print()
+
+    try:
+        suggestion = generate_structured_learning_suggestion(student)
+    except RuntimeError as error:
+        print("AI 建议暂不可用。")
+        print(f"原因：{error}")
+        print("你可以先使用选项 3 获取规则建议。")
+    except httpx.HTTPError:
+        print("AI 建议暂不可用。")
+        print("原因：AI provider 请求失败。")
+        print("你可以先使用选项 3 获取规则建议。")
+    except ValueError as error:
+        print("AI 建议暂不可用。")
+        print(f"原因：{error}")
+        print("你可以先使用选项 3 获取规则建议。")
+    else:
+        for line in format_ai_suggestion(suggestion):
+            print(line)
+```
+
+最后在菜单中保留旧编号，并追加新选项：
+
+```python
+print("3. 生成今日学习建议")
+print("4. 退出")
+print("5. 生成 AI 学习建议")
+```
+
+对应分支：
+
+```python
+elif choice == "5":
+    suggest_with_ai()
+```
+
+这样做有两个好处：
+
+- 旧课程里输入 `3` 和 `4` 的脚本仍然可用。
+- CLI 和 API 共享模型调用能力，但不要求 CLI 依赖本地 API 服务。
+
+### 第七步：补充 CLI 测试
+
+新建：
+
+```text
+ai-learning-assistant/tests/test_cli.py
+```
+
+测试重点：
+
+- `format_ai_suggestion()` 能把结构化模型转成人能读的 CLI 文本。
+- `suggest_with_ai()` 成功时会打印摘要、行动建议和下一检查点。
+- provider 请求失败时，CLI 会明确提示 AI 不可用，并提醒可以使用规则建议。
+
 ## 6. 运行方式
 
 进入项目目录：
@@ -400,7 +553,19 @@ py -3.13 -m pytest
 语法检查：
 
 ```powershell
-py -3.13 -m py_compile app/main.py app/cli.py app/student_state.py app/storage.py app/models.py app/api.py app/suggestions.py app/config.py app/llm.py app/llm_demo.py app/structured_llm_demo.py app/__init__.py tests/test_storage.py tests/test_api.py tests/test_suggestions.py tests/test_config.py tests/test_llm.py tests/test_llm_demo.py tests/test_structured_llm_demo.py
+py -3.13 -m py_compile app/main.py app/cli.py app/student_state.py app/storage.py app/models.py app/api.py app/suggestions.py app/config.py app/llm.py app/llm_demo.py app/structured_llm_demo.py app/__init__.py tests/test_storage.py tests/test_api.py tests/test_cli.py tests/test_suggestions.py tests/test_config.py tests/test_llm.py tests/test_llm_demo.py tests/test_structured_llm_demo.py
+```
+
+如果你要检查 CLI 菜单：
+
+```powershell
+py -3.13 -m app.main
+```
+
+菜单中会出现：
+
+```text
+5. 生成 AI 学习建议
 ```
 
 启动 API：
@@ -423,6 +588,7 @@ POST http://127.0.0.1:8000/ai/suggestion
 
 如果 provider 配置不可用，`POST /ai/suggestion` 会返回 `503`。
 这时你仍然可以调用 `GET /suggestion` 获取规则建议。
+CLI 中也一样：如果 AI 建议不可用，可以先使用选项 `3` 获取规则建议。
 
 ## 7. 常见错误
 
@@ -465,11 +631,35 @@ provider 不可用、网络失败、模型输出不合 schema，更像外部依�
 
 不要破坏已经稳定的接口。
 
-本课只新增：
+本课只新增 API：
 
 ```text
 POST /ai/suggestion
 ```
+
+同时新增 CLI 入口：
+
+```text
+5. 生成 AI 学习建议
+```
+
+### 让 CLI 通过 HTTP 调本地 API
+
+不要在 CLI 里直接写：
+
+```python
+requests.post("http://127.0.0.1:8000/ai/suggestion")
+```
+
+这会要求学习者先启动 API 服务，CLI 才能生成 AI 建议。
+
+本课采用的做法是：
+
+```text
+CLI 和 API 共享 generate_structured_learning_suggestion()
+```
+
+HTTP route 只是对外服务边界，不是项目内部唯一调用方式。
 
 ## 8. 练习
 
@@ -483,15 +673,19 @@ POST /ai/suggestion
 
 练习 5：启动 API，在 provider 可用时手动请求 `POST /ai/suggestion`。
 
+练习 6：运行 CLI，选择 `5`，观察 provider 可用和不可用时分别会打印什么。
+
 ## 9. 验收标准
 
 完成本课后，你应该能做到：
 
 - 解释规则建议接口和 AI 建议接口的区别。
 - 解释为什么 `POST /ai/suggestion` 不破坏 `GET /suggestion`。
+- 解释为什么 CLI AI 建议不需要 HTTP 调本地 API。
 - 解释为什么 provider 不可用时返回 `503`。
 - 看懂 `AISuggestionResponse`。
 - 看懂 `generate_ai_suggestion()` 的错误处理。
+- 看懂 `suggest_with_ai()` 的错误处理。
 - 运行 `py -3.13 -m pytest` 通过。
 - 运行 `py_compile` 通过。
 - 知道真实 provider 调用仍然需要 `.env` 或 Ollama 环境。
@@ -503,6 +697,7 @@ POST /ai/suggestion
 | 本课内容 | 后续升级 |
 | --- | --- |
 | `POST /ai/suggestion` | LangChain Agent API |
+| CLI AI 建议入口 | 终端版 Agent 交互入口 |
 | `AISuggestionResponse` | Agent 结构化响应 |
 | `503` provider 边界 | Agent 错误和降级策略 |
 | 规则接口与 AI 接口分离 | 多 Agent / 多能力路由 |
@@ -529,18 +724,22 @@ Stage 5 进入 LangChain 后，模型调用会从手写 `llm.py` 逐步升级为
 - `README.md`
 - `ai-learning-assistant/README.md`
 - `ai-learning-assistant/app/api.py`
+- `ai-learning-assistant/app/cli.py`
 - `ai-learning-assistant/app/models.py`
 - `ai-learning-assistant/tests/test_api.py`
+- `ai-learning-assistant/tests/test_cli.py`
 - `docs/tutorial/README.md`
 
 代码变更：
 
 - 新增 `AISuggestionResponse`。
 - 新增 `POST /ai/suggestion`。
+- 新增 CLI 选项 `5. 生成 AI 学习建议`。
 - 新增 AI 建议 API 成功测试。
 - 新增 provider 配置缺失时的 `503` 测试。
 - 新增 provider 请求失败时的 `503` 测试。
 - 新增模型输出无效时的 `503` 测试。
+- 新增 CLI AI 建议格式化测试和 provider 失败提示测试。
 
 新增依赖：
 
@@ -556,7 +755,7 @@ Stage 5 进入 LangChain 后，模型调用会从手写 `llm.py` 逐步升级为
 
 ```powershell
 py -3.13 -m pytest
-py -3.13 -m py_compile app/main.py app/cli.py app/student_state.py app/storage.py app/models.py app/api.py app/suggestions.py app/config.py app/llm.py app/llm_demo.py app/structured_llm_demo.py app/__init__.py tests/test_storage.py tests/test_api.py tests/test_suggestions.py tests/test_config.py tests/test_llm.py tests/test_llm_demo.py tests/test_structured_llm_demo.py
+py -3.13 -m py_compile app/main.py app/cli.py app/student_state.py app/storage.py app/models.py app/api.py app/suggestions.py app/config.py app/llm.py app/llm_demo.py app/structured_llm_demo.py app/__init__.py tests/test_storage.py tests/test_api.py tests/test_cli.py tests/test_suggestions.py tests/test_config.py tests/test_llm.py tests/test_llm_demo.py tests/test_structured_llm_demo.py
 ```
 
 下一步：

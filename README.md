@@ -142,6 +142,7 @@ ai-learning-assistant/
 ├── tests/
 │   ├── .gitkeep
 │   ├── test_api.py
+│   ├── test_cli.py
 │   ├── test_config.py
 │   ├── test_llm.py
 │   ├── test_llm_demo.py

@@ -90,7 +90,7 @@ ai-learning-assistant/
 | 4 | 4.2 | 配置 LLM Provider 和 API Key | `docs/tutorial/lessons/stage-4/04-02-configure-api-key.md` | 已生成 | 已验证 |
 | 4 | 4.3 | 第一次模型调用 | `docs/tutorial/lessons/stage-4/04-03-first-llm-call.md` | 已生成 | 已验证 |
 | 4 | 4.4 | 结构化输出 | `docs/tutorial/lessons/stage-4/04-04-structured-output.md` | 已生成 | 已验证 |
-| 4 | 4.5 | AI 建议 API 与降级边界 | `docs/tutorial/lessons/stage-4/04-05-ai-suggestion-api.md` | 已生成 | 已验证 |
+| 4 | 4.5 | AI 建议 API、CLI 入口与降级边界 | `docs/tutorial/lessons/stage-4/04-05-ai-suggestion-api.md` | 已生成 | 已验证 |
 
 ## 3. 补充学习资料
 

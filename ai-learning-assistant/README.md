@@ -2,7 +2,7 @@
 
 这是 Agentic Learning Lab 的贯穿教学项目。
 
-当前阶段：阶段 4 进行中，已完成第 4.5 课 AI 建议 API 与降级边界。
+当前阶段：阶段 4 进行中，已完成第 4.5 课 AI 建议 API、CLI 入口与降级边界。
 
 ## 当前能力
 
@@ -52,6 +52,7 @@
 - 已为结构化输出新增成功路径和失败路径测试。
 - 已新增 AI 建议接口：`POST /ai/suggestion`。
 - `POST /ai/suggestion` 返回结构化 AI 建议，provider 不可用或模型输出无效时返回 `503`。
+- CLI 已新增 `5. 生成 AI 学习建议`，复用结构化 AI 建议能力。
 - `GET /suggestion` 仍保留为稳定规则建议接口。
 
 ## 推荐运行方式
@@ -145,6 +146,14 @@ POST http://127.0.0.1:8000/ai/suggestion
 
 如果 provider 不可用，AI 建议接口会返回 `503`。规则建议接口仍然可用。
 
+CLI 中也可以选择：
+
+```text
+5. 生成 AI 学习建议
+```
+
+CLI 不通过 HTTP 调本地 API，而是直接复用 `generate_structured_learning_suggestion()`。
+
 LLM Provider 配置：
 
 ```text
@@ -169,7 +178,7 @@ py -3.13 -m app.llm_demo
 
 这条命令需要在 `ai-learning-assistant/` 目录下运行，并且需要 `.env` 中的 provider 配置可用。
 
-当前 `GET /suggestion` 仍返回规则建议；AI 建议调用先封装在 `generate_learning_suggestion()`，后续课程再接入 API。
+当前 `GET /suggestion` 仍返回规则建议；AI 建议已经接入 `POST /ai/suggestion` 和 CLI 选项 `5`。
 
 手动跑普通文本模型调用：
 
