@@ -2,7 +2,7 @@
 
 这是 Agentic Learning Lab 的贯穿教学项目。
 
-当前阶段：阶段 4 进行中，已完成第 4.1 课 LLM 基础概念。
+当前阶段：阶段 4 进行中，已完成第 4.2 课 LLM Provider 和 API Key 配置。
 
 ## 当前能力
 
@@ -38,6 +38,10 @@
 - 已明确当前阶段的存储边界：继续使用 `data/student.json`，后续再按需要迁移到 SQLite / PostgreSQL。
 - 已补充 Stage 3 学习资料：`materials/stage-3.md`。
 - 已进入 Stage 4：先理解 LLM 调用中的 `model`、prompt、message、instructions、input 和 token，暂不新增真实模型调用代码。
+- 已新增 LLM Provider 配置层：`app/config.py`。
+- 已支持通过 `LLM_PROVIDER` 在火山引擎 Ark Agent Plan、DeepSeek 和 Ollama 本地模型之间切换。
+- 已更新 `.env.example`，提供云端模型和本地 Ollama 的配置模板。
+- 已为配置读取新增测试：`tests/test_config.py`。
 
 ## 推荐运行方式
 
@@ -67,6 +71,7 @@ tests/      测试代码
 阶段 2.5 引入 pytest 作为测试依赖。
 阶段 3.1 引入 FastAPI 作为 Web API 框架，并固定到本课已验证版本。
 同时引入 `fastapi-cli`、`uvicorn[standard]` 和 `httpx`，用于开发服务器和 API 测试。
+阶段 4.2 引入 `python-dotenv`，用于从本地 `.env` 读取模型服务配置。
 
 后续课程会逐步把依赖写入 `requirements.txt`。
 
@@ -120,3 +125,13 @@ POST http://127.0.0.1:8000/notes
 ```text
 GET http://127.0.0.1:8000/suggestion
 ```
+
+LLM Provider 配置：
+
+```text
+LLM_PROVIDER=volcengine_agent_plan
+LLM_PROVIDER=deepseek
+LLM_PROVIDER=ollama
+```
+
+真实密钥写入本地 `.env`，不要写入 `.env.example` 或代码。

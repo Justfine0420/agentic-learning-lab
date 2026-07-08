@@ -87,6 +87,7 @@ ai-learning-assistant/
 | 3 | 3.6 | API 错误处理 | `docs/tutorial/lessons/stage-3/03-06-api-error-handling.md` | 已生成 | 已验证 |
 | 3 | 3.7 | 存储边界与数据库迁移预告 | `docs/tutorial/lessons/stage-3/03-07-storage-boundary-database-preview.md` | 已生成 | 已验证 |
 | 4 | 4.1 | LLM 基础概念 | `docs/tutorial/lessons/stage-4/04-01-llm-basic-concepts.md` | 已生成 | 已验证 |
+| 4 | 4.2 | 配置 LLM Provider 和 API Key | `docs/tutorial/lessons/stage-4/04-02-configure-api-key.md` | 已生成 | 已验证 |
 
 ## 3. 补充学习资料
 
@@ -107,9 +108,9 @@ ai-learning-assistant/
 ## 5. 当前学习位置
 
 - 当前阶段：阶段 4 进行中
-- 当前课程：第 4.1 课已生成并验证
+- 当前课程：第 4.2 课已生成并验证
 - 开源仓库名：`agentic-learning-lab`
 - 真实代码项目：`ai-learning-assistant/` 已创建
 - 阶段复盘：`docs/tutorial/reviews/stage-0-review.md`、`docs/tutorial/reviews/stage-1-review.md`、`docs/tutorial/reviews/stage-2-review.md`、`docs/tutorial/reviews/stage-3-review.md`
 - 补充资料：`ai-learning-assistant/materials/stage-2.md`、`ai-learning-assistant/materials/stage-3.md`
-- 下一步建议：继续阶段 4，第 4.2 课配置 API Key
+- 下一步建议：继续阶段 4，第 4.3 课第一次真实模型调用

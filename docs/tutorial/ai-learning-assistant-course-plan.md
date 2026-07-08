@@ -109,7 +109,7 @@ ai-learning-assistant/
 | 3.6 | API 错误处理 | 404、400、异常响应 | 稳定 API |
 | 3.7 | 存储边界与数据库迁移预告 | JSON 存储局限、Repository 思路、SQLite / PostgreSQL 迁移时机 | 明确当前不落库的原因和后续迁移路线 |
 | 4.1 | LLM 基础概念 | prompt、message、model、token | 理解模型调用 |
-| 4.2 | 配置 API Key | `.env`、环境变量 | 安全加载配置 |
+| 4.2 | 配置 LLM Provider 和 API Key | `.env`、环境变量、云端和本地模型 provider | 安全加载配置 |
 | 4.3 | 第一次模型调用 | 封装 `llm.py` | AI 生成建议 |
 | 4.4 | 结构化输出 | JSON schema / Pydantic | 稳定返回学习建议 |
 | 5.1 | LangChain 定位 | `create_agent`、agent harness | 理解框架边界 |
