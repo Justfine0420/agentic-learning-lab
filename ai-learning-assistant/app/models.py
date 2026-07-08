@@ -32,6 +32,11 @@ class NotesResponse(BaseModel):
     note_count: int = 0
 
 
+class NoteResponse(BaseModel):
+    index: int
+    content: str
+
+
 class SuggestionResponse(BaseModel):
     python_level: str = ""
     suggestion: str

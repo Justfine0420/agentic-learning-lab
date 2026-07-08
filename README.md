@@ -98,7 +98,8 @@ docs/tutorial/
 │       ├── 03-02-pydantic-models.md
 │       ├── 03-03-profile-api.md
 │       ├── 03-04-notes-api.md
-│       └── 03-05-suggestion-api.md
+│       ├── 03-05-suggestion-api.md
+│       └── 03-06-api-error-handling.md
 └── reviews/
     ├── stage-0-review.md
     ├── stage-1-review.md
@@ -196,9 +197,9 @@ docs/tutorial/reviews/
 - 真实代码项目：`ai-learning-assistant/` 已创建
 - 教程正文：阶段 0、阶段 1 和阶段 2 已完成，阶段 3 已开始
 - 当前阶段：阶段 3 进行中
-- 当前课程：第 3.5 课已生成并验证
+- 当前课程：第 3.6 课已生成并验证
 
-下一步建议：继续阶段 3，第 3.6 课 API 错误处理。
+下一步建议：继续阶段 3，第 3.7 课存储边界与数据库迁移预告。
 
 ## 9. 开源治理说明
 

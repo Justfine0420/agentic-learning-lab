@@ -32,6 +32,9 @@
 - 已把学习建议规则抽到 `app/suggestions.py`，供 CLI 和 API 共用。
 - 已新增学习建议模型：`SuggestionResponse`。
 - 已提供学习建议接口：`GET /suggestion`。
+- 已新增单条学习笔记响应模型：`NoteResponse`。
+- 已新增单条学习笔记查询接口：`GET /notes/{note_index}`。
+- 已为学习笔记 API 增加基础业务错误处理：笔记不存在返回 `404`，空白笔记返回 `400`。
 
 ## 推荐运行方式
 
@@ -104,6 +107,7 @@ POST http://127.0.0.1:8000/profile
 
 ```text
 GET  http://127.0.0.1:8000/notes
+GET  http://127.0.0.1:8000/notes/{note_index}
 POST http://127.0.0.1:8000/notes
 ```
 

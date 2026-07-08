@@ -148,6 +148,45 @@ def test_get_notes_returns_saved_notes(tmp_path: Path) -> None:
     }
 
 
+def test_get_note_returns_one_saved_note(tmp_path: Path) -> None:
+    use_tmp_storage(tmp_path)
+    storage.save_student(
+        {
+            "name": "Dana",
+            "goal": "Review APIs",
+            "python_level": "basic",
+            "notes": ["Read FastAPI docs", "Write API tests"],
+        }
+    )
+
+    response = client.get("/notes/2")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "index": 2,
+        "content": "Write API tests",
+    }
+
+
+def test_get_note_returns_404_when_note_missing(tmp_path: Path) -> None:
+    use_tmp_storage(tmp_path)
+    storage.save_student(
+        {
+            "name": "Dana",
+            "goal": "Review APIs",
+            "python_level": "basic",
+            "notes": ["Read FastAPI docs"],
+        }
+    )
+
+    response = client.get("/notes/2")
+
+    assert response.status_code == 404
+    assert response.json() == {
+        "detail": "学习笔记不存在。",
+    }
+
+
 def test_post_notes_appends_note_and_keeps_profile(tmp_path: Path) -> None:
     use_tmp_storage(tmp_path)
     storage.save_student(
@@ -190,6 +229,31 @@ def test_post_notes_rejects_empty_note(tmp_path: Path) -> None:
     )
 
     assert response.status_code == 422
+
+
+def test_post_notes_rejects_blank_note_with_business_error(tmp_path: Path) -> None:
+    use_tmp_storage(tmp_path)
+    storage.save_student(
+        {
+            "name": "Eve",
+            "goal": "Build note API",
+            "python_level": "intermediate",
+            "notes": ["Existing note"],
+        }
+    )
+
+    response = client.post(
+        "/notes",
+        json={
+            "content": "   ",
+        },
+    )
+
+    assert response.status_code == 400
+    assert response.json() == {
+        "detail": "学习笔记不能为空。",
+    }
+    assert storage.load_student()["notes"] == ["Existing note"]
 
 
 def test_get_suggestion_returns_rule_based_suggestion(tmp_path: Path) -> None:

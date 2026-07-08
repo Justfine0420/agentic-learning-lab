@@ -1,7 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 from app.models import (
     NoteCreate,
+    NoteResponse,
     NotesResponse,
     Student,
     StudentProfile,
@@ -69,8 +70,22 @@ def get_notes() -> NotesResponse:
     )
 
 
+@app.get("/notes/{note_index}", response_model=NoteResponse)
+def get_note(note_index: int) -> NoteResponse:
+    student = load_student()
+    notes = student["notes"]
+
+    if note_index < 1 or note_index > len(notes):
+        raise HTTPException(status_code=404, detail="学习笔记不存在。")
+
+    return NoteResponse(index=note_index, content=notes[note_index - 1])
+
+
 @app.post("/notes", response_model=NotesResponse)
 def add_note(note: NoteCreate) -> NotesResponse:
+    if note.content.strip() == "":
+        raise HTTPException(status_code=400, detail="学习笔记不能为空。")
+
     student = load_student()
     student["notes"].append(note.content)
     save_student(student)
