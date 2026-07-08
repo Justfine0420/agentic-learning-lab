@@ -6,8 +6,10 @@ from app.models import (
     Student,
     StudentProfile,
     StudentProfileResponse,
+    SuggestionResponse,
 )
 from app.storage import load_student, save_student
+from app.suggestions import build_suggestion
 
 
 app = FastAPI(title="AI Learning Assistant")
@@ -76,4 +78,14 @@ def add_note(note: NoteCreate) -> NotesResponse:
     return NotesResponse(
         notes=student["notes"],
         note_count=len(student["notes"]),
+    )
+
+
+@app.get("/suggestion", response_model=SuggestionResponse)
+def get_suggestion() -> SuggestionResponse:
+    student = load_student()
+
+    return SuggestionResponse(
+        python_level=student["python_level"],
+        suggestion=build_suggestion(student["python_level"]),
     )

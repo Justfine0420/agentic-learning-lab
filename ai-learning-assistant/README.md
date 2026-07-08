@@ -29,6 +29,9 @@
 - 已新增学习笔记模型：`NoteCreate` 和 `NotesResponse`。
 - 已提供学习笔记接口：`GET /notes`、`POST /notes`。
 - `POST /notes` 会追加学习笔记，并保留已有学员资料。
+- 已把学习建议规则抽到 `app/suggestions.py`，供 CLI 和 API 共用。
+- 已新增学习建议模型：`SuggestionResponse`。
+- 已提供学习建议接口：`GET /suggestion`。
 
 ## 推荐运行方式
 
@@ -102,4 +105,10 @@ POST http://127.0.0.1:8000/profile
 ```text
 GET  http://127.0.0.1:8000/notes
 POST http://127.0.0.1:8000/notes
+```
+
+学习建议 API：
+
+```text
+GET http://127.0.0.1:8000/suggestion
 ```

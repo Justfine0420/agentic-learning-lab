@@ -23,6 +23,7 @@
 - 能用 RAG 基于资料答疑。
 - 能用 LangGraph 管理学习流程。
 - 能用 Deep Agents 拆任务、写计划、生成总结文件。
+- 能解释当前 JSON 存储的边界，并知道后续何时迁移到数据库。
 - 有基础测试、运行说明和交付文档。
 
 ## 2. 框架边界
@@ -106,6 +107,7 @@ ai-learning-assistant/
 | 3.4 | 学习笔记 API | `GET/POST /notes` | API 管理笔记 |
 | 3.5 | 学习建议 API | `GET /suggestion` | 规则建议接口 |
 | 3.6 | API 错误处理 | 404、400、异常响应 | 稳定 API |
+| 3.7 | 存储边界与数据库迁移预告 | JSON 存储局限、Repository 思路、SQLite / PostgreSQL 迁移时机 | 明确当前不落库的原因和后续迁移路线 |
 | 4.1 | LLM 基础概念 | prompt、message、model、token | 理解模型调用 |
 | 4.2 | 配置 API Key | `.env`、环境变量 | 安全加载配置 |
 | 4.3 | 第一次模型调用 | 封装 `llm.py` | AI 生成建议 |
@@ -156,6 +158,7 @@ ai-learning-assistant/
 | Python 函数 | LangChain Tool / LangGraph node |
 | `if/else` | LangGraph conditional edge |
 | JSON 文件 | 简单持久化 / checkpoint 前置理解 |
+| `storage.py` | Repository / SQLite / PostgreSQL |
 | 本地 Markdown | RAG 知识库 |
 | CLI 菜单 | FastAPI 路由 |
 | 学习建议函数 | LLM Agent |

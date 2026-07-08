@@ -30,3 +30,8 @@ class NoteCreate(BaseModel):
 class NotesResponse(BaseModel):
     notes: list[str] = Field(default_factory=list)
     note_count: int = 0
+
+
+class SuggestionResponse(BaseModel):
+    python_level: str = ""
+    suggestion: str

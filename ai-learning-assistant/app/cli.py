@@ -1,5 +1,6 @@
 from app.storage import load_student, save_student
 from app.student_state import replace_student, student
+from app.suggestions import build_suggestion
 
 
 PROJECT_NAME = "AI Learning Assistant"
@@ -44,13 +45,7 @@ def show_profile() -> None:
 def suggest_next_step() -> None:
     print()
     print("=== 今日学习建议 ===")
-
-    if student["python_level"] == "beginner":
-        print("建议：今天学习变量、函数、字典。")
-    elif student["python_level"] == "basic":
-        print("建议：今天学习类、文件读写、异常处理。")
-    else:
-        print("建议：今天开始学习 LangChain 的 agent。")
+    print(build_suggestion(student["python_level"]))
 
 
 def run_cli() -> None:

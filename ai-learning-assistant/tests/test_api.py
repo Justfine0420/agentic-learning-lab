@@ -190,3 +190,49 @@ def test_post_notes_rejects_empty_note(tmp_path: Path) -> None:
     )
 
     assert response.status_code == 422
+
+
+def test_get_suggestion_returns_rule_based_suggestion(tmp_path: Path) -> None:
+    use_tmp_storage(tmp_path)
+    storage.save_student(
+        {
+            "name": "Frank",
+            "goal": "Review conditionals",
+            "python_level": "beginner",
+            "notes": ["Need API suggestion"],
+        }
+    )
+
+    response = client.get("/suggestion")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "python_level": "beginner",
+        "suggestion": "建议：今天学习变量、函数、字典。",
+    }
+    assert storage.load_student() == {
+        "name": "Frank",
+        "goal": "Review conditionals",
+        "python_level": "beginner",
+        "notes": ["Need API suggestion"],
+    }
+
+
+def test_get_suggestion_uses_fallback_for_missing_level(tmp_path: Path) -> None:
+    use_tmp_storage(tmp_path)
+    storage.save_student(
+        {
+            "name": "Grace",
+            "goal": "",
+            "python_level": "",
+            "notes": [],
+        }
+    )
+
+    response = client.get("/suggestion")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "python_level": "",
+        "suggestion": "建议：今天开始学习 LangChain 的 agent。",
+    }
