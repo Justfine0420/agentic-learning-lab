@@ -90,6 +90,7 @@ ai-learning-assistant/
 | 4 | 4.2 | 配置 LLM Provider 和 API Key | `docs/tutorial/lessons/stage-4/04-02-configure-api-key.md` | 已生成 | 已验证 |
 | 4 | 4.3 | 第一次模型调用 | `docs/tutorial/lessons/stage-4/04-03-first-llm-call.md` | 已生成 | 已验证 |
 | 4 | 4.4 | 结构化输出 | `docs/tutorial/lessons/stage-4/04-04-structured-output.md` | 已生成 | 已验证 |
+| 4 | 4.5 | AI 建议 API 与降级边界 | `docs/tutorial/lessons/stage-4/04-05-ai-suggestion-api.md` | 已生成 | 已验证 |
 
 ## 3. 补充学习资料
 
@@ -110,9 +111,9 @@ ai-learning-assistant/
 ## 5. 当前学习位置
 
 - 当前阶段：阶段 4 进行中
-- 当前课程：第 4.4 课已生成并验证
+- 当前课程：第 4.5 课已生成并验证
 - 开源仓库名：`agentic-learning-lab`
 - 真实代码项目：`ai-learning-assistant/` 已创建
 - 阶段复盘：`docs/tutorial/reviews/stage-0-review.md`、`docs/tutorial/reviews/stage-1-review.md`、`docs/tutorial/reviews/stage-2-review.md`、`docs/tutorial/reviews/stage-3-review.md`
 - 补充资料：`ai-learning-assistant/materials/stage-2.md`、`ai-learning-assistant/materials/stage-3.md`
-- 下一步建议：继续阶段 4，第 4.5 课 AI 建议 API 与降级边界
+- 下一步建议：生成阶段 4 复盘

@@ -1,9 +1,12 @@
 from pathlib import Path
 
+import httpx
 from fastapi.testclient import TestClient
 
 from app import storage
+from app import api
 from app.api import app
+from app.models import StructuredLearningSuggestion
 
 
 client = TestClient(app)
@@ -299,4 +302,139 @@ def test_get_suggestion_uses_fallback_for_missing_level(tmp_path: Path) -> None:
     assert response.json() == {
         "python_level": "",
         "suggestion": "建议：今天开始学习 LangChain 的 agent。",
+    }
+
+
+def test_post_ai_suggestion_returns_structured_result(tmp_path: Path, monkeypatch) -> None:
+    use_tmp_storage(tmp_path)
+    student = {
+        "name": "Hank",
+        "goal": "Use AI suggestions",
+        "python_level": "basic",
+        "notes": ["Structured output should be validated"],
+    }
+    storage.save_student(student)
+    suggestion = StructuredLearningSuggestion(
+        summary="今天先复习 FastAPI 和 Pydantic。",
+        suggestions=[
+            {
+                "title": "复习接口边界",
+                "description": "区分规则建议接口和 AI 建议接口。",
+                "estimated_minutes": 20,
+            }
+        ],
+        next_checkpoint="能说明 provider 不可用时为什么返回 503。",
+    )
+
+    def fake_generate_structured_learning_suggestion(loaded_student):
+        assert loaded_student == student
+        return suggestion
+
+    monkeypatch.setattr(
+        api,
+        "generate_structured_learning_suggestion",
+        fake_generate_structured_learning_suggestion,
+    )
+
+    response = client.post("/ai/suggestion")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "source": "ai",
+        "suggestion": {
+            "summary": "今天先复习 FastAPI 和 Pydantic。",
+            "suggestions": [
+                {
+                    "title": "复习接口边界",
+                    "description": "区分规则建议接口和 AI 建议接口。",
+                    "estimated_minutes": 20,
+                }
+            ],
+            "next_checkpoint": "能说明 provider 不可用时为什么返回 503。",
+        },
+    }
+    assert storage.load_student() == student
+
+
+def test_post_ai_suggestion_returns_503_when_provider_config_missing(tmp_path: Path, monkeypatch) -> None:
+    use_tmp_storage(tmp_path)
+    storage.save_student(
+        {
+            "name": "Ivy",
+            "goal": "Use AI suggestions",
+            "python_level": "basic",
+            "notes": [],
+        }
+    )
+
+    def fake_generate_structured_learning_suggestion(_student):
+        raise RuntimeError("Missing required environment variable: DEEPSEEK_API_KEY.")
+
+    monkeypatch.setattr(
+        api,
+        "generate_structured_learning_suggestion",
+        fake_generate_structured_learning_suggestion,
+    )
+
+    response = client.post("/ai/suggestion")
+
+    assert response.status_code == 503
+    assert response.json() == {
+        "detail": "Missing required environment variable: DEEPSEEK_API_KEY.",
+    }
+
+
+def test_post_ai_suggestion_returns_503_when_model_output_is_invalid(tmp_path: Path, monkeypatch) -> None:
+    use_tmp_storage(tmp_path)
+    storage.save_student(
+        {
+            "name": "Jill",
+            "goal": "Use AI suggestions",
+            "python_level": "basic",
+            "notes": [],
+        }
+    )
+
+    def fake_generate_structured_learning_suggestion(_student):
+        raise ValueError("LLM response was not a valid structured learning suggestion.")
+
+    monkeypatch.setattr(
+        api,
+        "generate_structured_learning_suggestion",
+        fake_generate_structured_learning_suggestion,
+    )
+
+    response = client.post("/ai/suggestion")
+
+    assert response.status_code == 503
+    assert response.json() == {
+        "detail": "LLM response was not a valid structured learning suggestion.",
+    }
+
+
+def test_post_ai_suggestion_returns_503_when_provider_request_fails(tmp_path: Path, monkeypatch) -> None:
+    use_tmp_storage(tmp_path)
+    storage.save_student(
+        {
+            "name": "Kim",
+            "goal": "Use AI suggestions",
+            "python_level": "basic",
+            "notes": [],
+        }
+    )
+
+    def fake_generate_structured_learning_suggestion(_student):
+        raise httpx.RequestError("network failed")
+
+    monkeypatch.setattr(
+        api,
+        "generate_structured_learning_suggestion",
+        fake_generate_structured_learning_suggestion,
+    )
+
+    response = client.post("/ai/suggestion")
+
+    assert response.status_code == 503
+    assert response.json() == {
+        "detail": "AI provider request failed.",
     }

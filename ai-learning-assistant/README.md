@@ -2,7 +2,7 @@
 
 这是 Agentic Learning Lab 的贯穿教学项目。
 
-当前阶段：阶段 4 进行中，已完成第 4.4 课结构化输出。
+当前阶段：阶段 4 进行中，已完成第 4.5 课 AI 建议 API 与降级边界。
 
 ## 当前能力
 
@@ -50,6 +50,9 @@
 - 已能请求模型返回 JSON 对象，并用 Pydantic 校验为结构化建议。
 - 已新增结构化模型调用 demo：`app/structured_llm_demo.py`，可在 provider 配置可用时手动打印结构化 JSON。
 - 已为结构化输出新增成功路径和失败路径测试。
+- 已新增 AI 建议接口：`POST /ai/suggestion`。
+- `POST /ai/suggestion` 返回结构化 AI 建议，provider 不可用或模型输出无效时返回 `503`。
+- `GET /suggestion` 仍保留为稳定规则建议接口。
 
 ## 推荐运行方式
 
@@ -133,6 +136,14 @@ POST http://127.0.0.1:8000/notes
 ```text
 GET http://127.0.0.1:8000/suggestion
 ```
+
+AI 学习建议 API：
+
+```text
+POST http://127.0.0.1:8000/ai/suggestion
+```
+
+如果 provider 不可用，AI 建议接口会返回 `503`。规则建议接口仍然可用。
 
 LLM Provider 配置：
 

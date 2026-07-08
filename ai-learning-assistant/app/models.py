@@ -56,3 +56,8 @@ class StructuredLearningSuggestion(BaseModel):
         description="1 到 3 条可执行学习建议",
     )
     next_checkpoint: str = Field(min_length=1, description="下一次学习前要确认的检查点")
+
+
+class AISuggestionResponse(BaseModel):
+    source: str = "ai"
+    suggestion: StructuredLearningSuggestion

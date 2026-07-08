@@ -1,6 +1,9 @@
+import httpx
 from fastapi import FastAPI, HTTPException
 
+from app.llm import generate_structured_learning_suggestion
 from app.models import (
+    AISuggestionResponse,
     NoteCreate,
     NoteResponse,
     NotesResponse,
@@ -104,3 +107,19 @@ def get_suggestion() -> SuggestionResponse:
         python_level=student["python_level"],
         suggestion=build_suggestion(student["python_level"]),
     )
+
+
+@app.post("/ai/suggestion", response_model=AISuggestionResponse)
+def generate_ai_suggestion() -> AISuggestionResponse:
+    student = load_student()
+
+    try:
+        suggestion = generate_structured_learning_suggestion(student)
+    except RuntimeError as error:
+        raise HTTPException(status_code=503, detail=str(error)) from error
+    except httpx.HTTPError as error:
+        raise HTTPException(status_code=503, detail="AI provider request failed.") from error
+    except ValueError as error:
+        raise HTTPException(status_code=503, detail=str(error)) from error
+
+    return AISuggestionResponse(suggestion=suggestion)
