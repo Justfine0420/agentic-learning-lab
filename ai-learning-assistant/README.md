@@ -44,10 +44,11 @@
 - 已为配置读取新增测试：`tests/test_config.py`。
 - 已新增 LLM 调用封装：`app/llm.py`。
 - 已能把学员资料组织成 OpenAI 兼容 `chat/completions` 请求，并解析模型返回的建议文本。
-- 已新增首次真实模型调用入口：`app/llm_demo.py`。
+- 已新增普通文本模型调用 demo：`app/llm_demo.py`，可在 provider 配置可用时手动跑真实模型调用。
 - 已为 LLM 调用封装新增离线测试：`tests/test_llm.py`。
 - 已新增结构化学习建议模型：`LearningSuggestionItem` 和 `StructuredLearningSuggestion`。
 - 已能请求模型返回 JSON 对象，并用 Pydantic 校验为结构化建议。
+- 已新增结构化模型调用 demo：`app/structured_llm_demo.py`，可在 provider 配置可用时手动打印结构化 JSON。
 - 已为结构化输出新增成功路径和失败路径测试。
 
 ## 推荐运行方式
@@ -159,6 +160,12 @@ py -3.13 -m app.llm_demo
 
 当前 `GET /suggestion` 仍返回规则建议；AI 建议调用先封装在 `generate_learning_suggestion()`，后续课程再接入 API。
 
+手动跑普通文本模型调用：
+
+```powershell
+py -3.13 -m app.llm_demo
+```
+
 结构化 AI 建议入口：
 
 ```text
@@ -166,3 +173,9 @@ generate_structured_learning_suggestion()
 ```
 
 它返回 `StructuredLearningSuggestion`，而不是普通字符串。
+
+手动跑结构化模型调用：
+
+```powershell
+py -3.13 -m app.structured_llm_demo
+```

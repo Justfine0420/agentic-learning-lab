@@ -8,6 +8,12 @@
 Student -> messages -> chat/completions -> 普通文本建议
 ```
 
+并且第 4.3 课已经提供了手动真实调用入口：
+
+```powershell
+py -3.13 -m app.llm_demo
+```
+
 但普通文本有一个问题：
 
 ```text
@@ -29,10 +35,11 @@ Student
 - 如何把 Pydantic schema 放进 prompt。
 - 如何请求 provider 返回 JSON 对象。
 - 如何用 `model_validate_json()` 校验模型返回内容。
+- 如何从命令行跑一次真实结构化模型调用。
 - 如何测试结构化输出的成功和失败路径。
 
 本课仍不把 AI 建议接入 `GET /suggestion`。
-当前 API 保持稳定，AI 调用继续先留在 `app/llm.py`。
+当前 API 保持稳定，AI 调用继续先留在 `app/llm.py` 和 demo 入口里。
 
 ## 2. 你会新增什么项目能力
 
@@ -41,7 +48,9 @@ Student
 ```text
 app/models.py
 app/llm.py
+app/structured_llm_demo.py
 tests/test_llm.py
+tests/test_structured_llm_demo.py
 ```
 
 新增结构化结果模型：
@@ -73,12 +82,21 @@ result.suggestions[0].estimated_minutes
 result.next_checkpoint
 ```
 
+新增手动真实调用命令：
+
+```powershell
+py -3.13 -m app.structured_llm_demo
+```
+
+它会读取 `data/student.json`，调用结构化模型入口，并把结构化建议打印成 JSON。
+
 ## 3. 前置知识
 
 开始前，你应该已经理解：
 
 - Pydantic `BaseModel` 可以定义字段和校验规则。
 - 第 4.3 课的 `call_chat_completion()` 会返回模型文本。
+- 第 4.3 课的 `llm_demo.py` 已经可以跑一次真实普通文本模型调用。
 - JSON 是程序之间交换结构化数据的常见格式。
 - 模型输出不可信，必须验证。
 - 单元测试不能依赖真实 provider。
@@ -414,12 +432,50 @@ StructuredLearningSuggestion
 
 不是普通字符串。
 
-### 第七步：补充测试
+### 第七步：新增结构化手动调用入口
+
+新增文件：
+
+```text
+ai-learning-assistant/app/structured_llm_demo.py
+```
+
+内容是：
+
+```python
+from app.llm import generate_structured_learning_suggestion
+from app.storage import load_student
+
+
+def main() -> None:
+    student = load_student()
+    suggestion = generate_structured_learning_suggestion(student)
+    print(suggestion.model_dump_json(indent=2))
+
+
+if __name__ == "__main__":
+    main()
+```
+
+它和第 4.3 课的 `llm_demo.py` 对应：
+
+| 文件 | 输出 |
+| --- | --- |
+| `app/llm_demo.py` | 普通文本建议 |
+| `app/structured_llm_demo.py` | 结构化 JSON 建议 |
+
+这个入口会真的调用 provider。
+所以它要求你的 `.env` 和 provider 服务可用。
+
+自动测试不会直接访问真实 provider。
+
+### 第八步：补充测试
 
 打开：
 
 ```text
 ai-learning-assistant/tests/test_llm.py
+ai-learning-assistant/tests/test_structured_llm_demo.py
 ```
 
 本课新增测试覆盖：
@@ -430,6 +486,7 @@ ai-learning-assistant/tests/test_llm.py
 - 普通文本会被拒绝。
 - schema 不匹配会被拒绝。
 - `generate_structured_learning_suggestion()` 会使用 JSON mode 和 schema。
+- `structured_llm_demo.main()` 会加载学员资料、调用结构化入口并打印 JSON。
 
 重点不是测试模型是否聪明。
 重点是测试我们的程序边界：
@@ -461,7 +518,7 @@ py -3.13 -m pytest
 语法检查：
 
 ```powershell
-py -3.13 -m py_compile app/main.py app/cli.py app/student_state.py app/storage.py app/models.py app/api.py app/suggestions.py app/config.py app/llm.py app/__init__.py tests/test_storage.py tests/test_api.py tests/test_suggestions.py tests/test_config.py tests/test_llm.py
+py -3.13 -m py_compile app/main.py app/cli.py app/student_state.py app/storage.py app/models.py app/api.py app/suggestions.py app/config.py app/llm.py app/llm_demo.py app/structured_llm_demo.py app/__init__.py tests/test_storage.py tests/test_api.py tests/test_suggestions.py tests/test_config.py tests/test_llm.py tests/test_llm_demo.py tests/test_structured_llm_demo.py
 ```
 
 如果你已经配置好 provider，可以手动试结构化调用。
@@ -475,11 +532,12 @@ OLLAMA_MODEL=你的本地模型名
 手动调用：
 
 ```powershell
-py -3.13 -c "from app.llm import generate_structured_learning_suggestion; student={'name':'Alice','goal':'学习 LangChain','python_level':'basic','notes':['Pydantic 可以校验模型输出']}; result=generate_structured_learning_suggestion(student); print(result.model_dump())"
+py -3.13 -m app.structured_llm_demo
 ```
 
 这条真实调用不是自动验收要求。
 自动测试仍然使用 fake client。
+但如果你在第 4.3 课已经跑通 `py -3.13 -m app.llm_demo`，本课就应该继续跑一次结构化 demo，确认真实 provider 能返回可校验 JSON。
 
 ## 7. 常见错误
 
@@ -518,6 +576,19 @@ StructuredLearningSuggestion.model_json_schema()
 
 本课只完成结构化调用层。
 
+### 忘记结构化 demo 也会真实调用 provider
+
+下面这条命令不是离线测试：
+
+```powershell
+py -3.13 -m app.structured_llm_demo
+```
+
+它会读取 `.env`，再调用真实 provider。
+
+如果 `.env` 没配、DeepSeek / 火山密钥无效，或者 Ollama 没启动，这条命令会失败。
+这是正常的环境问题，不是单元测试失败。
+
 ### 忽略失败测试
 
 结构化输出最重要的测试不是“成功返回”。
@@ -542,6 +613,8 @@ StructuredLearningSuggestion.model_json_schema()
 
 练习 5：解释为什么 `response_format={"type": "json_object"}` 不能替代 Pydantic 校验。
 
+练习 6：在 provider 可用时运行 `py -3.13 -m app.structured_llm_demo`，观察输出 JSON 是否包含 `summary`、`suggestions` 和 `next_checkpoint`。
+
 ## 9. 验收标准
 
 完成本课后，你应该能做到：
@@ -553,6 +626,7 @@ StructuredLearningSuggestion.model_json_schema()
 - 看懂 `parse_structured_learning_suggestion()` 为什么会拒绝无效输出。
 - 运行 `py -3.13 -m pytest` 通过。
 - 运行 `py_compile` 通过。
+- 在 provider 配置可用时，能运行 `py -3.13 -m app.structured_llm_demo` 打印结构化 JSON。
 - 知道当前 `GET /suggestion` 仍未接入 AI。
 
 ## 10. 和后续 LangChain / LangGraph / Deep Agents 的关系
@@ -580,6 +654,8 @@ Deep Agents 会写计划和总结文件。
 
 新增文件：
 
+- `ai-learning-assistant/app/structured_llm_demo.py`
+- `ai-learning-assistant/tests/test_structured_llm_demo.py`
 - `docs/tutorial/lessons/stage-4/04-04-structured-output.md`
 
 修改文件：
@@ -600,6 +676,7 @@ Deep Agents 会写计划和总结文件。
 - `call_chat_completion()` 新增可选 `response_format` 参数。
 - 新增 `parse_structured_learning_suggestion()`。
 - 新增 `generate_structured_learning_suggestion()`。
+- 新增 `structured_llm_demo.main()`，用于从命令行发起真实结构化模型调用。
 - 新增结构化输出相关测试。
 
 新增依赖：
@@ -616,7 +693,13 @@ Deep Agents 会写计划和总结文件。
 
 ```powershell
 py -3.13 -m pytest
-py -3.13 -m py_compile app/main.py app/cli.py app/student_state.py app/storage.py app/models.py app/api.py app/suggestions.py app/config.py app/llm.py app/__init__.py tests/test_storage.py tests/test_api.py tests/test_suggestions.py tests/test_config.py tests/test_llm.py
+py -3.13 -m py_compile app/main.py app/cli.py app/student_state.py app/storage.py app/models.py app/api.py app/suggestions.py app/config.py app/llm.py app/llm_demo.py app/structured_llm_demo.py app/__init__.py tests/test_storage.py tests/test_api.py tests/test_suggestions.py tests/test_config.py tests/test_llm.py tests/test_llm_demo.py tests/test_structured_llm_demo.py
+```
+
+可选手动验收命令：
+
+```powershell
+py -3.13 -m app.structured_llm_demo
 ```
 
 下一步：

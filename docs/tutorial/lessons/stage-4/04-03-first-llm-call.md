@@ -661,6 +661,11 @@ Deep Agents 会做更长任务。
 ```powershell
 py -3.13 -m pytest
 py -3.13 -m py_compile app/main.py app/cli.py app/student_state.py app/storage.py app/models.py app/api.py app/suggestions.py app/config.py app/llm.py app/llm_demo.py app/__init__.py tests/test_storage.py tests/test_api.py tests/test_suggestions.py tests/test_config.py tests/test_llm.py tests/test_llm_demo.py
+```
+
+可选手动验收命令：
+
+```powershell
 py -3.13 -m app.llm_demo
 ```
 

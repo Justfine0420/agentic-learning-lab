@@ -127,6 +127,7 @@ ai-learning-assistant/
 │   ├── main.py
 │   ├── models.py
 │   ├── suggestions.py
+│   ├── structured_llm_demo.py
 │   ├── storage.py
 │   └── student_state.py
 ├── data/
@@ -143,6 +144,7 @@ ai-learning-assistant/
 │   ├── test_config.py
 │   ├── test_llm.py
 │   ├── test_llm_demo.py
+│   ├── test_structured_llm_demo.py
 │   ├── test_suggestions.py
 │   └── test_storage.py
 ├── requirements.txt
