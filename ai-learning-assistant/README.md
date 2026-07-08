@@ -35,6 +35,7 @@
 - 已新增单条学习笔记响应模型：`NoteResponse`。
 - 已新增单条学习笔记查询接口：`GET /notes/{note_index}`。
 - 已为学习笔记 API 增加基础业务错误处理：笔记不存在返回 `404`，空白笔记返回 `400`。
+- 已明确当前阶段的存储边界：继续使用 `data/student.json`，后续再按需要迁移到 SQLite / PostgreSQL。
 
 ## 推荐运行方式
 
