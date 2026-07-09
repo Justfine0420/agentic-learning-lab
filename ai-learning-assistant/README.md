@@ -2,7 +2,7 @@
 
 这是 Agentic Learning Lab 的贯穿教学项目。
 
-当前阶段：阶段 5 进行中，已完成第 5.2 课创建第一个 LangChain Agent。
+当前阶段：阶段 5 进行中，已完成第 5.3 课 Python 函数变成 LangChain 工具。
 
 ## 当前能力
 
@@ -58,7 +58,7 @@
 - 已进入 Stage 5：先理解 LangChain 的 `create_agent`、agent harness、tools，以及 LangChain / LangGraph / Deep Agents 的边界。本课不新增 LangChain 依赖。
 - 已新增最小 LangChain Agent 模块：`app/langchain_agent.py`。
 - 已新增 LangChain Agent 手动 demo：`app/langchain_agent_demo.py`。
-- 当前 LangChain Agent 只使用 model、messages 和 system prompt，暂时没有 tools。
+- 当前 LangChain Agent 已新增第一个只读工具：`read_current_student_profile`，可读取本地 JSON 学员档案。
 
 ## 推荐运行方式
 
@@ -92,6 +92,7 @@ tests/      测试代码
 阶段 4.2 引入 `python-dotenv`，用于从本地 `.env` 读取模型服务配置。
 阶段 5.1 只做 LangChain 定位和阶段标识同步，暂不新增依赖。
 阶段 5.2 引入 `langchain==1.3.12` 和 `langchain-openai==1.3.4`，用于创建第一个最小 LangChain Agent。
+阶段 5.3 不新增依赖，继续使用第 5.2 课的 LangChain 依赖，把 Python 函数包装成第一个只读 tool。
 
 后续课程会逐步把依赖写入 `requirements.txt`。
 
@@ -214,7 +215,13 @@ LangChain Agent 入口：
 app/langchain_agent.py
 ```
 
-当前 Agent 仍然没有工具，只能基于输入消息回答。
+当前 Agent 已注册第一个只读工具：
+
+```text
+read_current_student_profile
+```
+
+它会读取 `data/student.json` 中的学员档案，并返回姓名、学习目标、Python 水平和学习笔记。
 
 手动跑 LangChain Agent：
 

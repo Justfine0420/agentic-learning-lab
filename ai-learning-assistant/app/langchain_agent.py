@@ -2,21 +2,64 @@ from collections.abc import Mapping
 from typing import Any
 
 from langchain.agents import create_agent
+from langchain.tools import tool
 from langchain_openai import ChatOpenAI
 
 from app.config import LLMSettings, get_llm_settings, require_llm_api_key
-from app.llm import build_learning_suggestion_input
 from app.models import Student
+from app.storage import load_student
 
 
 LEARNING_AGENT_SYSTEM_PROMPT = (
     "你是一个 Python 和 AI Agent 学习助教。"
     "你会根据学员档案、学习目标和笔记，给出清晰、可执行的学习建议。"
-    "当前阶段你还没有工具，只能基于输入里的学员资料回答。"
+    "你现在有一个只读工具，可以查询当前保存在本地 JSON 中的学员档案。"
+    "当你需要了解学员姓名、目标、Python 水平或学习笔记时，优先调用工具。"
+    "不要编造本地文件里的内容。"
     "回答必须使用中文。"
 )
 
-DEFAULT_AGENT_QUESTION = "请根据当前学习档案，生成今天的学习建议。"
+DEFAULT_AGENT_QUESTION = "请先查询当前学习档案，再生成今天的学习建议。"
+
+
+def format_student_profile_for_tool(student: Student, *, include_notes: bool = True) -> str:
+    name = student["name"] or "未填写"
+    goal = student["goal"] or "未填写"
+    python_level = student["python_level"] or "未填写"
+
+    lines = [
+        f"学员姓名：{name}",
+        f"学习目标：{goal}",
+        f"Python 水平：{python_level}",
+    ]
+
+    if include_notes:
+        lines.append("学习笔记：")
+        if student["notes"]:
+            lines.extend(f"{index}. {note}" for index, note in enumerate(student["notes"], start=1))
+        else:
+            lines.append("暂无笔记")
+
+    return "\n".join(lines)
+
+
+def read_current_student_profile(include_notes: bool = True) -> str:
+    """Read the current learner profile from local JSON storage."""
+    student = load_student()
+    return format_student_profile_for_tool(student, include_notes=include_notes)
+
+
+read_current_student_profile_tool = tool(
+    "read_current_student_profile",
+    description=(
+        "读取当前保存在本地 JSON 文件中的学员档案，包括姓名、学习目标、Python 水平，"
+        "并可按需包含学习笔记。这个工具只读，不会修改任何文件。"
+    ),
+)(read_current_student_profile)
+
+
+def build_learning_agent_tools() -> list[Any]:
+    return [read_current_student_profile_tool]
 
 
 def build_langchain_chat_model(settings: LLMSettings | None = None) -> ChatOpenAI:
@@ -36,27 +79,22 @@ def create_learning_agent(
     *,
     settings: LLMSettings | None = None,
     model: Any | None = None,
+    tools: list[Any] | None = None,
 ) -> Any:
     current_model = model or build_langchain_chat_model(settings)
+    current_tools = tools if tools is not None else build_learning_agent_tools()
 
     return create_agent(
         model=current_model,
-        tools=[],
+        tools=current_tools,
         system_prompt=LEARNING_AGENT_SYSTEM_PROMPT,
     )
 
 
 def build_learning_agent_messages(
-    student: Student,
     question: str = DEFAULT_AGENT_QUESTION,
 ) -> list[dict[str, str]]:
-    content = "\n\n".join(
-        [
-            build_learning_suggestion_input(student),
-            f"用户问题：{question}",
-        ]
-    )
-    return [{"role": "user", "content": content}]
+    return [{"role": "user", "content": f"用户问题：{question}"}]
 
 
 def content_to_text(content: Any) -> str:
@@ -103,12 +141,11 @@ def extract_agent_text(agent_result: Mapping[str, Any]) -> str:
 
 
 def run_learning_agent(
-    student: Student,
     question: str = DEFAULT_AGENT_QUESTION,
     *,
     settings: LLMSettings | None = None,
     agent: Any | None = None,
 ) -> str:
     current_agent = agent or create_learning_agent(settings=settings)
-    result = current_agent.invoke({"messages": build_learning_agent_messages(student, question)})
+    result = current_agent.invoke({"messages": build_learning_agent_messages(question)})
     return extract_agent_text(result)

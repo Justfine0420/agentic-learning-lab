@@ -18,6 +18,7 @@
 - [阶段 4 复盘](./reviews/stage-4-review.md)
 - [第 5.1 课：LangChain 定位](./lessons/stage-5/05-01-langchain-positioning.md)
 - [第 5.2 课：创建第一个 LangChain Agent](./lessons/stage-5/05-02-first-langchain-agent.md)
+- [第 5.3 课：Python 函数变成 LangChain 工具](./lessons/stage-5/05-03-python-functions-as-tools.md)
 - [阶段 2 补充学习资料](../../ai-learning-assistant/materials/stage-2.md)
 - [阶段 3 补充学习资料](../../ai-learning-assistant/materials/stage-3.md)
 - [阶段 4 补充学习资料](../../ai-learning-assistant/materials/stage-4.md)
@@ -99,6 +100,7 @@ ai-learning-assistant/
 | 4 | 4.5 | AI 建议 API、CLI 入口与降级边界 | `docs/tutorial/lessons/stage-4/04-05-ai-suggestion-api.md` | 已生成 | 已验证 |
 | 5 | 5.1 | LangChain 定位 | `docs/tutorial/lessons/stage-5/05-01-langchain-positioning.md` | 已生成 | 已验证 |
 | 5 | 5.2 | 创建第一个 LangChain Agent | `docs/tutorial/lessons/stage-5/05-02-first-langchain-agent.md` | 已生成 | 已验证 |
+| 5 | 5.3 | Python 函数变成 LangChain 工具 | `docs/tutorial/lessons/stage-5/05-03-python-functions-as-tools.md` | 已生成 | 已验证 |
 
 ## 3. 补充学习资料
 
@@ -121,9 +123,9 @@ ai-learning-assistant/
 ## 5. 当前学习位置
 
 - 当前阶段：阶段 5 进行中
-- 当前课程：第 5.2 课已生成并验证
+- 当前课程：第 5.3 课已生成并验证
 - 开源仓库名：`agentic-learning-lab`
 - 真实代码项目：`ai-learning-assistant/` 已创建
 - 阶段复盘：`docs/tutorial/reviews/stage-0-review.md`、`docs/tutorial/reviews/stage-1-review.md`、`docs/tutorial/reviews/stage-2-review.md`、`docs/tutorial/reviews/stage-3-review.md`、`docs/tutorial/reviews/stage-4-review.md`
 - 补充资料：`ai-learning-assistant/materials/stage-2.md`、`ai-learning-assistant/materials/stage-3.md`、`ai-learning-assistant/materials/stage-4.md`
-- 下一步建议：生成第 5.3 课，把 Python 函数变成工具
+- 下一步建议：生成第 5.4 课，多工具调用
