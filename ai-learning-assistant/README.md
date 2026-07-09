@@ -2,7 +2,7 @@
 
 这是 Agentic Learning Lab 的贯穿教学项目。
 
-当前阶段：阶段 5 进行中，已完成第 5.1 课 LangChain 定位。
+当前阶段：阶段 5 进行中，已完成第 5.2 课创建第一个 LangChain Agent。
 
 ## 当前能力
 
@@ -56,6 +56,9 @@
 - CLI 已新增 `4. 生成 AI 学习建议`，复用结构化 AI 建议能力；`3` 保留为离线规则建议。
 - `GET /suggestion` 仍保留为稳定规则建议接口。
 - 已进入 Stage 5：先理解 LangChain 的 `create_agent`、agent harness、tools，以及 LangChain / LangGraph / Deep Agents 的边界。本课不新增 LangChain 依赖。
+- 已新增最小 LangChain Agent 模块：`app/langchain_agent.py`。
+- 已新增 LangChain Agent 手动 demo：`app/langchain_agent_demo.py`。
+- 当前 LangChain Agent 只使用 model、messages 和 system prompt，暂时没有 tools。
 
 ## 推荐运行方式
 
@@ -88,6 +91,7 @@ tests/      测试代码
 同时引入 `fastapi-cli`、`uvicorn[standard]` 和 `httpx`，用于开发服务器和 API 测试。
 阶段 4.2 引入 `python-dotenv`，用于从本地 `.env` 读取模型服务配置。
 阶段 5.1 只做 LangChain 定位和阶段标识同步，暂不新增依赖。
+阶段 5.2 引入 `langchain==1.3.12` 和 `langchain-openai==1.3.4`，用于创建第一个最小 LangChain Agent。
 
 后续课程会逐步把依赖写入 `requirements.txt`。
 
@@ -203,3 +207,19 @@ generate_structured_learning_suggestion()
 ```powershell
 py -3.13 -m app.structured_llm_demo
 ```
+
+LangChain Agent 入口：
+
+```text
+app/langchain_agent.py
+```
+
+当前 Agent 仍然没有工具，只能基于输入消息回答。
+
+手动跑 LangChain Agent：
+
+```powershell
+py -3.13 -m app.langchain_agent_demo
+```
+
+这条命令需要 `.env` 中的 provider 配置可用，或者本地 Ollama 已启动。

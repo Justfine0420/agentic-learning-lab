@@ -108,7 +108,8 @@ docs/tutorial/
 │       ├── 04-04-structured-output.md
 │       └── 04-05-ai-suggestion-api.md
 │   └── stage-5/
-│       └── 05-01-langchain-positioning.md
+│       ├── 05-01-langchain-positioning.md
+│       └── 05-02-first-langchain-agent.md
 └── reviews/
     ├── stage-0-review.md
     ├── stage-1-review.md
@@ -126,6 +127,8 @@ ai-learning-assistant/
 │   ├── api.py
 │   ├── cli.py
 │   ├── config.py
+│   ├── langchain_agent.py
+│   ├── langchain_agent_demo.py
 │   ├── llm.py
 │   ├── llm_demo.py
 │   ├── main.py
@@ -148,6 +151,8 @@ ai-learning-assistant/
 │   ├── test_api.py
 │   ├── test_cli.py
 │   ├── test_config.py
+│   ├── test_langchain_agent.py
+│   ├── test_langchain_agent_demo.py
 │   ├── test_llm.py
 │   ├── test_llm_demo.py
 │   ├── test_structured_llm_demo.py
@@ -197,6 +202,7 @@ docs/tutorial/reviews/
 - [阶段 3 复盘](docs/tutorial/reviews/stage-3-review.md)
 - [阶段 4 复盘](docs/tutorial/reviews/stage-4-review.md)
 - [第 5.1 课：LangChain 定位](docs/tutorial/lessons/stage-5/05-01-langchain-positioning.md)
+- [第 5.2 课：创建第一个 LangChain Agent](docs/tutorial/lessons/stage-5/05-02-first-langchain-agent.md)
 - [阶段 2 补充学习资料](ai-learning-assistant/materials/stage-2.md)
 - [阶段 3 补充学习资料](ai-learning-assistant/materials/stage-3.md)
 - [阶段 4 补充学习资料](ai-learning-assistant/materials/stage-4.md)
@@ -224,11 +230,11 @@ docs/tutorial/reviews/
 - 仓库名：`agentic-learning-lab`
 - 贯穿项目：`AI 学习助教`
 - 真实代码项目：`ai-learning-assistant/` 已创建
-- 教程正文：阶段 0、阶段 1、阶段 2、阶段 3、阶段 4 和第 5.1 课已完成
+- 教程正文：阶段 0、阶段 1、阶段 2、阶段 3、阶段 4 和第 5.1、5.2 课已完成
 - 当前阶段：阶段 5 进行中
-- 当前课程：第 5.1 课已生成并验证
+- 当前课程：第 5.2 课已生成并验证
 
-下一步建议：生成第 5.2 课，创建第一个 LangChain Agent。
+下一步建议：生成第 5.3 课，把 Python 函数变成工具。
 
 ## 9. 开源治理说明
 
