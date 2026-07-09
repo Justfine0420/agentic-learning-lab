@@ -101,12 +101,14 @@ docs/tutorial/
 │       ├── 03-05-suggestion-api.md
 │       ├── 03-06-api-error-handling.md
 │       └── 03-07-storage-boundary-database-preview.md
-│   └── stage-4/
+│   ├── stage-4/
 │       ├── 04-01-llm-basic-concepts.md
 │       ├── 04-02-configure-api-key.md
 │       ├── 04-03-first-llm-call.md
 │       ├── 04-04-structured-output.md
 │       └── 04-05-ai-suggestion-api.md
+│   └── stage-5/
+│       └── 05-01-langchain-positioning.md
 └── reviews/
     ├── stage-0-review.md
     ├── stage-1-review.md
@@ -194,6 +196,7 @@ docs/tutorial/reviews/
 - [阶段 2 复盘](docs/tutorial/reviews/stage-2-review.md)
 - [阶段 3 复盘](docs/tutorial/reviews/stage-3-review.md)
 - [阶段 4 复盘](docs/tutorial/reviews/stage-4-review.md)
+- [第 5.1 课：LangChain 定位](docs/tutorial/lessons/stage-5/05-01-langchain-positioning.md)
 - [阶段 2 补充学习资料](ai-learning-assistant/materials/stage-2.md)
 - [阶段 3 补充学习资料](ai-learning-assistant/materials/stage-3.md)
 - [阶段 4 补充学习资料](ai-learning-assistant/materials/stage-4.md)
@@ -221,11 +224,11 @@ docs/tutorial/reviews/
 - 仓库名：`agentic-learning-lab`
 - 贯穿项目：`AI 学习助教`
 - 真实代码项目：`ai-learning-assistant/` 已创建
-- 教程正文：阶段 0、阶段 1、阶段 2、阶段 3 和阶段 4 已完成
-- 当前阶段：阶段 4 已复盘
-- 当前课程：阶段 4 复盘已生成并验证
+- 教程正文：阶段 0、阶段 1、阶段 2、阶段 3、阶段 4 和第 5.1 课已完成
+- 当前阶段：阶段 5 进行中
+- 当前课程：第 5.1 课已生成并验证
 
-下一步建议：开始阶段 5，进入 LangChain。
+下一步建议：生成第 5.2 课，创建第一个 LangChain Agent。
 
 ## 9. 开源治理说明
 

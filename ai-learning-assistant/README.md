@@ -2,7 +2,7 @@
 
 这是 Agentic Learning Lab 的贯穿教学项目。
 
-当前阶段：阶段 4 已复盘，已完成 LLM 基础、结构化输出与 AI 建议入口。
+当前阶段：阶段 5 进行中，已完成第 5.1 课 LangChain 定位。
 
 ## 当前能力
 
@@ -38,7 +38,7 @@
 - 已明确当前阶段的存储边界：继续使用 `data/student.json`，后续再按需要迁移到 SQLite / PostgreSQL。
 - 已补充 Stage 3 学习资料：`materials/stage-3.md`。
 - 已补充 Stage 4 学习资料：`materials/stage-4.md`。
-- 已进入 Stage 4：理解 LLM 调用中的 `model`、prompt、message、instructions、input 和 token。
+- Stage 4 已完成：理解 LLM 调用中的 `model`、prompt、message、instructions、input 和 token。
 - 已新增 LLM Provider 配置层：`app/config.py`。
 - 已支持通过 `LLM_PROVIDER` 在火山引擎 Ark Agent Plan、DeepSeek 和 Ollama 本地模型之间切换。
 - 已更新 `.env.example`，提供云端模型和本地 Ollama 的配置模板。
@@ -55,6 +55,7 @@
 - `POST /ai/suggestion` 返回结构化 AI 建议，provider 不可用或模型输出无效时返回 `503`。
 - CLI 已新增 `4. 生成 AI 学习建议`，复用结构化 AI 建议能力；`3` 保留为离线规则建议。
 - `GET /suggestion` 仍保留为稳定规则建议接口。
+- 已进入 Stage 5：先理解 LangChain 的 `create_agent`、agent harness、tools，以及 LangChain / LangGraph / Deep Agents 的边界。本课不新增 LangChain 依赖。
 
 ## 推荐运行方式
 
@@ -86,6 +87,7 @@ tests/      测试代码
 阶段 3.1 引入 FastAPI 作为 Web API 框架，并固定到本课已验证版本。
 同时引入 `fastapi-cli`、`uvicorn[standard]` 和 `httpx`，用于开发服务器和 API 测试。
 阶段 4.2 引入 `python-dotenv`，用于从本地 `.env` 读取模型服务配置。
+阶段 5.1 只做 LangChain 定位和阶段标识同步，暂不新增依赖。
 
 后续课程会逐步把依赖写入 `requirements.txt`。
 
