@@ -6,7 +6,7 @@
 
 当前阶段：阶段 5，LangChain。
 
-当前进度：已完成第 5.5 课，项目已经具备多个只读 LangChain 工具，并能生成结构化 Agent 输出。
+当前进度：已完成第 5.6 课，CLI 已经可以调用结构化 LangChain Agent 生成学习建议。
 
 ## 1. 当前功能
 
@@ -16,7 +16,7 @@
 - 添加学习笔记。
 - 查看学员资料和笔记。
 - 生成离线规则学习建议。
-- 在 provider 配置可用时，生成结构化 AI 学习建议。
+- 在 provider 配置可用时，通过 LangChain Agent 生成结构化学习建议。
 
 运行入口：
 
@@ -100,6 +100,7 @@ app/structured_llm_demo.py
 - 工具可以读取 `data/student.json` 中的学员档案、最近学习笔记，并复用离线规则建议。
 - 使用 `ToolStrategy(StructuredLearningSuggestion)` 生成结构化 Agent 结果。
 - 对火山引擎 Ark coding / Agent Plan 路径放宽 LangChain 强制工具选择参数，兼容不支持 `tool_choice="required"` 的 OpenAI-compatible 端点。
+- CLI 第 4 项会调用 `run_structured_learning_agent()`，并把结果格式化为命令行文本。
 - 提供手动 demo 入口验证 Agent 调用。
 
 相关模块：
@@ -152,6 +153,7 @@ OLLAMA_MODEL=qwen2.5:7b
 如果 provider 不可用：
 
 - CLI 的离线规则建议仍然可用。
+- CLI 的 Agent 学习建议会提示不可用，并提示使用离线规则建议。
 - `GET /suggestion` 仍然可用。
 - `POST /ai/suggestion` 会返回 `503`。
 - 需要真实模型的 demo 会提示配置或连接问题。

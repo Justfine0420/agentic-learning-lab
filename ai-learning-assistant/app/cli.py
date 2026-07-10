@@ -1,6 +1,7 @@
 import httpx
+from openai import OpenAIError
 
-from app.llm import generate_structured_learning_suggestion
+from app.langchain_agent import run_structured_learning_agent
 from app.models import StructuredLearningSuggestion
 from app.storage import load_student, save_student
 from app.student_state import replace_student, student
@@ -52,9 +53,9 @@ def show_rule_suggestion() -> None:
     print(build_suggestion(student["python_level"]))
 
 
-def format_ai_suggestion(suggestion: StructuredLearningSuggestion) -> list[str]:
+def format_agent_suggestion(suggestion: StructuredLearningSuggestion) -> list[str]:
     lines = [
-        "=== AI 学习建议 ===",
+        "=== Agent 学习建议 ===",
         f"摘要：{suggestion.summary}",
         "",
         "行动建议：",
@@ -68,25 +69,26 @@ def format_ai_suggestion(suggestion: StructuredLearningSuggestion) -> list[str]:
     return lines
 
 
-def suggest_with_ai() -> None:
+def suggest_with_agent() -> None:
     print()
 
     try:
-        suggestion = generate_structured_learning_suggestion(student)
+        save_student(student)
+        suggestion = run_structured_learning_agent()
     except RuntimeError as error:
-        print("AI 建议暂不可用。")
+        print("Agent 建议暂不可用。")
         print(f"原因：{error}")
         print("你可以先使用选项 3 获取离线规则建议。")
-    except httpx.HTTPError:
-        print("AI 建议暂不可用。")
+    except (httpx.HTTPError, OpenAIError):
+        print("Agent 建议暂不可用。")
         print("原因：AI provider 请求失败。")
         print("你可以先使用选项 3 获取离线规则建议。")
     except ValueError as error:
-        print("AI 建议暂不可用。")
+        print("Agent 建议暂不可用。")
         print(f"原因：{error}")
         print("你可以先使用选项 3 获取离线规则建议。")
     else:
-        for line in format_ai_suggestion(suggestion):
+        for line in format_agent_suggestion(suggestion):
             print(line)
 
 
@@ -105,7 +107,7 @@ def run_cli() -> None:
         print("1. 添加学习笔记")
         print("2. 查看学习信息")
         print("3. 查看离线规则建议")
-        print("4. 生成 AI 学习建议")
+        print("4. 生成 Agent 学习建议")
         print("5. 退出")
 
         choice = input("输入选项：")
@@ -117,7 +119,7 @@ def run_cli() -> None:
         elif choice == "3":
             show_rule_suggestion()
         elif choice == "4":
-            suggest_with_ai()
+            suggest_with_agent()
         elif choice == "5":
             save_student(student)
             print(f"{student['name']}，下次继续学习。")

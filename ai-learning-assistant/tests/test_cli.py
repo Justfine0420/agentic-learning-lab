@@ -1,5 +1,6 @@
 import httpx
 import pytest
+from openai import OpenAIError
 
 from app import cli
 from app.models import StructuredLearningSuggestion
@@ -11,82 +12,107 @@ def reset_cli_student() -> None:
     cli.replace_student(create_default_student())
 
 
-def test_format_ai_suggestion_returns_readable_lines() -> None:
+def test_format_agent_suggestion_returns_readable_lines() -> None:
     suggestion = StructuredLearningSuggestion(
-        summary="今天练习 AI 建议入口。",
+        summary="今天练习 Agent 建议入口。",
         suggestions=[
             {
-                "title": "补 CLI 入口",
-                "description": "让 CLI 复用结构化 AI 建议能力。",
+                "title": "接入 Agent",
+                "description": "让 CLI 复用结构化 LangChain Agent 能力。",
                 "estimated_minutes": 20,
             }
         ],
-        next_checkpoint="能说明 CLI 为什么不需要 HTTP 调本地 API。",
+        next_checkpoint="能说明 CLI 为什么直接调用 Agent 函数。",
     )
 
-    assert cli.format_ai_suggestion(suggestion) == [
-        "=== AI 学习建议 ===",
-        "摘要：今天练习 AI 建议入口。",
+    assert cli.format_agent_suggestion(suggestion) == [
+        "=== Agent 学习建议 ===",
+        "摘要：今天练习 Agent 建议入口。",
         "",
         "行动建议：",
-        "1. 补 CLI 入口（约 20 分钟）",
-        "   让 CLI 复用结构化 AI 建议能力。",
+        "1. 接入 Agent（约 20 分钟）",
+        "   让 CLI 复用结构化 LangChain Agent 能力。",
         "",
-        "下一检查点：能说明 CLI 为什么不需要 HTTP 调本地 API。",
+        "下一检查点：能说明 CLI 为什么直接调用 Agent 函数。",
     ]
 
 
-def test_suggest_with_ai_prints_structured_suggestion(monkeypatch, capsys) -> None:
+def test_suggest_with_agent_prints_structured_suggestion(monkeypatch, capsys) -> None:
     cli.student["name"] = "Alice"
     cli.student["goal"] = "学习 LangChain"
     cli.student["python_level"] = "basic"
-    cli.student["notes"] = ["FastAPI route 可以复用 service 函数"]
+    cli.student["notes"] = ["LangChain Agent 可以调用工具"]
 
     suggestion = StructuredLearningSuggestion(
-        summary="今天把 CLI 和 API 能力对齐。",
+        summary="今天把 CLI 接到 LangChain Agent。",
         suggestions=[
             {
-                "title": "复用 LLM 函数",
-                "description": "CLI 直接调用 generate_structured_learning_suggestion。",
+                "title": "调用结构化 Agent",
+                "description": "CLI 直接调用 run_structured_learning_agent。",
                 "estimated_minutes": 25,
             }
         ],
-        next_checkpoint="能区分 API route 和业务函数。",
+        next_checkpoint="能说明 Agent 如何读取本地学习档案。",
     )
+    saved_students = []
 
-    def fake_generate_structured_learning_suggestion(loaded_student):
-        assert loaded_student == cli.student
+    def fake_save_student(current_student):
+        saved_students.append(dict(current_student))
+
+    def fake_run_structured_learning_agent():
         return suggestion
 
+    monkeypatch.setattr(cli, "save_student", fake_save_student)
     monkeypatch.setattr(
         cli,
-        "generate_structured_learning_suggestion",
-        fake_generate_structured_learning_suggestion,
+        "run_structured_learning_agent",
+        fake_run_structured_learning_agent,
     )
 
-    cli.suggest_with_ai()
+    cli.suggest_with_agent()
 
     output = capsys.readouterr().out
-    assert "=== AI 学习建议 ===" in output
-    assert "摘要：今天把 CLI 和 API 能力对齐。" in output
-    assert "1. 复用 LLM 函数（约 25 分钟）" in output
-    assert "下一检查点：能区分 API route 和业务函数。" in output
+    assert saved_students == [dict(cli.student)]
+    assert "=== Agent 学习建议 ===" in output
+    assert "摘要：今天把 CLI 接到 LangChain Agent。" in output
+    assert "1. 调用结构化 Agent（约 25 分钟）" in output
+    assert "下一检查点：能说明 Agent 如何读取本地学习档案。" in output
 
 
-def test_suggest_with_ai_prints_provider_failure(monkeypatch, capsys) -> None:
-    def fake_generate_structured_learning_suggestion(_student):
+def test_suggest_with_agent_prints_provider_failure(monkeypatch, capsys) -> None:
+    def fake_run_structured_learning_agent():
         raise httpx.ConnectError("connection failed")
 
+    monkeypatch.setattr(cli, "save_student", lambda _student: None)
     monkeypatch.setattr(
         cli,
-        "generate_structured_learning_suggestion",
-        fake_generate_structured_learning_suggestion,
+        "run_structured_learning_agent",
+        fake_run_structured_learning_agent,
     )
 
-    cli.suggest_with_ai()
+    cli.suggest_with_agent()
 
     output = capsys.readouterr().out
-    assert "AI 建议暂不可用。" in output
+    assert "Agent 建议暂不可用。" in output
+    assert "原因：AI provider 请求失败。" in output
+    assert "你可以先使用选项 3 获取离线规则建议。" in output
+
+
+def test_suggest_with_agent_prints_openai_provider_failure(monkeypatch, capsys) -> None:
+    def fake_run_structured_learning_agent():
+        raise OpenAIError("provider failed")
+
+    monkeypatch.setattr(cli, "save_student", lambda _student: None)
+    monkeypatch.setattr(
+        cli,
+        "run_structured_learning_agent",
+        fake_run_structured_learning_agent,
+    )
+
+    cli.suggest_with_agent()
+
+    output = capsys.readouterr().out
+    assert "Agent 建议暂不可用。" in output
     assert "原因：AI provider 请求失败。" in output
     assert "你可以先使用选项 3 获取离线规则建议。" in output
 
@@ -120,32 +146,32 @@ def test_run_cli_routes_choice_3_to_rule_suggestion(monkeypatch, capsys) -> None
     assert saved_students[-1]["name"] == "Alice"
 
 
-def test_run_cli_routes_choice_4_to_ai_suggestion(monkeypatch, capsys) -> None:
+def test_run_cli_routes_choice_4_to_agent_suggestion(monkeypatch, capsys) -> None:
     saved_students = []
-    calls = {"ai_suggestion": 0}
+    calls = {"agent_suggestion": 0}
     loaded_student = {
         "name": "Alice",
         "goal": "学习 LangChain",
         "python_level": "basic",
-        "notes": ["CLI menu should expose AI suggestions"],
+        "notes": ["CLI menu should expose Agent suggestions"],
     }
     choices = iter(["4", "5"])
 
-    def fake_suggest_with_ai() -> None:
-        calls["ai_suggestion"] += 1
-        print("AI suggestion branch called")
+    def fake_suggest_with_agent() -> None:
+        calls["agent_suggestion"] += 1
+        print("Agent suggestion branch called")
 
     monkeypatch.setattr(cli, "load_student", lambda: loaded_student)
     monkeypatch.setattr(cli, "save_student", lambda current_student: saved_students.append(dict(current_student)))
-    monkeypatch.setattr(cli, "suggest_with_ai", fake_suggest_with_ai)
+    monkeypatch.setattr(cli, "suggest_with_agent", fake_suggest_with_agent)
     monkeypatch.setattr("builtins.input", lambda _prompt: next(choices))
 
     cli.run_cli()
 
     output = capsys.readouterr().out
     assert "3. 查看离线规则建议" in output
-    assert "4. 生成 AI 学习建议" in output
+    assert "4. 生成 Agent 学习建议" in output
     assert "5. 退出" in output
-    assert "AI suggestion branch called" in output
-    assert calls["ai_suggestion"] == 1
+    assert "Agent suggestion branch called" in output
+    assert calls["agent_suggestion"] == 1
     assert saved_students[-1]["name"] == "Alice"
