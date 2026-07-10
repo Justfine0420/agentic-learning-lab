@@ -26,6 +26,44 @@ def test_build_langchain_chat_model_uses_llm_settings() -> None:
     assert model.max_retries == 1
 
 
+def test_build_langchain_chat_model_uses_volcengine_compatible_wrapper() -> None:
+    settings = LLMSettings(
+        provider="volcengine_agent_plan",
+        api_key="test-key",
+        api_key_env="VOLCENGINE_AGENT_PLAN_API_KEY",
+        base_url="https://ark.cn-beijing.volces.com/api/coding/v3",
+        model="ark-code-latest",
+        requires_api_key=True,
+    )
+
+    model = langchain_agent.build_langchain_chat_model(settings)
+
+    assert isinstance(model, langchain_agent.VolcengineCompatibleChatOpenAI)
+
+
+def test_volcengine_wrapper_relaxes_required_tool_choice(monkeypatch) -> None:
+    calls = {}
+
+    def fake_bind_tools(self, tools, *, tool_choice=None, **kwargs):
+        calls["tools"] = tools
+        calls["tool_choice"] = tool_choice
+        calls["kwargs"] = kwargs
+        return "bound-model"
+
+    monkeypatch.setattr(langchain_agent.ChatOpenAI, "bind_tools", fake_bind_tools)
+
+    model = langchain_agent.VolcengineCompatibleChatOpenAI(
+        model="ark-code-latest",
+        api_key="test-key",
+        base_url="https://ark.cn-beijing.volces.com/api/coding/v3",
+    )
+
+    result = model.bind_tools([], tool_choice="any")
+
+    assert result == "bound-model"
+    assert calls["tool_choice"] is None
+
+
 def test_build_langchain_chat_model_requires_api_key() -> None:
     with pytest.raises(RuntimeError, match="DEEPSEEK_API_KEY"):
         langchain_agent.build_langchain_chat_model(build_settings(api_key=""))

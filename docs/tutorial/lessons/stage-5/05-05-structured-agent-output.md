@@ -149,6 +149,10 @@ ToolStrategy(StructuredLearningSuggestion)
 
 这样更符合当前课程阶段：先让 Agent 输出结构稳定，再逐步处理不同 provider 的能力差异。
 
+注意：`ToolStrategy` 会要求模型调用结构化输出工具。部分 OpenAI-compatible provider 不接受
+`tool_choice="required"` 这类强制工具选择参数。当前项目对火山引擎 Ark coding / Agent Plan 路径使用
+`VolcengineCompatibleChatOpenAI` 包装层，去掉这个强制参数，保留工具列表，让模型自行选择工具。
+
 ### Streaming 继续后置
 
 结构化输出解决的是“最终结果是什么”。
@@ -386,6 +390,13 @@ py -3.13 -m app.langchain_structured_agent_demo
 如果 provider 没有配置、网络不可用、模型不支持工具调用或结构化结果不满足 Pydantic 约束，这条手动命令可能失败。自动化测试不会调用真实 provider。
 
 ## 7. 常见错误
+
+### 忽略 provider 工具调用兼容性
+
+OpenAI-compatible 不等于每个参数都和 OpenAI 官方完全一致。
+
+例如当前火山引擎 Ark coding 端点可以接受普通 `tools`，但不接受 LangChain `ToolStrategy` 默认强制出的
+`tool_choice="required"`。所以项目里保留了一个很窄的兼容包装层，只调整这个参数，不改业务工具和结构化模型。
 
 ### 继续解析普通文本
 
