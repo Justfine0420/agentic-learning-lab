@@ -1,111 +1,164 @@
 # AI 学习助教
 
-这是 Agentic Learning Lab 的贯穿教学项目。
+`AI 学习助教` 是本课程的贯穿代码项目。
 
-当前阶段：阶段 5 进行中，已完成第 5.3 课 Python 函数变成 LangChain 工具。
+它从一个普通 Python CLI 程序开始，逐步升级为具备 FastAPI、LLM 调用、LangChain 工具调用、RAG、LangGraph 和 Deep Agents 能力的 AI 应用。
 
-## 当前能力
+当前阶段：阶段 5，LangChain。
 
-- 项目目录已创建。
-- 可以通过命令行收集学员名字、学习目标和 Python 水平。
-- 使用 `student` 字典保存当前学员资料。
-- 可以添加一条学习笔记，并保存在 `student["notes"]` 列表中。
-- 已把标题展示、资料收集、笔记添加和档案展示拆成独立函数。
-- 可以根据 Python 水平输出今日学习建议。
-- 提供循环菜单，可以反复添加笔记、查看资料、生成建议和退出。
-- 已把入口、CLI 交互和学习状态拆分到不同模块：`main.py`、`cli.py`、`student_state.py`。
-- 可以把学员资料和学习笔记保存到 `data/student.json`，下次运行时自动加载。
-- 可以处理文件不存在、JSON 损坏和字段缺失等基础存储异常。
-- 使用 `TypedDict` 描述 `Student` 数据结构，为后续 Pydantic 和 LangGraph State 铺路。
-- 已为存储模块添加第一批 pytest 单元测试。
-- 已补充 Stage 2 学习资料：`materials/stage-2.md`。
-- 已新增最小 FastAPI 应用：`app/api.py`。
-- 已提供健康检查接口：`GET /health`。
-- 已为 `/health` 添加 API 测试：`tests/test_api.py`。
-- 已新增 Pydantic 模型：`StudentProfile` 和 `StudentProfileResponse`。
-- 已提供请求体/响应模型示例接口：`POST /profile/preview`。
-- 已提供学员资料接口：`GET /profile`、`POST /profile`。
-- `POST /profile` 会保存学员资料，并保留已有学习笔记。
-- 已新增学习笔记模型：`NoteCreate` 和 `NotesResponse`。
-- 已提供学习笔记接口：`GET /notes`、`POST /notes`。
-- `POST /notes` 会追加学习笔记，并保留已有学员资料。
-- 已把学习建议规则抽到 `app/suggestions.py`，供 CLI 和 API 共用。
-- 已新增学习建议模型：`SuggestionResponse`。
-- 已提供学习建议接口：`GET /suggestion`。
-- 已新增单条学习笔记响应模型：`NoteResponse`。
-- 已新增单条学习笔记查询接口：`GET /notes/{note_index}`。
-- 已为学习笔记 API 增加基础业务错误处理：笔记不存在返回 `404`，空白笔记返回 `400`。
-- 已明确当前阶段的存储边界：继续使用 `data/student.json`，后续再按需要迁移到 SQLite / PostgreSQL。
-- 已补充 Stage 3 学习资料：`materials/stage-3.md`。
-- 已补充 Stage 4 学习资料：`materials/stage-4.md`。
-- Stage 4 已完成：理解 LLM 调用中的 `model`、prompt、message、instructions、input 和 token。
-- 已新增 LLM Provider 配置层：`app/config.py`。
-- 已支持通过 `LLM_PROVIDER` 在火山引擎 Ark Agent Plan、DeepSeek 和 Ollama 本地模型之间切换。
-- 已更新 `.env.example`，提供云端模型和本地 Ollama 的配置模板。
-- 已为配置读取新增测试：`tests/test_config.py`。
-- 已新增 LLM 调用封装：`app/llm.py`。
-- 已能把学员资料组织成 OpenAI 兼容 `chat/completions` 请求，并解析模型返回的建议文本。
-- 已新增普通文本模型调用 demo：`app/llm_demo.py`，可在 provider 配置可用时手动跑真实模型调用。
-- 已为 LLM 调用封装新增离线测试：`tests/test_llm.py`。
-- 已新增结构化学习建议模型：`LearningSuggestionItem` 和 `StructuredLearningSuggestion`。
-- 已能请求模型返回 JSON 对象，并用 Pydantic 校验为结构化建议。
-- 已新增结构化模型调用 demo：`app/structured_llm_demo.py`，可在 provider 配置可用时手动打印结构化 JSON。
-- 已为结构化输出新增成功路径和失败路径测试。
-- 已新增 AI 建议接口：`POST /ai/suggestion`。
-- `POST /ai/suggestion` 返回结构化 AI 建议，provider 不可用或模型输出无效时返回 `503`。
-- CLI 已新增 `4. 生成 AI 学习建议`，复用结构化 AI 建议能力；`3` 保留为离线规则建议。
-- `GET /suggestion` 仍保留为稳定规则建议接口。
-- 已进入 Stage 5：先理解 LangChain 的 `create_agent`、agent harness、tools，以及 LangChain / LangGraph / Deep Agents 的边界。本课不新增 LangChain 依赖。
-- 已新增最小 LangChain Agent 模块：`app/langchain_agent.py`。
-- 已新增 LangChain Agent 手动 demo：`app/langchain_agent_demo.py`。
-- 当前 LangChain Agent 已新增第一个只读工具：`read_current_student_profile`，可读取本地 JSON 学员档案。
+当前进度：已完成第 5.4 课，项目已经具备多个只读 LangChain 工具。
 
-## 推荐运行方式
+## 1. 当前功能
 
-后续课程优先使用 Python 3.13：
+### CLI
+
+- 收集学员姓名、学习目标和 Python 水平。
+- 添加学习笔记。
+- 查看学员资料和笔记。
+- 生成离线规则学习建议。
+- 在 provider 配置可用时，生成结构化 AI 学习建议。
+
+运行入口：
 
 ```powershell
 py -3.13 -m app.main
 ```
 
-## 目录说明
+### FastAPI
+
+当前 API 覆盖：
 
 ```text
-app/        Python 应用代码
-data/       本地学习数据
-materials/  学习资料
-outputs/    生成的学习计划和总结
-tests/      测试代码
+GET  /health
+GET  /profile
+POST /profile
+GET  /notes
+GET  /notes/{note_index}
+POST /notes
+GET  /suggestion
+POST /ai/suggestion
 ```
 
-## 学习资料
+启动服务：
 
-- `materials/stage-2.md`：阶段 2 补充学习资料，覆盖模块导入、`Path`、JSON 文件读写、异常处理、pytest 基础和当前数据流。
-- `materials/stage-3.md`：阶段 3 补充学习资料，覆盖 FastAPI route、Pydantic 模型、状态码、`TestClient`、虚拟环境和 API 数据流。
-- `materials/stage-4.md`：阶段 4 补充学习资料，覆盖 LLM provider 配置、模型调用、结构化输出、CLI/API AI 建议入口和当前数据流。
+```powershell
+py -3.13 -m uvicorn app.api:app --reload
+```
 
-## 依赖说明
+API 文档：
 
-阶段 2.5 引入 pytest 作为测试依赖。
-阶段 3.1 引入 FastAPI 作为 Web API 框架，并固定到本课已验证版本。
-同时引入 `fastapi-cli`、`uvicorn[standard]` 和 `httpx`，用于开发服务器和 API 测试。
-阶段 4.2 引入 `python-dotenv`，用于从本地 `.env` 读取模型服务配置。
-阶段 5.1 只做 LangChain 定位和阶段标识同步，暂不新增依赖。
-阶段 5.2 引入 `langchain==1.3.12` 和 `langchain-openai==1.3.4`，用于创建第一个最小 LangChain Agent。
-阶段 5.3 不新增依赖，继续使用第 5.2 课的 LangChain 依赖，把 Python 函数包装成第一个只读 tool。
+```text
+http://127.0.0.1:8000/docs
+```
 
-后续课程会逐步把依赖写入 `requirements.txt`。
+### 本地存储
 
-安装依赖：
+当前仍使用 JSON 文件保存学习状态：
+
+```text
+data/student.json
+```
+
+已覆盖的存储能力：
+
+- 文件不存在时返回默认学员资料。
+- JSON 损坏时备份异常文件并恢复默认数据。
+- 字段缺失或旧数据格式不完整时做基础归一化。
+- CLI、API 和 LangChain 工具共用同一份本地学习状态。
+
+数据库迁移会在后续课程中再引入。
+
+### LLM 调用
+
+当前已支持 OpenAI 兼容的 `chat/completions` 调用方式，并通过环境变量切换 provider。
+
+支持的 provider 配置包括：
+
+```text
+LLM_PROVIDER=volcengine_agent_plan
+LLM_PROVIDER=deepseek
+LLM_PROVIDER=ollama
+```
+
+相关模块：
+
+```text
+app/config.py
+app/llm.py
+app/llm_demo.py
+app/structured_llm_demo.py
+```
+
+真实密钥写入本地 `.env`，不要写入 `.env.example` 或代码。
+
+### LangChain
+
+当前 LangChain 能力：
+
+- 使用 `create_agent` 创建最小 Agent。
+- 注册多个只读工具：`read_current_student_profile`、`read_recent_learning_notes`、`build_current_rule_based_suggestion`。
+- 工具可以读取 `data/student.json` 中的学员档案、最近学习笔记，并复用离线规则建议。
+- 提供手动 demo 入口验证 Agent 调用。
+
+相关模块：
+
+```text
+app/langchain_agent.py
+app/langchain_agent_demo.py
+```
+
+手动运行：
+
+```powershell
+py -3.13 -m app.langchain_agent_demo
+```
+
+这条命令需要 `.env` 中的 provider 配置可用，或者本地 Ollama 已启动。
+
+## 2. 安装依赖
+
+建议使用 Python 3.13。
+
+在本目录下执行：
 
 ```powershell
 py -3.13 -m pip install -r requirements.txt
 ```
 
-运行测试：
+## 3. 环境变量
+
+复制 `.env.example` 为本地 `.env`，并按你的 provider 填写配置。
+
+示例：
+
+```text
+LLM_PROVIDER=deepseek
+DEEPSEEK_API_KEY=your_api_key
+DEEPSEEK_BASE_URL=https://api.deepseek.com
+DEEPSEEK_MODEL=deepseek-chat
+```
+
+本地 Ollama 示例：
+
+```text
+LLM_PROVIDER=ollama
+OLLAMA_BASE_URL=http://127.0.0.1:11434/v1
+OLLAMA_MODEL=qwen2.5:7b
+```
+
+如果 provider 不可用：
+
+- CLI 的离线规则建议仍然可用。
+- `GET /suggestion` 仍然可用。
+- `POST /ai/suggestion` 会返回 `503`。
+- 需要真实模型的 demo 会提示配置或连接问题。
+
+## 4. 运行项目
+
+运行 CLI：
 
 ```powershell
-py -3.13 -m pytest
+py -3.13 -m app.main
 ```
 
 启动 API：
@@ -114,119 +167,77 @@ py -3.13 -m pytest
 py -3.13 -m uvicorn app.api:app --reload
 ```
 
-健康检查：
-
-```text
-GET http://127.0.0.1:8000/health
-```
-
-学员资料预览：
-
-```text
-POST http://127.0.0.1:8000/profile/preview
-```
-
-学员资料 API：
-
-```text
-GET  http://127.0.0.1:8000/profile
-POST http://127.0.0.1:8000/profile
-```
-
-学习笔记 API：
-
-```text
-GET  http://127.0.0.1:8000/notes
-GET  http://127.0.0.1:8000/notes/{note_index}
-POST http://127.0.0.1:8000/notes
-```
-
-学习建议 API：
-
-```text
-GET http://127.0.0.1:8000/suggestion
-```
-
-AI 学习建议 API：
-
-```text
-POST http://127.0.0.1:8000/ai/suggestion
-```
-
-如果 provider 不可用，AI 建议接口会返回 `503`。规则建议接口仍然可用。
-
-CLI 中也可以选择：
-
-```text
-4. 生成 AI 学习建议
-```
-
-CLI 不通过 HTTP 调本地 API，而是直接复用 `generate_structured_learning_suggestion()`。
-
-LLM Provider 配置：
-
-```text
-LLM_PROVIDER=volcengine_agent_plan
-LLM_PROVIDER=deepseek
-LLM_PROVIDER=ollama
-```
-
-真实密钥写入本地 `.env`，不要写入 `.env.example` 或代码。
-
-LLM 调用封装：
-
-```text
-app/llm.py
-```
-
-首次真实模型调用入口：
+普通文本模型调用 demo：
 
 ```powershell
 py -3.13 -m app.llm_demo
 ```
 
-这条命令需要在 `ai-learning-assistant/` 目录下运行，并且需要 `.env` 中的 provider 配置可用。
-
-当前 `GET /suggestion` 仍返回规则建议；AI 建议已经接入 `POST /ai/suggestion` 和 CLI 选项 `4`。
-
-手动跑普通文本模型调用：
-
-```powershell
-py -3.13 -m app.llm_demo
-```
-
-结构化 AI 建议入口：
-
-```text
-generate_structured_learning_suggestion()
-```
-
-它返回 `StructuredLearningSuggestion`，而不是普通字符串。
-
-手动跑结构化模型调用：
+结构化模型调用 demo：
 
 ```powershell
 py -3.13 -m app.structured_llm_demo
 ```
 
-LangChain Agent 入口：
-
-```text
-app/langchain_agent.py
-```
-
-当前 Agent 已注册第一个只读工具：
-
-```text
-read_current_student_profile
-```
-
-它会读取 `data/student.json` 中的学员档案，并返回姓名、学习目标、Python 水平和学习笔记。
-
-手动跑 LangChain Agent：
+LangChain Agent demo：
 
 ```powershell
 py -3.13 -m app.langchain_agent_demo
 ```
 
-这条命令需要 `.env` 中的 provider 配置可用，或者本地 Ollama 已启动。
+## 5. 运行测试
+
+```powershell
+py -3.13 -m pytest
+```
+
+当前测试覆盖：
+
+- 存储读写和异常恢复。
+- CLI 输出和交互入口。
+- FastAPI 路由、请求体校验和错误响应。
+- provider 配置读取。
+- LLM 请求封装和结构化输出解析。
+- LangChain Agent 和工具注册。
+
+## 6. 目录说明
+
+```text
+app/
+├── api.py                       FastAPI 应用
+├── cli.py                       CLI 交互
+├── config.py                    LLM provider 配置
+├── langchain_agent.py           LangChain Agent 和工具
+├── langchain_agent_demo.py      LangChain 手动 demo
+├── llm.py                       LLM 调用封装
+├── llm_demo.py                  普通文本模型调用 demo
+├── main.py                      CLI 入口
+├── models.py                    TypedDict / Pydantic 模型
+├── storage.py                   JSON 存储
+├── structured_llm_demo.py       结构化输出 demo
+├── student_state.py             初始学习状态
+└── suggestions.py               离线规则学习建议
+
+data/                            本地学习数据，真实数据不提交
+materials/                       阶段补充学习资料
+outputs/                         后续生成的学习计划和总结
+tests/                           测试代码
+```
+
+## 7. 学习资料
+
+- `materials/stage-2.md`：Python 工程化、模块导入、JSON 文件读写、异常处理和 pytest。
+- `materials/stage-3.md`：FastAPI、Pydantic、状态码、`TestClient` 和 API 数据流。
+- `materials/stage-4.md`：LLM provider 配置、模型调用、结构化输出、CLI/API AI 建议入口。
+
+## 8. 与课程的关系
+
+这个目录只维护一份真实项目代码。
+
+每一课都会在这份代码上继续迭代，不创建 `lesson-xx-code/` 或 `stage-xx-code/` 这类副本。
+
+课程入口见：
+
+```text
+../docs/tutorial/README.md
+```

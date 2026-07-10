@@ -1,74 +1,34 @@
-# AI 学习助教教程索引
+# 教程索引
 
-## 0. 使用方式
+这里是 `AI 学习助教` 项目驱动课程的学习入口。
 
-本目录用于沉淀“从 Python 到 LangChain / LangGraph / Deep Agents”的项目驱动教程。
+课程主线：从 Python 基础开始，逐步进入 FastAPI、LLM 调用、LangChain、RAG、LangGraph 和 Deep Agents。
 
-开源仓库名：`agentic-learning-lab`
+## 1. 推荐阅读顺序
 
-根目录 README：[../../README.md](../../README.md)
+如果你是第一次进入仓库，建议按这个顺序阅读：
 
-先读：
+1. [课程总纲](./ai-learning-assistant-course-plan.md)
+2. 从第 0 阶段开始逐课学习
+3. 每完成一个阶段，阅读对应阶段复盘
+4. 需要回看代码时，使用对应 Git tag
 
-- [课程总纲](./ai-learning-assistant-course-plan.md)
-- [阶段 0 复盘](./reviews/stage-0-review.md)
-- [阶段 1 复盘](./reviews/stage-1-review.md)
-- [阶段 2 复盘](./reviews/stage-2-review.md)
-- [阶段 3 复盘](./reviews/stage-3-review.md)
-- [阶段 4 复盘](./reviews/stage-4-review.md)
-- [第 5.1 课：LangChain 定位](./lessons/stage-5/05-01-langchain-positioning.md)
-- [第 5.2 课：创建第一个 LangChain Agent](./lessons/stage-5/05-02-first-langchain-agent.md)
-- [第 5.3 课：Python 函数变成 LangChain 工具](./lessons/stage-5/05-03-python-functions-as-tools.md)
-- [阶段 2 补充学习资料](../../ai-learning-assistant/materials/stage-2.md)
-- [阶段 3 补充学习资料](../../ai-learning-assistant/materials/stage-3.md)
-- [阶段 4 补充学习资料](../../ai-learning-assistant/materials/stage-4.md)
+当前最新课程：
 
-学习方式：
+- [第 5.4 课：多工具调用](./lessons/stage-5/05-04-multiple-tools.md)
 
-- 按下方课程索引逐课阅读。
-- 每课都在 `ai-learning-assistant/` 中运行对应命令。
-- 阶段结束后阅读阶段复盘。
-- 需要回看阶段代码时，使用仓库 tag。
+下一课：
 
-## 1. 目录结构
+- 第 5.5 课：结构化 Agent 输出
 
-```text
-docs/tutorial/
-├── ai-learning-assistant-course-plan.md
-├── README.md
-├── lessons/
-│   ├── stage-0/
-│   ├── stage-1/
-│   ├── stage-2/
-│   ├── stage-3/
-│   ├── stage-4/
-│   ├── stage-5/
-│   └── ...
-└── reviews/
-    ├── stage-0-review.md
-    ├── stage-1-review.md
-    ├── stage-2-review.md
-    └── ...
-```
+## 2. 当前学习位置
 
-真实代码项目结构：
+- 当前阶段：阶段 5 进行中
+- 当前课程：第 5.4 课已生成并验证
+- 真实代码项目：`ai-learning-assistant/`
+- 下一步建议：生成第 5.5 课，结构化 Agent 输出，并明确 streaming 边界
 
-```text
-ai-learning-assistant/
-├── app/
-├── data/
-├── materials/
-│   ├── stage-2.md
-│   ├── stage-3.md
-│   └── stage-4.md
-├── outputs/
-├── tests/
-├── requirements.txt
-├── .env.example
-└── README.md
-```
-
-## 2. 课程索引
+## 3. 课程索引
 
 | 阶段 | 小节 | 标题 | 文档路径 | 状态 | 验收 |
 | --- | --- | --- | --- | --- | --- |
@@ -101,14 +61,7 @@ ai-learning-assistant/
 | 5 | 5.1 | LangChain 定位 | `docs/tutorial/lessons/stage-5/05-01-langchain-positioning.md` | 已生成 | 已验证 |
 | 5 | 5.2 | 创建第一个 LangChain Agent | `docs/tutorial/lessons/stage-5/05-02-first-langchain-agent.md` | 已生成 | 已验证 |
 | 5 | 5.3 | Python 函数变成 LangChain 工具 | `docs/tutorial/lessons/stage-5/05-03-python-functions-as-tools.md` | 已生成 | 已验证 |
-
-## 3. 补充学习资料
-
-| 阶段 | 资料 | 路径 | 用途 |
-| --- | --- | --- | --- |
-| 2 | Stage 2 补充学习资料：模块导入与 JSON 文件保存 | `ai-learning-assistant/materials/stage-2.md` | 回顾模块导入、`Path`、JSON、异常处理、pytest 基础和当前数据流 |
-| 3 | Stage 3 补充学习资料：FastAPI、Pydantic 与接口测试 | `ai-learning-assistant/materials/stage-3.md` | 回顾 FastAPI route、Pydantic 模型、状态码、`TestClient`、虚拟环境和 API 数据流 |
-| 4 | Stage 4 补充学习资料：LLM 调用、结构化输出与 AI 建议入口 | `ai-learning-assistant/materials/stage-4.md` | 回顾 provider 配置、模型调用、JSON Schema、结构化校验、CLI/API AI 建议入口和当前数据流 |
+| 5 | 5.4 | 多工具调用 | `docs/tutorial/lessons/stage-5/05-04-multiple-tools.md` | 已生成 | 已验证 |
 
 ## 4. 阶段复盘
 
@@ -120,12 +73,41 @@ ai-learning-assistant/
 | 3 | [阶段 3 复盘：FastAPI 基础与学习助手 API](./reviews/stage-3-review.md) |
 | 4 | [阶段 4 复盘：LLM 基础、结构化输出与 AI 建议入口](./reviews/stage-4-review.md) |
 
-## 5. 当前学习位置
+## 5. 补充学习资料
 
-- 当前阶段：阶段 5 进行中
-- 当前课程：第 5.3 课已生成并验证
-- 开源仓库名：`agentic-learning-lab`
-- 真实代码项目：`ai-learning-assistant/` 已创建
-- 阶段复盘：`docs/tutorial/reviews/stage-0-review.md`、`docs/tutorial/reviews/stage-1-review.md`、`docs/tutorial/reviews/stage-2-review.md`、`docs/tutorial/reviews/stage-3-review.md`、`docs/tutorial/reviews/stage-4-review.md`
-- 补充资料：`ai-learning-assistant/materials/stage-2.md`、`ai-learning-assistant/materials/stage-3.md`、`ai-learning-assistant/materials/stage-4.md`
-- 下一步建议：生成第 5.4 课，多工具调用
+| 阶段 | 资料 | 路径 | 用途 |
+| --- | --- | --- | --- |
+| 2 | Stage 2 补充学习资料：模块导入与 JSON 文件保存 | `ai-learning-assistant/materials/stage-2.md` | 回顾模块导入、`Path`、JSON、异常处理、pytest 基础和当前数据流 |
+| 3 | Stage 3 补充学习资料：FastAPI、Pydantic 与接口测试 | `ai-learning-assistant/materials/stage-3.md` | 回顾 FastAPI route、Pydantic 模型、状态码、`TestClient`、虚拟环境和 API 数据流 |
+| 4 | Stage 4 补充学习资料：LLM 调用、结构化输出与 AI 建议入口 | `ai-learning-assistant/materials/stage-4.md` | 回顾 provider 配置、模型调用、JSON Schema、结构化校验、CLI/API AI 建议入口和当前数据流 |
+
+## 6. 目录说明
+
+```text
+docs/tutorial/
+├── ai-learning-assistant-course-plan.md
+├── README.md
+├── lessons/
+│   ├── stage-0/
+│   ├── stage-1/
+│   ├── stage-2/
+│   ├── stage-3/
+│   ├── stage-4/
+│   ├── stage-5/
+│   └── ...
+└── reviews/
+    ├── stage-0-review.md
+    ├── stage-1-review.md
+    ├── stage-2-review.md
+    ├── stage-3-review.md
+    ├── stage-4-review.md
+    └── ...
+```
+
+真实代码项目：
+
+```text
+ai-learning-assistant/
+```
+
+每一课都围绕这份真实代码继续迭代，不维护按小节复制出来的代码目录。

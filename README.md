@@ -1,37 +1,50 @@
-# Agentic Learning Lab
+# LangChain / LangGraph / Deep Agents 项目实战教程
 
-一个项目驱动的开源教程仓库：从 Python 基础出发，逐步学习 FastAPI、LangChain、RAG、LangGraph 和 Deep Agents，最后完成一个可运行的 `AI 学习助教`。
+从 Python 与 FastAPI 基础出发，逐步学习 LLM 调用、LangChain、RAG、LangGraph 和 Deep Agents，最终构建一个可运行、可测试、可持续扩展的 `AI 学习助教`。
 
-## 1. 仓库定位
+## 1. 项目简介
 
-本仓库不是零散代码片段合集，也不是只讲概念的框架笔记。
+本仓库是一套项目驱动的 AI Agent 工程课程。
 
-它的目标是用一个贯穿项目，把 AI Agent 应用开发需要的基础能力串起来：
+课程不把框架概念拆成孤立笔记，而是围绕同一个贯穿项目逐步升级：
 
-- Python 基础语法和工程化组织。
-- FastAPI 后端接口开发。
-- LLM 调用、结构化输出和工具调用。
-- LangChain agent harness。
-- 基于本地资料的 RAG。
-- LangGraph 有状态流程编排。
-- Deep Agents 的规划、文件系统、子 Agent 和长期任务能力。
-- 测试、验收、教程回顾和开源仓库治理。
+```text
+AI 学习助教
+```
 
-贯穿项目名：`AI 学习助教`
+你会从一个普通命令行程序开始，逐步把它升级成具备 API、模型调用、工具调用、资料问答、学习流程编排和长期任务能力的 AI 应用。
 
-真实代码项目目录：`ai-learning-assistant/`
+真实代码项目位于：
 
-## 2. 为什么叫 Agentic Learning Lab
+```text
+ai-learning-assistant/
+```
 
-仓库名采用 `agentic-learning-lab`，而不是直接叫 `ai-learning-assistant`。
+## 2. 适合谁学习
 
-原因：
+这套课程适合：
 
-- `AI 学习助教` 是贯穿课程的教学项目。
-- `Agentic Learning Lab` 是完整学习实验室，包含教程、治理文档、阶段复盘、代码主线和后续扩展示例。
-- 后续如果增加前端、数据库、多用户、部署或其它 Agent 示例，不需要改仓库定位。
+- 想系统学习 LangChain、LangGraph、Deep Agents 的开发者。
+- 想从 Python 基础过渡到 AI Agent 应用开发的学习者。
+- 已经看过一些框架概念，但缺少完整项目主线的人。
+- 想了解 FastAPI、LLM 调用、RAG、Agent 工具调用和状态编排如何串起来的人。
 
-## 3. 最终要做出的东西
+不适合只想复制一个现成聊天机器人模板的人。
+
+## 3. 你会学到什么
+
+课程覆盖的核心能力：
+
+- Python 基础语法、函数拆分、模块化和文件持久化。
+- FastAPI 接口开发、Pydantic 模型、API 测试和错误处理。
+- LLM provider 配置、模型调用、结构化输出和降级边界。
+- LangChain `create_agent`、工具定义、工具调用和 agent harness。
+- 基于本地资料的 RAG 问答。
+- LangGraph 的 `State`、node、edge、条件分支、checkpoint 和人机协作。
+- Deep Agents 的规划、文件系统、子 Agent 和长任务执行。
+- 测试、验收、阶段复盘和可回顾的 Git checkpoint。
+
+## 4. 最终会构建什么
 
 最终项目会具备：
 
@@ -41,14 +54,62 @@ AI 学习助教
 - FastAPI 可调用
 - 能保存学员信息和学习笔记
 - 能读取本地学习资料
-- 能用 LangChain 调用模型和工具
-- 能用 RAG 基于资料答疑
+- 能调用大模型生成学习建议
+- 能用 LangChain Agent 调用工具
+- 能用 RAG 基于学习资料答疑
 - 能用 LangGraph 管理学习流程
 - 能用 Deep Agents 拆任务、写计划、生成总结文件
-- 有基础测试、运行说明和交付文档
+- 有测试、运行说明和交付文档
 ```
 
-## 4. 学习路线
+## 5. 当前进度
+
+- 当前阶段：阶段 5，LangChain。
+- 当前课程：第 5.4 课已完成，主题是多工具调用。
+- 下一课：第 5.5 课，结构化 Agent 输出，并明确 streaming 边界。
+- 已完成阶段复盘：阶段 0、阶段 1、阶段 2、阶段 3、阶段 4。
+
+课程索引见：[docs/tutorial/README.md](docs/tutorial/README.md)
+
+## 6. 快速开始
+
+进入真实项目目录：
+
+```powershell
+cd ai-learning-assistant
+```
+
+安装依赖：
+
+```powershell
+py -3.13 -m pip install -r requirements.txt
+```
+
+运行测试：
+
+```powershell
+py -3.13 -m pytest
+```
+
+运行 CLI：
+
+```powershell
+py -3.13 -m app.main
+```
+
+启动 API：
+
+```powershell
+py -3.13 -m uvicorn app.api:app --reload
+```
+
+API 文档地址：
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+## 7. 学习路线
 
 | 阶段 | 主题 | 项目升级 |
 | --- | --- | --- |
@@ -67,185 +128,44 @@ AI 学习助教
 
 完整课程规划见：[docs/tutorial/ai-learning-assistant-course-plan.md](docs/tutorial/ai-learning-assistant-course-plan.md)
 
-## 5. 仓库结构
-
-当前教程文档结构：
-
-```text
-docs/tutorial/
-├── ai-learning-assistant-course-plan.md
-├── README.md
-├── lessons/
-│   ├── stage-0/
-│   │   ├── 00-01-dev-environment.md
-│   │   ├── 00-02-project-structure.md
-│   │   └── 00-03-health-check.md
-│   ├── stage-1/
-│   │   ├── 01-01-variables-input-output.md
-│   │   ├── 01-02-dictionary-state.md
-│   │   ├── 01-03-lists-and-notes.md
-│   │   ├── 01-04-function-extraction.md
-│   │   ├── 01-05-conditional-suggestion.md
-│   │   └── 01-06-loop-menu.md
-│   ├── stage-2/
-│       ├── 02-01-module-split.md
-│       ├── 02-02-json-file-io.md
-│       ├── 02-03-exception-handling.md
-│       ├── 02-04-type-hints.md
-│       └── 02-05-simple-pytest.md
-│   ├── stage-3/
-│       ├── 03-01-fastapi-first-api.md
-│       ├── 03-02-pydantic-models.md
-│       ├── 03-03-profile-api.md
-│       ├── 03-04-notes-api.md
-│       ├── 03-05-suggestion-api.md
-│       ├── 03-06-api-error-handling.md
-│       └── 03-07-storage-boundary-database-preview.md
-│   ├── stage-4/
-│       ├── 04-01-llm-basic-concepts.md
-│       ├── 04-02-configure-api-key.md
-│       ├── 04-03-first-llm-call.md
-│       ├── 04-04-structured-output.md
-│       └── 04-05-ai-suggestion-api.md
-│   └── stage-5/
-│       ├── 05-01-langchain-positioning.md
-│       ├── 05-02-first-langchain-agent.md
-│       └── 05-03-python-functions-as-tools.md
-└── reviews/
-    ├── stage-0-review.md
-    ├── stage-1-review.md
-    ├── stage-2-review.md
-    ├── stage-3-review.md
-    └── stage-4-review.md
-```
-
-真实代码项目：
-
-```text
-ai-learning-assistant/
-├── app/
-│   ├── __init__.py
-│   ├── api.py
-│   ├── cli.py
-│   ├── config.py
-│   ├── langchain_agent.py
-│   ├── langchain_agent_demo.py
-│   ├── llm.py
-│   ├── llm_demo.py
-│   ├── main.py
-│   ├── models.py
-│   ├── suggestions.py
-│   ├── structured_llm_demo.py
-│   ├── storage.py
-│   └── student_state.py
-├── data/
-│   └── .gitkeep
-├── materials/
-│   ├── .gitkeep
-│   ├── stage-2.md
-│   ├── stage-3.md
-│   └── stage-4.md
-├── outputs/
-│   └── .gitkeep
-├── tests/
-│   ├── .gitkeep
-│   ├── test_api.py
-│   ├── test_cli.py
-│   ├── test_config.py
-│   ├── test_langchain_agent.py
-│   ├── test_langchain_agent_demo.py
-│   ├── test_llm.py
-│   ├── test_llm_demo.py
-│   ├── test_structured_llm_demo.py
-│   ├── test_suggestions.py
-│   └── test_storage.py
-├── requirements.txt
-├── .env.example
-└── README.md
-```
-
-教程小节会按阶段单独归档：
-
-```text
-docs/tutorial/lessons/
-├── stage-0/
-├── stage-1/
-├── stage-2/
-└── ...
-```
-
-阶段复盘会放在：
-
-```text
-docs/tutorial/reviews/
-```
-
-## 6. 如何使用本教程
-
-本仓库强调可持续学习和可回顾。学习者不需要理解教程生成流程，只需要沿着课程索引、真实代码和 Git checkpoint 学习。
-
-建议方式：
-
-- 先阅读 [课程总纲](docs/tutorial/ai-learning-assistant-course-plan.md)，理解完整路线。
-- 再按 [教程索引](docs/tutorial/README.md) 从第 0 阶段开始逐课学习。
-- 每个小节都有独立文档，阶段结束后有阶段复盘。
-- 代码只维护一份真实主线项目：`ai-learning-assistant/`。
-- 需要回看某个阶段时，优先使用 Git tag，例如 `stage-0`。
-- 本地 `.venv/`、`.env`、IDE 配置和密钥文件不要提交。
-
-核心入口：
+## 8. 主要入口
 
 - [教程索引](docs/tutorial/README.md)
 - [课程总纲](docs/tutorial/ai-learning-assistant-course-plan.md)
+- [真实项目代码](ai-learning-assistant/)
 - [阶段 0 复盘](docs/tutorial/reviews/stage-0-review.md)
 - [阶段 1 复盘](docs/tutorial/reviews/stage-1-review.md)
 - [阶段 2 复盘](docs/tutorial/reviews/stage-2-review.md)
 - [阶段 3 复盘](docs/tutorial/reviews/stage-3-review.md)
 - [阶段 4 复盘](docs/tutorial/reviews/stage-4-review.md)
-- [第 5.1 课：LangChain 定位](docs/tutorial/lessons/stage-5/05-01-langchain-positioning.md)
-- [第 5.2 课：创建第一个 LangChain Agent](docs/tutorial/lessons/stage-5/05-02-first-langchain-agent.md)
-- [第 5.3 课：Python 函数变成 LangChain 工具](docs/tutorial/lessons/stage-5/05-03-python-functions-as-tools.md)
-- [阶段 2 补充学习资料](ai-learning-assistant/materials/stage-2.md)
-- [阶段 3 补充学习资料](ai-learning-assistant/materials/stage-3.md)
-- [阶段 4 补充学习资料](ai-learning-assistant/materials/stage-4.md)
+- [第 5.4 课：多工具调用](docs/tutorial/lessons/stage-5/05-04-multiple-tools.md)
 
-## 7. 每课固定格式
-
-后续每一课都按固定结构输出：
+## 9. 仓库结构
 
 ```text
-1. 本课目标
-2. 你会新增什么项目能力
-3. 前置知识
-4. 核心概念
-5. 代码实现
-6. 运行方式
-7. 常见错误
-8. 练习
-9. 验收标准
-10. 和后续 LangChain / LangGraph / Deep Agents 的关系
-11. 本课变更清单
+docs/tutorial/                 课程总纲、教程索引、逐课文档和阶段复盘
+ai-learning-assistant/app/      贯穿项目的应用代码
+ai-learning-assistant/tests/    测试代码
+ai-learning-assistant/materials/补充学习资料
+ai-learning-assistant/data/     本地学习数据，真实数据不提交
+ai-learning-assistant/outputs/  后续生成的计划和总结文件
 ```
 
-## 8. 当前状态
+## 10. 如何回顾旧版本
 
-- 仓库名：`agentic-learning-lab`
-- 贯穿项目：`AI 学习助教`
-- 真实代码项目：`ai-learning-assistant/` 已创建
-- 教程正文：阶段 0、阶段 1、阶段 2、阶段 3、阶段 4 和第 5.1、5.2、5.3 课已完成
-- 当前阶段：阶段 5 进行中
-- 当前课程：第 5.3 课已生成并验证
+每个重要学习节点会通过 Git tag 保留 checkpoint。
 
-下一步建议：生成第 5.4 课，多工具调用。
+常见 tag 形式：
 
-## 9. 开源治理说明
+```text
+lesson-X.Y
+stage-X
+```
 
-当前仓库仍处于教程早期阶段。正式开源前建议补齐：
+例如：
 
-- License
-- 贡献指南
-- Issue 模板
-- 代码风格说明
-- 安全说明，尤其是 API Key 和 `.env` 使用规则
+```powershell
+git checkout lesson-3.4
+```
 
-这些内容不在当前阶段强行创建，避免把开源治理模板写成空壳。
+可以回到第 3.4 课完成后的代码状态。

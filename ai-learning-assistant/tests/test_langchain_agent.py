@@ -80,12 +80,71 @@ def test_read_current_student_profile_uses_storage(monkeypatch) -> None:
     )
 
 
-def test_build_learning_agent_tools_contains_profile_tool() -> None:
-    tools = langchain_agent.build_learning_agent_tools()
+def test_normalize_note_limit_keeps_tool_bounds() -> None:
+    assert langchain_agent.normalize_note_limit(-1) == 1
+    assert langchain_agent.normalize_note_limit(0) == 1
+    assert langchain_agent.normalize_note_limit(3) == 3
+    assert langchain_agent.normalize_note_limit(99) == 10
 
-    assert len(tools) == 1
-    assert tools[0].name == "read_current_student_profile"
-    assert "只读" in tools[0].description
+
+def test_format_recent_notes_for_tool_returns_recent_notes() -> None:
+    notes = ["note 1", "note 2", "note 3", "note 4"]
+
+    assert langchain_agent.format_recent_notes_for_tool(notes, limit=2) == (
+        "最近学习笔记（最多 2 条）：\n"
+        "1. note 3\n"
+        "2. note 4"
+    )
+
+
+def test_format_recent_notes_for_tool_handles_empty_notes() -> None:
+    assert langchain_agent.format_recent_notes_for_tool([], limit=5) == "最近学习笔记：\n暂无笔记"
+
+
+def test_read_recent_learning_notes_uses_storage(monkeypatch) -> None:
+    monkeypatch.setattr(
+        langchain_agent,
+        "load_student",
+        lambda: {
+            "name": "Dana",
+            "goal": "多工具调用",
+            "python_level": "basic",
+            "notes": ["笔记 1", "笔记 2", "笔记 3"],
+        },
+    )
+
+    assert langchain_agent.read_recent_learning_notes(limit=2) == (
+        "最近学习笔记（最多 2 条）：\n"
+        "1. 笔记 2\n"
+        "2. 笔记 3"
+    )
+
+
+def test_build_current_rule_based_suggestion_uses_storage(monkeypatch) -> None:
+    monkeypatch.setattr(
+        langchain_agent,
+        "load_student",
+        lambda: {
+            "name": "Eve",
+            "goal": "复习 Python",
+            "python_level": "beginner",
+            "notes": [],
+        },
+    )
+
+    assert "变量" in langchain_agent.build_current_rule_based_suggestion()
+
+
+def test_build_learning_agent_tools_contains_multiple_tools() -> None:
+    tools = langchain_agent.build_learning_agent_tools()
+    tool_names = [item.name for item in tools]
+
+    assert tool_names == [
+        "read_current_student_profile",
+        "read_recent_learning_notes",
+        "build_current_rule_based_suggestion",
+    ]
+    assert all("只读" in item.description or "不会修改" in item.description for item in tools)
 
 
 def test_profile_tool_invokes_profile_reader(monkeypatch) -> None:
@@ -106,6 +165,41 @@ def test_profile_tool_invokes_profile_reader(monkeypatch) -> None:
     assert "暂无笔记" in text
 
 
+def test_recent_notes_tool_invokes_note_reader(monkeypatch) -> None:
+    monkeypatch.setattr(
+        langchain_agent,
+        "load_student",
+        lambda: {
+            "name": "Frank",
+            "goal": "测试多工具",
+            "python_level": "basic",
+            "notes": ["A", "B", "C"],
+        },
+    )
+
+    text = langchain_agent.read_recent_learning_notes_tool.invoke({"limit": 2})
+
+    assert "1. B" in text
+    assert "2. C" in text
+
+
+def test_rule_suggestion_tool_invokes_rule_suggestion(monkeypatch) -> None:
+    monkeypatch.setattr(
+        langchain_agent,
+        "load_student",
+        lambda: {
+            "name": "Grace",
+            "goal": "测试规则建议",
+            "python_level": "basic",
+            "notes": [],
+        },
+    )
+
+    text = langchain_agent.build_current_rule_based_suggestion_tool.invoke({})
+
+    assert "类" in text
+
+
 def test_create_learning_agent_uses_model_prompt_and_default_tools(monkeypatch) -> None:
     calls = {}
     fake_model = object()
@@ -123,9 +217,11 @@ def test_create_learning_agent_uses_model_prompt_and_default_tools(monkeypatch) 
 
     assert agent is fake_agent
     assert calls["model"] is fake_model
-    assert len(calls["tools"]) == 1
+    assert len(calls["tools"]) == 3
     assert calls["tools"][0].name == "read_current_student_profile"
-    assert "只读工具" in calls["system_prompt"]
+    assert calls["tools"][1].name == "read_recent_learning_notes"
+    assert calls["tools"][2].name == "build_current_rule_based_suggestion"
+    assert "多个只读工具" in calls["system_prompt"]
 
 
 def test_create_learning_agent_accepts_explicit_tools(monkeypatch) -> None:
