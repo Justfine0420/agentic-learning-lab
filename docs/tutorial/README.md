@@ -15,18 +15,18 @@
 
 当前最新课程：
 
-- [第 5.5 课：结构化 Agent 输出](./lessons/stage-5/05-05-structured-agent-output.md)
+- [第 5.6 课：CLI 接入 LangChain Agent](./lessons/stage-5/05-06-cli-agent-integration.md)
 
 下一课：
 
-- 第 5.6 课：CLI 接入 LangChain Agent
+- 第 5.7 课：FastAPI 接入 LangChain Agent
 
 ## 2. 当前学习位置
 
 - 当前阶段：阶段 5 进行中
-- 当前课程：第 5.5 课已生成并验证
+- 当前课程：第 5.6 课已生成并验证
 - 真实代码项目：`ai-learning-assistant/`
-- 下一步建议：生成第 5.6 课，CLI 接入 LangChain Agent
+- 下一步建议：生成第 5.7 课，FastAPI 接入 LangChain Agent
 
 ## 3. 课程索引
 
@@ -63,6 +63,7 @@
 | 5 | 5.3 | Python 函数变成 LangChain 工具 | `docs/tutorial/lessons/stage-5/05-03-python-functions-as-tools.md` | 已生成 | 已验证 |
 | 5 | 5.4 | 多工具调用 | `docs/tutorial/lessons/stage-5/05-04-multiple-tools.md` | 已生成 | 已验证 |
 | 5 | 5.5 | 结构化 Agent 输出 | `docs/tutorial/lessons/stage-5/05-05-structured-agent-output.md` | 已生成 | 已验证 |
+| 5 | 5.6 | CLI 接入 LangChain Agent | `docs/tutorial/lessons/stage-5/05-06-cli-agent-integration.md` | 已生成 | 已验证 |
 
 ## 4. 阶段复盘
 
