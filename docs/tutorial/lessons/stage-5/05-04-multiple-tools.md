@@ -162,13 +162,10 @@ build_current_rule_based_suggestion
 
 这些会更适合放到后续 LangGraph / Deep Agents 阶段。
 
-### 为什么本课不做 streaming
+### Streaming 的后置处理边界
 
-你提到第 5.5 课是否应该考虑结果流式输出，这个判断是对的。
-
-但本课和第 5.5 课不应该急着实现 streaming。
-
-原因是 Stage 5 当前还在建立 LangChain Agent 的基础：
+Streaming 属于过程事件输出能力，不是多工具调用的前置条件。
+在 Stage 5 当前阶段，课程重点仍然是建立 LangChain Agent 的基础能力：
 
 | 小节 | 当前重点 |
 | --- | --- |
@@ -176,9 +173,9 @@ build_current_rule_based_suggestion
 | 5.3 | 第一个工具 |
 | 5.4 | 多工具选择 |
 | 5.5 | 结构化最终输出 |
-| 5.6 | FastAPI 接入 Agent |
+| 后续入口接入 | CLI / FastAPI 使用稳定结果 |
 
-Streaming 至少会引入三类事件：
+Streaming 会引入额外的过程事件层，例如：
 
 ```text
 模型 token 流
@@ -186,7 +183,7 @@ Streaming 至少会引入三类事件：
 工具返回事件
 ```
 
-如果在 5.5 同时做结构化输出和 streaming，你会同时面对：
+如果在多工具边界尚未稳定时提前实现 streaming，课程会同时混入几类问题：
 
 - 最终 JSON 如何解析。
 - token 流中间态是不是合法 JSON。
@@ -194,17 +191,18 @@ Streaming 至少会引入三类事件：
 - API 如何返回流式事件。
 - 测试如何稳定断言流式输出。
 
-这会把学习重点打散。
+这些问题都重要，但它们不应该抢占本课的核心目标。
+本课只处理多工具选择和工具职责边界；streaming 后置到结构化输出、入口接入和 API 边界稳定之后再实现。
 
-所以本课程建议：
+本课程采用的顺序是：
 
 ```text
-5.5：做结构化 Agent 最终输出，并解释 streaming 设计边界。
-5.6：接入 FastAPI /chat，仍先用普通响应。
-后续 LangGraph Streaming 阶段：系统实现流式输出。
+5.5：先稳定 Agent 的结构化最终输出。
+后续入口接入：CLI / FastAPI 先使用普通响应。
+LangGraph 进阶阶段：系统学习并实现 streaming。
 ```
 
-Streaming 很重要，但它应该在输入、工具、结构化结果和 API 边界稳定之后再正式实现。
+这样可以先保证最终结果可解析、可测试、可接入，再处理过程事件如何实时输出。
 
 ## 5. 代码实现
 
@@ -513,13 +511,13 @@ Agent 创建时带工具
 
 真实模型是否先查档案再查笔记，放在人工 demo 观察。
 
-### 在本课实现 streaming
+### 提前实现 streaming
 
 不要在本课加 streaming。
 
-现在连结构化 Agent 最终输出都还没做。
+当前阶段还没有完成结构化 Agent 最终输出。
 
-先把多工具边界稳定下来。
+先把多工具边界稳定下来，再处理过程事件输出。
 
 ## 8. 练习
 
@@ -552,7 +550,7 @@ py -3.13 -m app.langchain_agent_demo
 - 看懂 `build_current_rule_based_suggestion()`。
 - 解释 3 个工具分别什么时候应该被调用。
 - 解释为什么本课仍然只做只读工具。
-- 解释为什么本课不实现 streaming。
+- 解释 streaming 为什么要后置到结构化输出和入口接入之后。
 - 运行 `py -3.13 -m pytest` 通过。
 - 运行 `py_compile` 通过。
 
@@ -568,21 +566,21 @@ py -3.13 -m app.langchain_agent_demo
 | 工具参数边界 | LangGraph 节点输入校验和 Deep Agents 工具治理 |
 | 不做 streaming | 后续 LangGraph streaming 阶段系统实现 |
 
-关于第 5.5 课和 streaming：
+关于 streaming 的后置顺序：
 
 ```text
-第 5.5 课应该考虑 streaming，但不建议实现 streaming。
+先稳定最终结构化结果，再处理过程事件流。
 ```
 
 更稳的路线是：
 
 ```text
 5.5：先把 Agent 最终输出变成结构化结果。
-5.6：再把 Agent 接进 FastAPI /chat。
+后续入口接入：CLI / FastAPI 先使用普通响应。
 8.2：在 LangGraph 进阶阶段系统学习 Streaming。
 ```
 
-这样你会先掌握最终结果的稳定结构，再学习过程事件如何流式输出。
+这样可以先掌握最终结果的稳定结构，再学习过程事件如何流式输出。
 
 Deep Agents 后续也会更依赖这种工具边界。
 
