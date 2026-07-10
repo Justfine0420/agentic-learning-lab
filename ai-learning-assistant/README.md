@@ -6,7 +6,7 @@
 
 当前阶段：阶段 5，LangChain。
 
-当前进度：已完成第 5.4 课，项目已经具备多个只读 LangChain 工具。
+当前进度：已完成第 5.5 课，项目已经具备多个只读 LangChain 工具，并能生成结构化 Agent 输出。
 
 ## 1. 当前功能
 
@@ -98,6 +98,7 @@ app/structured_llm_demo.py
 - 使用 `create_agent` 创建最小 Agent。
 - 注册多个只读工具：`read_current_student_profile`、`read_recent_learning_notes`、`build_current_rule_based_suggestion`。
 - 工具可以读取 `data/student.json` 中的学员档案、最近学习笔记，并复用离线规则建议。
+- 使用 `ToolStrategy(StructuredLearningSuggestion)` 生成结构化 Agent 结果。
 - 提供手动 demo 入口验证 Agent 调用。
 
 相关模块：
@@ -105,6 +106,7 @@ app/structured_llm_demo.py
 ```text
 app/langchain_agent.py
 app/langchain_agent_demo.py
+app/langchain_structured_agent_demo.py
 ```
 
 手动运行：
@@ -185,6 +187,12 @@ LangChain Agent demo：
 py -3.13 -m app.langchain_agent_demo
 ```
 
+结构化 LangChain Agent demo：
+
+```powershell
+py -3.13 -m app.langchain_structured_agent_demo
+```
+
 ## 5. 运行测试
 
 ```powershell
@@ -209,6 +217,7 @@ app/
 ├── config.py                    LLM provider 配置
 ├── langchain_agent.py           LangChain Agent 和工具
 ├── langchain_agent_demo.py      LangChain 手动 demo
+├── langchain_structured_agent_demo.py 结构化 LangChain 手动 demo
 ├── llm.py                       LLM 调用封装
 ├── llm_demo.py                  普通文本模型调用 demo
 ├── main.py                      CLI 入口

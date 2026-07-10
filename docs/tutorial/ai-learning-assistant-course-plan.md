@@ -3,7 +3,7 @@
 ## 0. 文档状态
 
 - 版本：v0.1
-- 最近更新：2026-07-07
+- 最近更新：2026-07-10
 - 用途：作为“从 Python 到 LangChain / LangGraph / Deep Agents”的系统学习路线总纲。
 - 范围：只规划课程链路、项目结构、阶段产物和验收标准；不包含每一课的完整正文。
 
@@ -118,7 +118,8 @@ ai-learning-assistant/
 | 5.3 | Python 函数变工具 | tool 思路 | 查询学员资料工具 |
 | 5.4 | 多工具调用 | 查资料、查笔记、生成建议 | 工具型 AI 助手 |
 | 5.5 | 结构化 Agent 输出 | 学习计划结构 | 可解析结果 |
-| 5.6 | FastAPI 接入 Agent | `POST /chat` | API 调 AI 助手 |
+| 5.6 | CLI 接入 Agent | CLI 菜单调用结构化 Agent | 命令行可用的 Agent 助手 |
+| 5.7 | FastAPI 接入 Agent | `POST /chat` | API 调 AI 助手 |
 | 6.1 | RAG 是什么 | 文档、chunk、embedding、retriever | 理解资料问答 |
 | 6.2 | 本地资料加载 | `materials/*.md` | 加载学习资料 |
 | 6.3 | 文档切分 | chunk size、overlap | 可检索片段 |

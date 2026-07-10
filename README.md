@@ -65,8 +65,8 @@ AI 学习助教
 ## 5. 当前进度
 
 - 当前阶段：阶段 5，LangChain。
-- 当前课程：第 5.4 课已完成，主题是多工具调用。
-- 下一课：第 5.5 课，结构化 Agent 输出，并明确 streaming 边界。
+- 当前课程：第 5.5 课已完成，主题是结构化 Agent 输出。
+- 下一课：第 5.6 课，CLI 接入 LangChain Agent。
 - 已完成阶段复盘：阶段 0、阶段 1、阶段 2、阶段 3、阶段 4。
 
 课程索引见：[docs/tutorial/README.md](docs/tutorial/README.md)
@@ -139,6 +139,7 @@ http://127.0.0.1:8000/docs
 - [阶段 3 复盘](docs/tutorial/reviews/stage-3-review.md)
 - [阶段 4 复盘](docs/tutorial/reviews/stage-4-review.md)
 - [第 5.4 课：多工具调用](docs/tutorial/lessons/stage-5/05-04-multiple-tools.md)
+- [第 5.5 课：结构化 Agent 输出](docs/tutorial/lessons/stage-5/05-05-structured-agent-output.md)
 
 ## 9. 仓库结构
 

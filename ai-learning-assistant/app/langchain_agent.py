@@ -2,11 +2,12 @@ from collections.abc import Mapping
 from typing import Any
 
 from langchain.agents import create_agent
+from langchain.agents.structured_output import ToolStrategy
 from langchain.tools import tool
 from langchain_openai import ChatOpenAI
 
 from app.config import LLMSettings, get_llm_settings, require_llm_api_key
-from app.models import Student
+from app.models import StructuredLearningSuggestion, Student
 from app.storage import load_student
 from app.suggestions import build_suggestion
 
@@ -21,6 +22,13 @@ LEARNING_AGENT_SYSTEM_PROMPT = (
 )
 
 DEFAULT_AGENT_QUESTION = "请先查询当前学习档案、最近笔记和离线规则建议，再生成今天的学习建议。"
+
+STRUCTURED_LEARNING_AGENT_SYSTEM_PROMPT = (
+    LEARNING_AGENT_SYSTEM_PROMPT
+    + "最终结果必须形成结构化学习建议，包括摘要、1 到 3 条行动建议和下一检查点。"
+)
+
+STRUCTURED_RESPONSE_TOOL_MESSAGE = "已生成结构化学习建议。"
 
 
 def format_student_profile_for_tool(student: Student, *, include_notes: bool = True) -> str:
@@ -145,6 +153,34 @@ def create_learning_agent(
     )
 
 
+def build_learning_agent_response_format() -> Any:
+    return ToolStrategy(
+        StructuredLearningSuggestion,
+        tool_message_content=STRUCTURED_RESPONSE_TOOL_MESSAGE,
+    )
+
+
+def create_structured_learning_agent(
+    *,
+    settings: LLMSettings | None = None,
+    model: Any | None = None,
+    tools: list[Any] | None = None,
+    response_format: Any | None = None,
+) -> Any:
+    current_model = model or build_langchain_chat_model(settings)
+    current_tools = tools if tools is not None else build_learning_agent_tools()
+    current_response_format = (
+        response_format if response_format is not None else build_learning_agent_response_format()
+    )
+
+    return create_agent(
+        model=current_model,
+        tools=current_tools,
+        system_prompt=STRUCTURED_LEARNING_AGENT_SYSTEM_PROMPT,
+        response_format=current_response_format,
+    )
+
+
 def build_learning_agent_messages(
     question: str = DEFAULT_AGENT_QUESTION,
 ) -> list[dict[str, str]]:
@@ -194,6 +230,18 @@ def extract_agent_text(agent_result: Mapping[str, Any]) -> str:
     raise ValueError("LangChain agent response message content is empty.")
 
 
+def extract_structured_agent_response(agent_result: Mapping[str, Any]) -> StructuredLearningSuggestion:
+    structured_response = agent_result.get("structured_response")
+
+    if isinstance(structured_response, StructuredLearningSuggestion):
+        return structured_response
+
+    if isinstance(structured_response, Mapping):
+        return StructuredLearningSuggestion.model_validate(structured_response)
+
+    raise ValueError("LangChain agent result did not contain structured_response.")
+
+
 def run_learning_agent(
     question: str = DEFAULT_AGENT_QUESTION,
     *,
@@ -203,3 +251,14 @@ def run_learning_agent(
     current_agent = agent or create_learning_agent(settings=settings)
     result = current_agent.invoke({"messages": build_learning_agent_messages(question)})
     return extract_agent_text(result)
+
+
+def run_structured_learning_agent(
+    question: str = DEFAULT_AGENT_QUESTION,
+    *,
+    settings: LLMSettings | None = None,
+    agent: Any | None = None,
+) -> StructuredLearningSuggestion:
+    current_agent = agent or create_structured_learning_agent(settings=settings)
+    result = current_agent.invoke({"messages": build_learning_agent_messages(question)})
+    return extract_structured_agent_response(result)

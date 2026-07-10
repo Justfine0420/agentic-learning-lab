@@ -1,7 +1,9 @@
 import pytest
+from langchain.agents.structured_output import ToolStrategy
 
 from app import langchain_agent
 from app.config import LLMSettings
+from app.models import StructuredLearningSuggestion
 
 
 def build_settings(*, api_key: str = "test-key", requires_api_key: bool = True) -> LLMSettings:
@@ -244,6 +246,41 @@ def test_create_learning_agent_accepts_explicit_tools(monkeypatch) -> None:
     assert calls["tools"] is fake_tools
 
 
+def test_build_learning_agent_response_format_uses_structured_suggestion_schema() -> None:
+    response_format = langchain_agent.build_learning_agent_response_format()
+
+    assert isinstance(response_format, ToolStrategy)
+    assert response_format.schema is StructuredLearningSuggestion
+    assert response_format.tool_message_content == langchain_agent.STRUCTURED_RESPONSE_TOOL_MESSAGE
+
+
+def test_create_structured_learning_agent_uses_response_format(monkeypatch) -> None:
+    calls = {}
+    fake_model = object()
+    fake_agent = object()
+    fake_response_format = object()
+
+    def fake_create_agent(*, model, tools, system_prompt, response_format):
+        calls["model"] = model
+        calls["tools"] = tools
+        calls["system_prompt"] = system_prompt
+        calls["response_format"] = response_format
+        return fake_agent
+
+    monkeypatch.setattr(langchain_agent, "create_agent", fake_create_agent)
+
+    agent = langchain_agent.create_structured_learning_agent(
+        model=fake_model,
+        response_format=fake_response_format,
+    )
+
+    assert agent is fake_agent
+    assert calls["model"] is fake_model
+    assert len(calls["tools"]) == 3
+    assert calls["response_format"] is fake_response_format
+    assert "结构化学习建议" in calls["system_prompt"]
+
+
 def test_build_learning_agent_messages_contains_question_only() -> None:
     messages = langchain_agent.build_learning_agent_messages("我今天应该学什么？")
 
@@ -282,6 +319,48 @@ def test_extract_agent_text_rejects_empty_messages() -> None:
         langchain_agent.extract_agent_text({"messages": []})
 
 
+def test_extract_structured_agent_response_accepts_model_instance() -> None:
+    suggestion = StructuredLearningSuggestion(
+        summary="今天先稳定结构化输出。",
+        suggestions=[
+            {
+                "title": "阅读 schema",
+                "description": "确认结构化字段含义。",
+                "estimated_minutes": 15,
+            }
+        ],
+        next_checkpoint="能解释 structured_response。",
+    )
+
+    assert langchain_agent.extract_structured_agent_response({"structured_response": suggestion}) is suggestion
+
+
+def test_extract_structured_agent_response_validates_mapping() -> None:
+    response = langchain_agent.extract_structured_agent_response(
+        {
+            "structured_response": {
+                "summary": "用结构化结果承接 Agent 输出。",
+                "suggestions": [
+                    {
+                        "title": "运行 demo",
+                        "description": "观察结构化 JSON 输出。",
+                        "estimated_minutes": 20,
+                    }
+                ],
+                "next_checkpoint": "能说明为什么 CLI 接入要等结构稳定。",
+            }
+        }
+    )
+
+    assert response.summary == "用结构化结果承接 Agent 输出。"
+    assert response.suggestions[0].title == "运行 demo"
+
+
+def test_extract_structured_agent_response_rejects_missing_response() -> None:
+    with pytest.raises(ValueError, match="structured_response"):
+        langchain_agent.extract_structured_agent_response({"messages": []})
+
+
 def test_run_learning_agent_invokes_agent_and_returns_text() -> None:
     class FakeAgent:
         def invoke(self, payload):
@@ -296,3 +375,30 @@ def test_run_learning_agent_invokes_agent_and_returns_text() -> None:
     )
 
     assert answer == "建议：先调用工具查询档案。"
+
+
+def test_run_structured_learning_agent_invokes_agent_and_returns_structured_response() -> None:
+    suggestion = StructuredLearningSuggestion(
+        summary="今天学习结构化 Agent 输出。",
+        suggestions=[
+            {
+                "title": "理解 response_format",
+                "description": "确认 Agent 最终 state 中的 structured_response。",
+                "estimated_minutes": 25,
+            }
+        ],
+        next_checkpoint="能运行结构化 Agent demo。",
+    )
+
+    class FakeAgent:
+        def invoke(self, payload):
+            assert payload["messages"][0]["role"] == "user"
+            assert "请生成结构化建议。" in payload["messages"][0]["content"]
+            return {"structured_response": suggestion}
+
+    response = langchain_agent.run_structured_learning_agent(
+        "请生成结构化建议。",
+        agent=FakeAgent(),
+    )
+
+    assert response is suggestion
