@@ -15,18 +15,18 @@
 
 当前最新课程：
 
-- [第 5.6 课：CLI 接入 LangChain Agent](./lessons/stage-5/05-06-cli-agent-integration.md)
+- [第 5.7 课：FastAPI 接入 LangChain Agent](./lessons/stage-5/05-07-fastapi-agent-integration.md)
 
 下一课：
 
-- 第 5.7 课：FastAPI 接入 LangChain Agent
+- 阶段 5 复盘：整理 LangChain Agent、工具、结构化输出与双入口
 
 ## 2. 当前学习位置
 
-- 当前阶段：阶段 5 进行中
-- 当前课程：第 5.6 课已生成并验证
+- 当前阶段：阶段 5 的实现课程已完成
+- 当前课程：第 5.7 课已生成并验证
 - 真实代码项目：`ai-learning-assistant/`
-- 下一步建议：生成第 5.7 课，FastAPI 接入 LangChain Agent
+- 下一步建议：生成阶段 5 复盘，再进入阶段 6 的 RAG 学习路线
 
 ## 3. 课程索引
 
@@ -64,6 +64,7 @@
 | 5 | 5.4 | 多工具调用 | `docs/tutorial/lessons/stage-5/05-04-multiple-tools.md` | 已生成 | 已验证 |
 | 5 | 5.5 | 结构化 Agent 输出 | `docs/tutorial/lessons/stage-5/05-05-structured-agent-output.md` | 已生成 | 已验证 |
 | 5 | 5.6 | CLI 接入 LangChain Agent | `docs/tutorial/lessons/stage-5/05-06-cli-agent-integration.md` | 已生成 | 已验证 |
+| 5 | 5.7 | FastAPI 接入 LangChain Agent | `docs/tutorial/lessons/stage-5/05-07-fastapi-agent-integration.md` | 已生成 | 已验证 |
 
 ## 4. 阶段复盘
 

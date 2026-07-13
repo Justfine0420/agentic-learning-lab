@@ -6,7 +6,7 @@
 
 当前阶段：阶段 5，LangChain。
 
-当前进度：已完成第 5.6 课，CLI 已经可以调用结构化 LangChain Agent 生成学习建议。
+当前进度：已完成第 5.7 课，CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议。
 
 ## 1. 当前功能
 
@@ -37,6 +37,7 @@ GET  /notes/{note_index}
 POST /notes
 GET  /suggestion
 POST /ai/suggestion
+POST /chat
 ```
 
 启动服务：
@@ -100,6 +101,7 @@ app/structured_llm_demo.py
 - 工具可以读取 `data/student.json` 中的学员档案、最近学习笔记，并复用离线规则建议。
 - 使用 `ToolStrategy(StructuredLearningSuggestion)` 生成结构化 Agent 结果。
 - CLI 第 4 项会调用 `run_structured_learning_agent()`，并把结果格式化为命令行文本。
+- `POST /chat` 接收学员问题后调用 `run_structured_learning_agent(question)`，返回结构化 Agent 建议。
 - 提供手动 demo 入口验证 Agent 调用。
 
 相关模块：
@@ -155,6 +157,7 @@ OLLAMA_MODEL=qwen2.5:7b
 - CLI 的 Agent 学习建议会提示不可用，并提示使用离线规则建议。
 - `GET /suggestion` 仍然可用。
 - `POST /ai/suggestion` 会返回 `503`。
+- `POST /chat` 会返回 `503`，不会静默改用规则建议。
 - 需要真实模型的 demo 会提示配置或连接问题。
 
 ## 4. 运行项目

@@ -1,9 +1,13 @@
 import httpx
 from fastapi import FastAPI, HTTPException
+from openai import OpenAIError
 
+from app.langchain_agent import run_structured_learning_agent
 from app.llm import generate_structured_learning_suggestion
 from app.models import (
     AISuggestionResponse,
+    AgentChatResponse,
+    ChatRequest,
     NoteCreate,
     NoteResponse,
     NotesResponse,
@@ -123,3 +127,28 @@ def generate_ai_suggestion() -> AISuggestionResponse:
         raise HTTPException(status_code=503, detail=str(error)) from error
 
     return AISuggestionResponse(suggestion=suggestion)
+
+
+@app.post(
+    "/chat",
+    response_model=AgentChatResponse,
+    responses={
+        400: {"description": "问题不能为空。"},
+        503: {"description": "Agent provider 或结构化结果不可用。"},
+    },
+)
+def chat_with_learning_agent(chat: ChatRequest) -> AgentChatResponse:
+    question = chat.question.strip()
+    if question == "":
+        raise HTTPException(status_code=400, detail="问题不能为空。")
+
+    try:
+        suggestion = run_structured_learning_agent(question)
+    except RuntimeError as error:
+        raise HTTPException(status_code=503, detail=str(error)) from error
+    except (httpx.HTTPError, OpenAIError) as error:
+        raise HTTPException(status_code=503, detail="AI provider request failed.") from error
+    except ValueError as error:
+        raise HTTPException(status_code=503, detail=str(error)) from error
+
+    return AgentChatResponse(suggestion=suggestion)

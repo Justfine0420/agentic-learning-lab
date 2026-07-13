@@ -1,7 +1,9 @@
 from pathlib import Path
 
 import httpx
+import pytest
 from fastapi.testclient import TestClient
+from openai import OpenAIError
 
 from app import storage
 from app import api
@@ -438,3 +440,98 @@ def test_post_ai_suggestion_returns_503_when_provider_request_fails(tmp_path: Pa
     assert response.json() == {
         "detail": "AI provider request failed.",
     }
+
+
+def test_post_chat_returns_structured_agent_result(monkeypatch) -> None:
+    suggestion = StructuredLearningSuggestion(
+        summary="今天用 FastAPI 调用结构化 Agent。",
+        suggestions=[
+            {
+                "title": "调用只读工具",
+                "description": "让 Agent 读取当前学习档案和笔记。",
+                "estimated_minutes": 25,
+            }
+        ],
+        next_checkpoint="能区分 /chat 和 /ai/suggestion。",
+    )
+
+    def fake_run_structured_learning_agent(question: str) -> StructuredLearningSuggestion:
+        assert question == "我今天应该先练什么？"
+        return suggestion
+
+    monkeypatch.setattr(
+        api,
+        "run_structured_learning_agent",
+        fake_run_structured_learning_agent,
+    )
+
+    response = client.post("/chat", json={"question": "我今天应该先练什么？"})
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "source": "agent",
+        "suggestion": {
+            "summary": "今天用 FastAPI 调用结构化 Agent。",
+            "suggestions": [
+                {
+                    "title": "调用只读工具",
+                    "description": "让 Agent 读取当前学习档案和笔记。",
+                    "estimated_minutes": 25,
+                }
+            ],
+            "next_checkpoint": "能区分 /chat 和 /ai/suggestion。",
+        },
+    }
+
+
+def test_post_chat_rejects_empty_and_blank_questions(monkeypatch) -> None:
+    def should_not_run_agent(_question: str) -> StructuredLearningSuggestion:
+        raise AssertionError("invalid request should not invoke the agent")
+
+    monkeypatch.setattr(api, "run_structured_learning_agent", should_not_run_agent)
+
+    missing_response = client.post("/chat", json={})
+    empty_response = client.post("/chat", json={"question": ""})
+    blank_response = client.post("/chat", json={"question": "   "})
+
+    assert missing_response.status_code == 422
+    assert empty_response.status_code == 422
+    assert blank_response.status_code == 400
+    assert blank_response.json() == {"detail": "问题不能为空。"}
+
+
+def test_post_chat_declares_error_responses_in_openapi() -> None:
+    responses = app.openapi()["paths"]["/chat"]["post"]["responses"]
+
+    assert {"200", "400", "422", "503"}.issubset(responses)
+
+
+@pytest.mark.parametrize(
+    ("agent_error", "expected_detail"),
+    [
+        (
+            RuntimeError("Missing required environment variable: DEEPSEEK_API_KEY."),
+            "Missing required environment variable: DEEPSEEK_API_KEY.",
+        ),
+        (httpx.ConnectError("network failed"), "AI provider request failed."),
+        (OpenAIError("provider failed"), "AI provider request failed."),
+        (
+            ValueError("LangChain agent result did not contain structured_response."),
+            "LangChain agent result did not contain structured_response.",
+        ),
+    ],
+)
+def test_post_chat_returns_503_for_agent_errors(monkeypatch, agent_error, expected_detail) -> None:
+    def fake_run_structured_learning_agent(_question: str) -> StructuredLearningSuggestion:
+        raise agent_error
+
+    monkeypatch.setattr(
+        api,
+        "run_structured_learning_agent",
+        fake_run_structured_learning_agent,
+    )
+
+    response = client.post("/chat", json={"question": "请生成今天的建议。"})
+
+    assert response.status_code == 503
+    assert response.json() == {"detail": expected_detail}

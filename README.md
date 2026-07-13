@@ -65,8 +65,8 @@ AI 学习助教
 ## 5. 当前进度
 
 - 当前阶段：阶段 5，LangChain。
-- 当前课程：第 5.6 课已完成，主题是 CLI 接入 LangChain Agent。
-- 下一课：第 5.7 课，FastAPI 接入 LangChain Agent。
+- 当前课程：第 5.7 课已完成，主题是 FastAPI 接入 LangChain Agent。
+- 下一步：生成阶段 5 复盘，再进入阶段 6 的 RAG 学习路线。
 - 已完成阶段复盘：阶段 0、阶段 1、阶段 2、阶段 3、阶段 4。
 
 课程索引见：[docs/tutorial/README.md](docs/tutorial/README.md)

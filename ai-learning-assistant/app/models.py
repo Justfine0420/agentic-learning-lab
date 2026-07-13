@@ -61,3 +61,12 @@ class StructuredLearningSuggestion(BaseModel):
 class AISuggestionResponse(BaseModel):
     source: str = "ai"
     suggestion: StructuredLearningSuggestion
+
+
+class ChatRequest(BaseModel):
+    question: str = Field(min_length=1, description="学员希望向学习助教提出的问题")
+
+
+class AgentChatResponse(BaseModel):
+    source: str = "agent"
+    suggestion: StructuredLearningSuggestion
