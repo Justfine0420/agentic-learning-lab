@@ -68,7 +68,8 @@ Agent 不再只是“有一个外部能力”，而是开始面对“什么时�
 
 - `load_student()` 会读取 `data/student.json`。
 - `build_suggestion()` 会根据 Python 水平生成离线规则建议。
-- `tool(...)(function)` 可以把 Python 函数包装成 LangChain tool。
+- `@tool` 可以把 Python 查询函数声明为 LangChain tool。
+- `@dynamic_prompt` 和 `@wrap_tool_call` 可以声明运行期 prompt 与工具调用边界。
 - `create_agent(..., tools=[...])` 会把工具列表交给 Agent。
 - 第 5.3 课里的工具是只读工具。
 
@@ -224,9 +225,9 @@ from app.suggestions import build_suggestion
 
 它根据 `python_level` 返回离线建议，不依赖模型 provider。
 
-### 第二步：更新 system prompt
+### 第二步：更新 `@dynamic_prompt` 使用的基础指令
 
-第 5.3 课的 prompt 只说有一个只读工具。
+第 5.3 课的 `@dynamic_prompt` 基础指令只说有一个只读工具。
 
 本课改成多个只读工具：
 
@@ -325,23 +326,23 @@ notes[-current_limit:]
 新增：
 
 ```python
+@tool
 def read_recent_learning_notes(limit: int = 5) -> str:
-    """Read recent learner notes from local JSON storage."""
+    """读取本地 JSON 中最近的学习笔记，最多 10 条；此工具只读，不会修改任何文件。"""
     student = load_student()
     return format_recent_notes_for_tool(student["notes"], limit=limit)
 ```
 
-它仍然是普通 Python 函数。
-
-下一步才包装成工具。
+`@tool` 直接把函数名、类型标注和 docstring 变成工具契约。
 
 ### 第七步：新增离线规则建议函数
 
 新增：
 
 ```python
+@tool
 def build_current_rule_based_suggestion() -> str:
-    """Build the current offline rule-based learning suggestion."""
+    """根据当前学员的 Python 水平生成离线规则学习建议；此工具只读且不调用模型。"""
     student = load_student()
     return build_suggestion(student["python_level"])
 ```
@@ -354,31 +355,15 @@ def build_current_rule_based_suggestion() -> str:
 让 Agent 可以把稳定规则建议作为参考，而不是全部依赖模型自由发挥。
 ```
 
-### 第八步：包装新工具
+### 第八步：用 `@tool` 声明新工具
 
 新增最近笔记工具：
 
-```python
-read_recent_learning_notes_tool = tool(
-    "read_recent_learning_notes",
-    description=(
-        "读取当前保存在本地 JSON 文件中的最近学习笔记。参数 limit 表示最多返回几条，"
-        "会被限制在 1 到 10 之间。这个工具只读，不会修改任何文件。"
-    ),
-)(read_recent_learning_notes)
-```
+`@tool` 已经在函数定义处完成注册；名称是 `read_recent_learning_notes`，说明来自它的 docstring。
 
 新增离线规则建议工具：
 
-```python
-build_current_rule_based_suggestion_tool = tool(
-    "build_current_rule_based_suggestion",
-    description=(
-        "根据当前学员的 Python 水平生成离线规则学习建议。这个工具只使用本地规则，"
-        "不会调用大模型，也不会修改任何文件。"
-    ),
-)(build_current_rule_based_suggestion)
-```
+`@tool` 同样直接声明 `build_current_rule_based_suggestion`，无需创建带 `_tool` 后缀的中间对象。
 
 两个工具都明确写了：
 
@@ -394,17 +379,69 @@ build_current_rule_based_suggestion_tool = tool(
 ```python
 def build_learning_agent_tools() -> list[Any]:
     return [
-        read_current_student_profile_tool,
-        read_recent_learning_notes_tool,
-        build_current_rule_based_suggestion_tool,
+        read_current_student_profile,
+        read_recent_learning_notes,
+        build_current_rule_based_suggestion,
     ]
 ```
 
 这个函数现在才真正体现价值。
 
-后续所有 Agent 工具都从这里集中注册。
+这里是 Agent 的工具清单，不是手工注册层；工具定义已经各自在 `@tool` 处完成。
 
-### 第十步：补充测试
+### 第十步：用 middleware 注解动态 prompt 和工具失败边界
+
+在 `app/langchain_agent.py` 增加导入：
+
+```python
+from langchain.agents.middleware import ModelRequest, ToolCallRequest, dynamic_prompt, wrap_tool_call
+from langchain.messages import ToolMessage
+```
+
+再声明两个 middleware：
+
+```python
+@dynamic_prompt
+def build_learning_agent_system_prompt(request: ModelRequest) -> str:
+    if len(request.state.get("messages", [])) > 1:
+        return LEARNING_AGENT_SYSTEM_PROMPT + "当前会话已有多条消息；结合已有上下文回答。"
+    return LEARNING_AGENT_SYSTEM_PROMPT
+
+
+@wrap_tool_call
+def recover_from_learning_tool_error(
+    request: ToolCallRequest,
+    handler: Callable[[ToolCallRequest], ToolMessage],
+) -> ToolMessage:
+    try:
+        return handler(request)
+    except (OSError, ValueError):
+        return ToolMessage(
+            content="读取本地学习资料失败，无法据此给出可靠建议。请告知用户稍后重试。",
+            tool_call_id=request.tool_call["id"],
+        )
+
+
+LEARNING_AGENT_MIDDLEWARE = [
+    build_learning_agent_system_prompt,
+    recover_from_learning_tool_error,
+]
+```
+
+`@dynamic_prompt` 每次模型调用前根据 Agent state 生成 prompt；`@wrap_tool_call` 只拦截工具调用，读取本地 JSON 失败时返回与该次 tool call 关联的安全结果，而不是让模型编造资料。两个装饰器各管一层，不要把它们写进工具函数本身。
+
+两个 Agent 创建函数都传入同一组 middleware：
+
+```python
+create_agent(
+    model=current_model,
+    tools=current_tools,
+    middleware=LEARNING_AGENT_MIDDLEWARE,
+    # 结构化 Agent 额外传入 response_format
+)
+```
+
+### 第十一步：补充测试
 
 更新：
 
@@ -423,6 +460,8 @@ ai-learning-assistant/tests/test_langchain_agent.py
 - 最近笔记 tool 可以 `.invoke(...)`。
 - 规则建议 tool 可以 `.invoke({})`。
 - `create_learning_agent()` 默认带 3 个工具。
+- `@dynamic_prompt` 会读取 Agent state 并生成 prompt。
+- `@wrap_tool_call` 会把本地读取异常转换成安全的 `ToolMessage`。
 
 本课仍然不让 pytest 调真实模型。
 
@@ -606,10 +645,11 @@ Deep Agents 后续也会更依赖这种工具边界。
 - 新增 `format_recent_notes_for_tool()`。
 - 新增 `read_recent_learning_notes()`。
 - 新增 `build_current_rule_based_suggestion()`。
-- 新增 `read_recent_learning_notes_tool`。
-- 新增 `build_current_rule_based_suggestion_tool`。
+- 用 `@tool` 声明 `read_recent_learning_notes`。
+- 用 `@tool` 声明 `build_current_rule_based_suggestion`。
 - `build_learning_agent_tools()` 从 1 个工具扩展到 3 个工具。
-- 更新 Agent system prompt 和默认问题。
+- 新增 `@dynamic_prompt` 的 Agent state 感知 prompt。
+- 新增 `@wrap_tool_call` 的本地工具失败边界。
 - 增加多工具相关测试。
 
 依赖变更：

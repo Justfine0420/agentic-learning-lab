@@ -84,6 +84,7 @@
 | 2 | Stage 2 补充学习资料：模块导入与 JSON 文件保存 | `ai-learning-assistant/materials/stage-2.md` | 回顾模块导入、`Path`、JSON、异常处理、pytest 基础和当前数据流 |
 | 3 | Stage 3 补充学习资料：FastAPI、Pydantic 与接口测试 | `ai-learning-assistant/materials/stage-3.md` | 回顾 FastAPI route、Pydantic 模型、状态码、`TestClient`、虚拟环境和 API 数据流 |
 | 4 | Stage 4 补充学习资料：LLM 调用、结构化输出与 AI 建议入口 | `ai-learning-assistant/materials/stage-4.md` | 回顾 provider 配置、模型调用、JSON Schema、结构化校验、CLI/API AI 建议入口和当前数据流 |
+| 5 | Stage 5 补充学习资料：LangChain Agent、注解式工具与双入口 | `ai-learning-assistant/materials/stage-5.md` | 回顾 `@tool`、`@dynamic_prompt`、`@wrap_tool_call`、结构化输出、provider 兼容、CLI/API 复用和错误边界 |
 
 ## 6. 目录说明
 

@@ -20,7 +20,7 @@ model + system_prompt + messages + tools
 
 - 什么是 LangChain tool。
 - 为什么 tool 本质上就是带说明、参数 schema 和返回值的 Python 函数。
-- 如何用 `langchain.tools.tool` 把普通 Python 函数包装成工具。
+- 如何用 `@tool` 把查询函数声明为 LangChain 工具。
 - 如何把工具传给 `create_agent(..., tools=[...])`。
 - 如何让 Agent 从“只读输入消息”升级成“能主动查询当前学员档案”。
 - 如何用离线测试验证工具，不依赖真实模型 provider。
@@ -252,13 +252,14 @@ def format_student_profile_for_tool(student: Student, *, include_notes: bool = T
 读取数据 -> 交给格式化函数 -> 返回字符串
 ```
 
-### 第三步：定义普通 Python 查询函数
+### 第三步：用 `@tool` 声明查询工具
 
 新增：
 
 ```python
+@tool
 def read_current_student_profile(include_notes: bool = True) -> str:
-    """Read the current learner profile from local JSON storage."""
+    """读取本地 JSON 中的当前学员档案；可按需包含学习笔记，且不会修改任何文件。"""
     student = load_student()
     return format_student_profile_for_tool(student, include_notes=include_notes)
 ```
@@ -282,26 +283,18 @@ include_notes: bool = True
 说明：读取本地学员档案
 ```
 
-### 第四步：用 `tool()` 包装成 LangChain 工具
+### 第四步：让 docstring 成为工具说明
 
 新增：
 
-```python
-read_current_student_profile_tool = tool(
-    "read_current_student_profile",
-    description=(
-        "读取当前保存在本地 JSON 文件中的学员档案，包括姓名、学习目标、Python 水平，"
-        "并可按需包含学习笔记。这个工具只读，不会修改任何文件。"
-    ),
-)(read_current_student_profile)
-```
+`@tool` 会从函数名、类型标注和 docstring 生成工具契约；不再额外创建带 `_tool` 后缀的手工包装对象。
 
 这里有几个细节：
 
-- 工具名使用 `snake_case`。
-- 描述明确写出“本地 JSON 文件”。
-- 描述明确写出“只读”。
-- 工具包装的是普通 Python 函数。
+- 工具名来自 `read_current_student_profile`，保持 `snake_case`。
+- docstring 明确写出“本地 JSON 文件”和“只读”。
+- 类型标注会生成参数 schema。
+- 装饰后的对象可直接传给 Agent，也可通过 `.invoke(...)` 做离线测试。
 
 模型会看到工具名、描述和参数 schema，然后决定是否调用。
 
@@ -311,7 +304,7 @@ read_current_student_profile_tool = tool(
 
 ```python
 def build_learning_agent_tools() -> list[Any]:
-    return [read_current_student_profile_tool]
+    return [read_current_student_profile]
 ```
 
 现在只有一个工具，为什么还要单独写函数？
@@ -322,9 +315,9 @@ def build_learning_agent_tools() -> list[Any]:
 
 ```python
 return [
-    read_current_student_profile_tool,
-    read_learning_notes_tool,
-    build_rule_suggestion_tool,
+    read_current_student_profile,
+    read_learning_notes,
+    build_rule_suggestion,
 ]
 ```
 
@@ -345,7 +338,7 @@ def create_learning_agent(
     return create_agent(
         model=current_model,
         tools=current_tools,
-        system_prompt=LEARNING_AGENT_SYSTEM_PROMPT,
+        middleware=[build_learning_agent_system_prompt],
     )
 ```
 
@@ -361,7 +354,7 @@ build_learning_agent_tools()
 
 测试路径可以传入 fake tools，避免测试过度绑定真实工具列表。
 
-### 第七步：更新 system prompt
+### 第七步：更新 `@dynamic_prompt` 的基础指令
 
 第 5.2 课的 prompt 说：
 
@@ -384,7 +377,7 @@ LEARNING_AGENT_SYSTEM_PROMPT = (
 )
 ```
 
-prompt 不是权限系统，但它能指导模型更稳定地使用工具。
+`@dynamic_prompt` 不是权限系统，但它能在每次模型调用前生成指令，指导模型更稳定地使用工具。第 5.4 课会让它读取 Agent state，并加入工具调用失败边界。
 
 ### 第八步：让 message 只保留问题
 
@@ -614,14 +607,14 @@ pytest 应该验证：
 
 ## 8. 练习
 
-练习 1：解释 `read_current_student_profile()` 为什么先是普通 Python 函数，再被包装成 LangChain tool。
+练习 1：解释 `@tool` 为什么能直接把 `read_current_student_profile()` 声明为 LangChain tool。
 
 练习 2：解释 `include_notes: bool = True` 会如何影响工具 schema。
 
 练习 3：把 `include_notes=False` 传给工具对象：
 
 ```python
-read_current_student_profile_tool.invoke({"include_notes": False})
+read_current_student_profile.invoke({"include_notes": False})
 ```
 
 观察返回结果。
@@ -646,7 +639,7 @@ py -3.13 -m app.langchain_agent_demo
 - 解释工具名称、类型标注、docstring、description 各自有什么作用。
 - 看懂 `format_student_profile_for_tool()`。
 - 看懂 `read_current_student_profile()`。
-- 看懂 `read_current_student_profile_tool` 是如何创建的。
+- 看懂 `@tool` 如何创建 `read_current_student_profile` 工具对象。
 - 看懂 `build_learning_agent_tools()` 为什么要存在。
 - 解释为什么本课工具只读。
 - 解释为什么工具返回字符串。
@@ -662,7 +655,7 @@ py -3.13 -m app.langchain_agent_demo
 | 本课内容 | 后续升级 |
 | --- | --- |
 | `read_current_student_profile` | 5.4 增加更多查询工具 |
-| `tool(...)(function)` | 后续所有 Agent 工具的基础写法 |
+| `@tool` | 后续所有 Agent 工具的基础写法 |
 | `build_learning_agent_tools()` | 5.4 多工具列表入口 |
 | 只读工具 | 后续引入写操作前的安全边界 |
 | 工具返回字符串 | 后续升级为结构化 tool output |
@@ -703,7 +696,7 @@ Deep Agents 也会继续使用工具。
 
 - 新增 `format_student_profile_for_tool()`。
 - 新增 `read_current_student_profile()`。
-- 新增 `read_current_student_profile_tool`。
+- 用 `@tool` 声明 `read_current_student_profile`。
 - 新增 `build_learning_agent_tools()`。
 - `create_learning_agent()` 默认传入只读学员档案工具。
 - `build_learning_agent_messages()` 改为只包含用户问题。

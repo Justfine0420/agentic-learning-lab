@@ -1,5 +1,8 @@
 import pytest
+from langchain.agents.middleware import ModelRequest
 from langchain.agents.structured_output import ToolStrategy
+from langchain.messages import ToolMessage
+from langgraph.prebuilt.tool_node import ToolCallRequest
 
 from app import langchain_agent
 from app.config import LLMSettings
@@ -111,7 +114,7 @@ def test_read_current_student_profile_uses_storage(monkeypatch) -> None:
 
     monkeypatch.setattr(langchain_agent, "load_student", lambda: student)
 
-    assert langchain_agent.read_current_student_profile() == (
+    assert langchain_agent.read_current_student_profile.invoke({}) == (
         "学员姓名：Bob\n"
         "学习目标：理解 tool calling\n"
         "Python 水平：intermediate\n"
@@ -153,7 +156,7 @@ def test_read_recent_learning_notes_uses_storage(monkeypatch) -> None:
         },
     )
 
-    assert langchain_agent.read_recent_learning_notes(limit=2) == (
+    assert langchain_agent.read_recent_learning_notes.invoke({"limit": 2}) == (
         "最近学习笔记（最多 2 条）：\n"
         "1. 笔记 2\n"
         "2. 笔记 3"
@@ -172,7 +175,7 @@ def test_build_current_rule_based_suggestion_uses_storage(monkeypatch) -> None:
         },
     )
 
-    assert "变量" in langchain_agent.build_current_rule_based_suggestion()
+    assert "变量" in langchain_agent.build_current_rule_based_suggestion.invoke({})
 
 
 def test_build_learning_agent_tools_contains_multiple_tools() -> None:
@@ -199,7 +202,7 @@ def test_profile_tool_invokes_profile_reader(monkeypatch) -> None:
         },
     )
 
-    text = langchain_agent.read_current_student_profile_tool.invoke({"include_notes": True})
+    text = langchain_agent.read_current_student_profile.invoke({"include_notes": True})
 
     assert "学员姓名：Carol" in text
     assert "暂无笔记" in text
@@ -217,7 +220,7 @@ def test_recent_notes_tool_invokes_note_reader(monkeypatch) -> None:
         },
     )
 
-    text = langchain_agent.read_recent_learning_notes_tool.invoke({"limit": 2})
+    text = langchain_agent.read_recent_learning_notes.invoke({"limit": 2})
 
     assert "1. B" in text
     assert "2. C" in text
@@ -235,7 +238,7 @@ def test_rule_suggestion_tool_invokes_rule_suggestion(monkeypatch) -> None:
         },
     )
 
-    text = langchain_agent.build_current_rule_based_suggestion_tool.invoke({})
+    text = langchain_agent.build_current_rule_based_suggestion.invoke({})
 
     assert "类" in text
 
@@ -245,10 +248,10 @@ def test_create_learning_agent_uses_model_prompt_and_default_tools(monkeypatch) 
     fake_model = object()
     fake_agent = object()
 
-    def fake_create_agent(*, model, tools, system_prompt):
+    def fake_create_agent(*, model, tools, middleware):
         calls["model"] = model
         calls["tools"] = tools
-        calls["system_prompt"] = system_prompt
+        calls["middleware"] = middleware
         return fake_agent
 
     monkeypatch.setattr(langchain_agent, "create_agent", fake_create_agent)
@@ -261,7 +264,7 @@ def test_create_learning_agent_uses_model_prompt_and_default_tools(monkeypatch) 
     assert calls["tools"][0].name == "read_current_student_profile"
     assert calls["tools"][1].name == "read_recent_learning_notes"
     assert calls["tools"][2].name == "build_current_rule_based_suggestion"
-    assert "多个只读工具" in calls["system_prompt"]
+    assert calls["middleware"] is langchain_agent.LEARNING_AGENT_MIDDLEWARE
 
 
 def test_create_learning_agent_accepts_explicit_tools(monkeypatch) -> None:
@@ -270,10 +273,10 @@ def test_create_learning_agent_accepts_explicit_tools(monkeypatch) -> None:
     fake_tools = [object()]
     fake_agent = object()
 
-    def fake_create_agent(*, model, tools, system_prompt):
+    def fake_create_agent(*, model, tools, middleware):
         calls["model"] = model
         calls["tools"] = tools
-        calls["system_prompt"] = system_prompt
+        calls["middleware"] = middleware
         return fake_agent
 
     monkeypatch.setattr(langchain_agent, "create_agent", fake_create_agent)
@@ -298,10 +301,10 @@ def test_create_structured_learning_agent_uses_response_format(monkeypatch) -> N
     fake_agent = object()
     fake_response_format = object()
 
-    def fake_create_agent(*, model, tools, system_prompt, response_format):
+    def fake_create_agent(*, model, tools, middleware, response_format):
         calls["model"] = model
         calls["tools"] = tools
-        calls["system_prompt"] = system_prompt
+        calls["middleware"] = middleware
         calls["response_format"] = response_format
         return fake_agent
 
@@ -316,7 +319,45 @@ def test_create_structured_learning_agent_uses_response_format(monkeypatch) -> N
     assert calls["model"] is fake_model
     assert len(calls["tools"]) == 3
     assert calls["response_format"] is fake_response_format
-    assert "结构化学习建议" in calls["system_prompt"]
+    assert calls["middleware"] is langchain_agent.LEARNING_AGENT_MIDDLEWARE
+
+
+def test_dynamic_prompt_uses_agent_state() -> None:
+    request = ModelRequest(
+        model=langchain_agent.build_langchain_chat_model(build_settings()),
+        messages=[],
+        state={"messages": [{"role": "user"}, {"role": "assistant"}]},
+    )
+
+    prompt = langchain_agent.build_learning_agent_system_prompt.wrap_model_call(
+        request,
+        lambda updated_request: updated_request.system_message,
+    )
+
+    assert prompt is not None
+    assert "当前会话已有多条消息" in prompt.content
+
+
+def test_tool_error_middleware_returns_safe_tool_message() -> None:
+    request = ToolCallRequest(
+        tool_call={
+            "name": "read_current_student_profile",
+            "args": {},
+            "id": "tool-call-1",
+            "type": "tool_call",
+        },
+        tool=None,
+        state={},
+        runtime=None,
+    )
+
+    def raise_storage_error(_: ToolCallRequest) -> ToolMessage:
+        raise OSError("student.json is unavailable")
+
+    result = langchain_agent.recover_from_learning_tool_error.wrap_tool_call(request, raise_storage_error)
+
+    assert result.tool_call_id == "tool-call-1"
+    assert "无法据此给出可靠建议" in result.content
 
 
 def test_build_learning_agent_messages_contains_question_only() -> None:

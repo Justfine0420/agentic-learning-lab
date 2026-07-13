@@ -18,7 +18,7 @@
 完成这个阶段后，学习者需要能解释：
 
 - LangChain 在项目中负责什么，LangGraph 和 Deep Agents 又分别解决什么问题。
-- `create_agent()`、模型、system prompt、messages 和 tools 如何组成 Agent harness。
+- `create_agent()`、模型、注解式 middleware、messages 和 tools 如何组成 Agent harness。
 - 为什么工具要按单一职责拆分，并保持只读。
 - 为什么 Agent 最终结果使用 `StructuredLearningSuggestion`，而不是重新解析普通文本。
 - 为什么 CLI 和 FastAPI 都复用 `run_structured_learning_agent()`。
@@ -43,7 +43,8 @@
 - 安装并固定 `langchain==1.3.12` 与 `langchain-openai==1.3.4`。
 - 使用 `ChatOpenAI` 复用阶段 4 的 `LLMSettings`、API Key、base URL、model、超时和重试配置。
 - 使用 `create_agent()` 创建 Agent，而不是在入口层手写工具调用循环。
-- 使用 `LEARNING_AGENT_SYSTEM_PROMPT` 描述学习助教职责、可用工具与中文输出约束。
+- 使用 `@dynamic_prompt` 根据 Agent state 生成学习助教职责、工具使用和中文输出约束。
+- 使用 `@wrap_tool_call` 把本地资料读取失败转换为安全的工具结果，避免编造资料。
 - 使用 `read_current_student_profile` 读取当前学员档案。
 - 使用 `read_recent_learning_notes` 读取受 1 到 10 条边界限制的最近笔记。
 - 使用 `build_current_rule_based_suggestion` 读取已有离线规则建议。
@@ -76,7 +77,7 @@ app/langchain_agent.py
 question
 -> run_structured_learning_agent(question)
 -> create_structured_learning_agent()
--> create_agent(model, tools, system_prompt, response_format)
+-> create_agent(model, tools, middleware, response_format)
 -> agent.invoke({"messages": ...})
 -> result["structured_response"]
 -> StructuredLearningSuggestion
@@ -168,7 +169,7 @@ POST /chat
 py -3.13 -m pytest tests/test_langchain_agent.py tests/test_cli.py tests/test_api.py
 ```
 
-这组测试覆盖 Agent 模型初始化、Ark 兼容包装、工具注册、结构化结果、CLI 路由和 `/chat` 错误边界。
+这组测试覆盖 Agent 模型初始化、Ark 兼容包装、`@tool`、`@dynamic_prompt`、`@wrap_tool_call`、结构化结果、CLI 路由和 `/chat` 错误边界。
 
 完整测试：
 
@@ -265,7 +266,7 @@ Agent 失败时，`/chat` 返回明确的 `503`；它不会把规则建议伪装
 
 完成阶段 5 后，应该能够回答：
 
-1. `create_agent()` 为什么需要 model、tools、system prompt 和 messages？
+1. `create_agent()` 为什么需要 model、tools、middleware 和 messages？
 2. `read_current_student_profile` 为什么适合作为只读 tool，而不是把所有资料直接拼进每条 message？
 3. CLI 调 Agent 前为什么先执行 `save_student(student)`？
 4. `ToolStrategy(StructuredLearningSuggestion)` 和 `structured_response` 分别解决什么问题？

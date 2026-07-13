@@ -173,7 +173,7 @@ model = ChatOpenAI(
 再传给：
 
 ```python
-create_agent(model=model, tools=[], system_prompt=...)
+create_agent(model=model, tools=[], middleware=[...])
 ```
 
 这样好处是：
@@ -202,7 +202,7 @@ tools=[]
 | 5.5 | Agent 结构化输出 |
 | 5.6 | FastAPI 接入 Agent |
 
-如果现在就注册工具，你会同时面对：
+如果现在就定义工具，你会同时面对：
 
 ```text
 LangChain 安装
@@ -319,6 +319,7 @@ ai-learning-assistant/app/langchain_agent.py
 
 ```python
 from langchain.agents import create_agent
+from langchain.agents.middleware import ModelRequest, dynamic_prompt
 from langchain_openai import ChatOpenAI
 ```
 
@@ -329,7 +330,7 @@ from app.config import LLMSettings, get_llm_settings, require_llm_api_key
 from app.llm import build_learning_suggestion_input
 ```
 
-### 第三步：定义 Agent system prompt
+### 第三步：用 `@dynamic_prompt` 定义 Agent prompt
 
 新增：
 
@@ -340,6 +341,11 @@ LEARNING_AGENT_SYSTEM_PROMPT = (
     "当前阶段你还没有工具，只能基于输入里的学员资料回答。"
     "回答必须使用中文。"
 )
+
+
+@dynamic_prompt
+def build_learning_agent_system_prompt(_: ModelRequest) -> str:
+    return LEARNING_AGENT_SYSTEM_PROMPT
 ```
 
 注意这里明确写了：
@@ -385,7 +391,7 @@ def create_learning_agent(
     return create_agent(
         model=current_model,
         tools=[],
-        system_prompt=LEARNING_AGENT_SYSTEM_PROMPT,
+        middleware=[build_learning_agent_system_prompt],
     )
 ```
 
@@ -520,7 +526,7 @@ tests/test_langchain_agent_demo.py
 
 - `ChatOpenAI` 使用 `LLMSettings` 里的 model、base URL、API Key。
 - 缺少 API Key 时仍然会失败。
-- `create_learning_agent()` 传入 `tools=[]`。
+- `create_learning_agent()` 传入 `tools=[]` 和注解式 prompt middleware。
 - Agent 输入消息包含学员档案和用户问题。
 - `extract_agent_text()` 能解析 `content` 和 `content_blocks`。
 - `run_learning_agent()` 会调用 fake agent 的 `invoke()`。
@@ -667,6 +673,7 @@ Agent 现在不是“自己会查资料”，而是“基于你传进去的 mess
 - 解释 `langchain` 和 `langchain-openai` 的分工。
 - 看懂 `build_langchain_chat_model()`。
 - 看懂 `create_learning_agent()`。
+- 解释 `@dynamic_prompt` 如何把 prompt 注入模型调用。
 - 解释为什么本课 `tools=[]`。
 - 看懂 `build_learning_agent_messages()` 如何复用 Stage 4 输入构造。
 - 看懂 `extract_agent_text()` 为什么要处理 `content` 和 `content_blocks`。
@@ -682,7 +689,7 @@ Agent 现在不是“自己会查资料”，而是“基于你传进去的 mess
 | 本课内容 | 后续升级 |
 | --- | --- |
 | `ChatOpenAI` | 后续继续复用 provider 配置 |
-| `create_agent(..., tools=[])` | 5.3 改为带工具的 Agent |
+| `create_agent(..., tools=[], middleware=[...])` | 5.3 改为带工具的 Agent |
 | `build_learning_agent_messages()` | 后续对话 API 和记忆输入基础 |
 | `extract_agent_text()` | 5.5 结构化 Agent 输出前的文本基线 |
 | `app/langchain_agent.py` | Stage 5 的 Agent 主模块 |

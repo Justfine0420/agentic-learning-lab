@@ -115,8 +115,8 @@ ai-learning-assistant/
 | 4.5 | AI 建议 API、CLI 入口与降级边界 | AI 建议接口、CLI AI 入口、provider 不可用时的错误和降级策略 | API 和 CLI 可选择调用 AI 建议 |
 | 5.1 | LangChain 定位 | `create_agent`、agent harness | 理解框架边界 |
 | 5.2 | 创建第一个 Agent | model + prompt | AI 助手入口 |
-| 5.3 | Python 函数变工具 | tool 思路 | 查询学员资料工具 |
-| 5.4 | 多工具调用 | 查资料、查笔记、生成建议 | 工具型 AI 助手 |
+| 5.3 | Python 函数变工具 | `@tool`、类型标注和 docstring | 查询学员资料工具 |
+| 5.4 | 多工具调用 | `@dynamic_prompt`、`@wrap_tool_call`、查资料、查笔记、生成建议 | 工具型 AI 助手 |
 | 5.5 | 结构化 Agent 输出 | 学习计划结构 | 可解析结果 |
 | 5.6 | CLI 接入 Agent | CLI 菜单调用结构化 Agent | 命令行可用的 Agent 助手 |
 | 5.7 | FastAPI 接入 Agent | `POST /chat` | API 调 AI 助手 |

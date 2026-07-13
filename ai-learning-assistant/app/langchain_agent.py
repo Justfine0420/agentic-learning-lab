@@ -3,7 +3,9 @@ from typing import Any
 
 from langchain_core.tools import BaseTool
 from langchain.agents import create_agent
+from langchain.agents.middleware import ModelRequest, ToolCallRequest, dynamic_prompt, wrap_tool_call
 from langchain.agents.structured_output import ToolStrategy
+from langchain.messages import ToolMessage
 from langchain.tools import tool
 from langchain_openai import ChatOpenAI
 
@@ -23,11 +25,6 @@ LEARNING_AGENT_SYSTEM_PROMPT = (
 )
 
 DEFAULT_AGENT_QUESTION = "请先查询当前学习档案、最近笔记和离线规则建议，再生成今天的学习建议。"
-
-STRUCTURED_LEARNING_AGENT_SYSTEM_PROMPT = (
-    LEARNING_AGENT_SYSTEM_PROMPT
-    + "最终结果必须形成结构化学习建议，包括摘要、1 到 3 条行动建议和下一检查点。"
-)
 
 STRUCTURED_RESPONSE_TOOL_MESSAGE = "已生成结构化学习建议。"
 
@@ -72,8 +69,9 @@ def format_student_profile_for_tool(student: Student, *, include_notes: bool = T
     return "\n".join(lines)
 
 
+@tool
 def read_current_student_profile(include_notes: bool = True) -> str:
-    """Read the current learner profile from local JSON storage."""
+    """读取本地 JSON 中的当前学员档案；可按需包含学习笔记，且不会修改任何文件。"""
     student = load_student()
     return format_student_profile_for_tool(student, include_notes=include_notes)
 
@@ -97,51 +95,57 @@ def format_recent_notes_for_tool(notes: list[str], *, limit: int = 5) -> str:
     return "\n".join(lines)
 
 
+@tool
 def read_recent_learning_notes(limit: int = 5) -> str:
-    """Read recent learner notes from local JSON storage."""
+    """读取本地 JSON 中最近的学习笔记，最多 10 条；此工具只读，不会修改任何文件。"""
     student = load_student()
     return format_recent_notes_for_tool(student["notes"], limit=limit)
 
 
+@tool
 def build_current_rule_based_suggestion() -> str:
-    """Build the current offline rule-based learning suggestion."""
+    """根据当前学员的 Python 水平生成离线规则学习建议；此工具只读且不调用模型。"""
     student = load_student()
     return build_suggestion(student["python_level"])
 
 
-read_current_student_profile_tool = tool(
-    "read_current_student_profile",
-    description=(
-        "读取当前保存在本地 JSON 文件中的学员档案，包括姓名、学习目标、Python 水平，"
-        "并可按需包含学习笔记。这个工具只读，不会修改任何文件。"
-    ),
-)(read_current_student_profile)
-
-
-read_recent_learning_notes_tool = tool(
-    "read_recent_learning_notes",
-    description=(
-        "读取当前保存在本地 JSON 文件中的最近学习笔记。参数 limit 表示最多返回几条，"
-        "会被限制在 1 到 10 之间。这个工具只读，不会修改任何文件。"
-    ),
-)(read_recent_learning_notes)
-
-
-build_current_rule_based_suggestion_tool = tool(
-    "build_current_rule_based_suggestion",
-    description=(
-        "根据当前学员的 Python 水平生成离线规则学习建议。这个工具只使用本地规则，"
-        "不会调用大模型，也不会修改任何文件。"
-    ),
-)(build_current_rule_based_suggestion)
-
-
 def build_learning_agent_tools() -> list[Any]:
     return [
-        read_current_student_profile_tool,
-        read_recent_learning_notes_tool,
-        build_current_rule_based_suggestion_tool,
+        read_current_student_profile,
+        read_recent_learning_notes,
+        build_current_rule_based_suggestion,
     ]
+
+
+@dynamic_prompt
+def build_learning_agent_system_prompt(request: ModelRequest) -> str:
+    message_count = len(request.state.get("messages", []))
+    if message_count > 1:
+        return (
+            LEARNING_AGENT_SYSTEM_PROMPT
+            + "当前会话已有多条消息；结合已有上下文回答，不要重复询问已经给出的信息。"
+        )
+    return LEARNING_AGENT_SYSTEM_PROMPT
+
+
+@wrap_tool_call
+def recover_from_learning_tool_error(
+    request: ToolCallRequest,
+    handler: Callable[[ToolCallRequest], ToolMessage],
+) -> ToolMessage:
+    try:
+        return handler(request)
+    except (OSError, ValueError):
+        return ToolMessage(
+            content="读取本地学习资料失败，无法据此给出可靠建议。请告知用户稍后重试。",
+            tool_call_id=request.tool_call["id"],
+        )
+
+
+LEARNING_AGENT_MIDDLEWARE = [
+    build_learning_agent_system_prompt,
+    recover_from_learning_tool_error,
+]
 
 
 def build_langchain_chat_model(settings: LLMSettings | None = None) -> ChatOpenAI:
@@ -170,7 +174,7 @@ def create_learning_agent(
     return create_agent(
         model=current_model,
         tools=current_tools,
-        system_prompt=LEARNING_AGENT_SYSTEM_PROMPT,
+        middleware=LEARNING_AGENT_MIDDLEWARE,
     )
 
 
@@ -197,7 +201,7 @@ def create_structured_learning_agent(
     return create_agent(
         model=current_model,
         tools=current_tools,
-        system_prompt=STRUCTURED_LEARNING_AGENT_SYSTEM_PROMPT,
+        middleware=LEARNING_AGENT_MIDDLEWARE,
         response_format=current_response_format,
     )
 

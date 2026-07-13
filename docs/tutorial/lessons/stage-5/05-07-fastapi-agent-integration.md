@@ -111,7 +111,7 @@ def run_structured_learning_agent(
     ...
 ```
 
-因此 FastAPI 不需要了解 `create_agent()`、`ToolStrategy` 或工具注册细节。它只接收 HTTP 请求并调用稳定的 Python 函数。
+因此 FastAPI 不需要了解 `create_agent()`、`ToolStrategy` 或 `@tool` / middleware 的装配细节。它只接收 HTTP 请求并调用稳定的 Python 函数。
 
 ## 4. 核心概念
 
@@ -130,7 +130,7 @@ def run_structured_learning_agent(
 
 ```text
 创建 Agent
-注册工具
+声明工具和 middleware
 调用模型
 提取 structured_response
 返回 StructuredLearningSuggestion

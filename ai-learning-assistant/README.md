@@ -212,7 +212,7 @@ py -3.13 -m pytest
 - FastAPI 路由、请求体校验和错误响应。
 - provider 配置读取。
 - LLM 请求封装和结构化输出解析。
-- LangChain Agent 和工具注册。
+- LangChain Agent、注解式工具与 middleware。
 
 ## 6. 目录说明
 
@@ -244,6 +244,7 @@ tests/                           测试代码
 - `materials/stage-2.md`：Python 工程化、模块导入、JSON 文件读写、异常处理和 pytest。
 - `materials/stage-3.md`：FastAPI、Pydantic、状态码、`TestClient` 和 API 数据流。
 - `materials/stage-4.md`：LLM provider 配置、模型调用、结构化输出、CLI/API AI 建议入口。
+- `materials/stage-5.md`：LangChain Agent、工具调用、结构化 Agent 输出、CLI/API 双入口与错误边界。
 
 ## 8. 与课程的关系
 

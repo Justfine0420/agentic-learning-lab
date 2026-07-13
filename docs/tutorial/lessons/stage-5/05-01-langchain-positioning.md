@@ -134,7 +134,7 @@ Stage 5 的目标是逐步升级成：
 一个 agent harness 会额外处理：
 
 - 用哪个模型。
-- 给模型什么 system prompt。
+- 通过 middleware 在模型调用前提供什么 prompt。
 - 当前有哪些 tools 可用。
 - 模型要求调用工具时，如何执行工具。
 - 工具结果如何再交回模型。
@@ -162,12 +162,18 @@ user message
 
 ```python
 from langchain.agents import create_agent
+from langchain.agents.middleware import ModelRequest, dynamic_prompt
+
+
+@dynamic_prompt
+def assistant_prompt(_: ModelRequest) -> str:
+    return "You are a helpful assistant"
 
 
 agent = create_agent(
     model="provider:model-name",
     tools=[some_tool],
-    system_prompt="You are a helpful assistant",
+    middleware=[assistant_prompt],
 )
 
 result = agent.invoke(
@@ -183,7 +189,8 @@ result = agent.invoke(
 | --- | --- |
 | `model` | 使用哪个模型 |
 | `tools` | agent 可以调用哪些 Python 函数 |
-| `system_prompt` | agent 的长期角色和行为边界 |
+| `middleware` | 用注解声明运行期 prompt、工具调用边界等扩展行为 |
+| `@dynamic_prompt` | 在 middleware 中生成 agent 的长期角色和行为边界 |
 
 这些概念和阶段 4 的代码可以对应起来：
 
@@ -519,7 +526,7 @@ from langchain.agents import create_agent
 
 - 解释 LangChain 当前推荐的 `create_agent` 定位。
 - 解释 agent harness 是什么。
-- 解释 model、tools、system prompt 在 agent 里的职责。
+- 解释 model、tools、middleware 在 agent 里的职责。
 - 说清 Stage 4 的 `llm.py` 和 Stage 5 的 `langchain_agent.py` 未来如何分工。
 - 说清 LangChain 和 LangGraph 的边界。
 - 说清 Deep Agents 为什么放到后续阶段。
@@ -538,7 +545,7 @@ from langchain.agents import create_agent
 | `create_agent` | 第 5.2 课创建第一个 LangChain Agent |
 | `tools` | 第 5.3 课把 Python 函数变成工具 |
 | agent harness | 第 5.4 课组合多个工具 |
-| system prompt | 第 5.5 课约束结构化 Agent 输出 |
+| middleware | 第 5.4 课注入动态 prompt 和工具失败边界 |
 | CLI/API 入口 | 第 5.6 课接入 `POST /chat` |
 | tool 调用边界 | Stage 6 RAG retriever 工具 |
 | 明确流程控制 | Stage 7 LangGraph State / node / edge |

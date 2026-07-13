@@ -62,8 +62,8 @@ next_checkpoint
 
 - Stage 4.4 已经定义了 `StructuredLearningSuggestion`。
 - Stage 4.5 已经让普通 LLM 调用返回结构化 AI 建议。
-- Stage 5.4 已经给 Agent 注册了多个只读工具。
-- `create_agent()` 可以接收 `tools` 和 `system_prompt`。
+- Stage 5.4 已经用 `@tool` 声明了多个只读工具，并用 middleware 注解运行期行为。
+- `create_agent()` 可以接收 `tools`、`middleware` 和 `response_format`。
 - LangChain Agent 最终返回的是一个 state，而不是单纯字符串。
 
 Stage 4 的结构化输出是直接调用模型：
@@ -191,20 +191,18 @@ from app.models import StructuredLearningSuggestion, Student
 
 它已经被普通 LLM 调用和 `POST /ai/suggestion` 使用过，这里继续复用，不再发明第二套结构。
 
-### 第二步：新增结构化 Agent prompt
+### 第二步：复用注解式 middleware
 
-新增：
+结构化路径不再新建第二份静态 prompt。它复用第 5.4 课定义的：
 
 ```python
-STRUCTURED_LEARNING_AGENT_SYSTEM_PROMPT = (
-    LEARNING_AGENT_SYSTEM_PROMPT
-    + "最终结果必须形成结构化学习建议，包括摘要、1 到 3 条行动建议和下一检查点。"
-)
+LEARNING_AGENT_MIDDLEWARE = [
+    build_learning_agent_system_prompt,
+    recover_from_learning_tool_error,
+]
 ```
 
-这里不是替换原来的 prompt，而是为结构化路径追加约束。
-
-旧的 `LEARNING_AGENT_SYSTEM_PROMPT` 仍然服务普通文本 demo。
+`@dynamic_prompt` 继续负责助教角色和会话上下文，`@wrap_tool_call` 继续负责本地资料读取失败边界。结构化结果的强约束由下一步的 `ToolStrategy` 承担，避免把相同规则复制进两份 prompt。
 
 ### 第三步：定义结构化响应格式
 
@@ -249,7 +247,7 @@ def create_structured_learning_agent(
     return create_agent(
         model=current_model,
         tools=current_tools,
-        system_prompt=STRUCTURED_LEARNING_AGENT_SYSTEM_PROMPT,
+        middleware=LEARNING_AGENT_MIDDLEWARE,
         response_format=current_response_format,
     )
 ```
@@ -342,6 +340,7 @@ ai-learning-assistant/tests/test_langchain_agent.py
 
 - `build_learning_agent_response_format()` 返回 `ToolStrategy`。
 - `create_structured_learning_agent()` 会把 `response_format` 传给 `create_agent()`。
+- 普通 Agent 和结构化 Agent 复用同一组注解式 middleware。
 - `extract_structured_agent_response()` 可以接收 Pydantic 实例。
 - `extract_structured_agent_response()` 可以校验 dict。
 - 缺少 `structured_response` 时会报错。
@@ -495,10 +494,10 @@ Deep Agents 阶段也会依赖结构化结果。
 
 代码变更：
 
-- 新增 `STRUCTURED_LEARNING_AGENT_SYSTEM_PROMPT`。
 - 新增 `STRUCTURED_RESPONSE_TOOL_MESSAGE`。
 - 新增 `build_learning_agent_response_format()`。
 - 新增 `create_structured_learning_agent()`。
+- 复用第 5.4 课的 `LEARNING_AGENT_MIDDLEWARE`，不再创建第二份静态 prompt。
 - 新增 `extract_structured_agent_response()`。
 - 新增 `run_structured_learning_agent()`。
 - 新增结构化 Agent demo。
