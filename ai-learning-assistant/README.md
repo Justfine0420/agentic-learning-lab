@@ -4,9 +4,9 @@
 
 它从一个普通 Python CLI 程序开始，逐步升级为具备 FastAPI、LLM 调用、LangChain 工具调用、RAG、LangGraph 和 Deep Agents 能力的 AI 应用。
 
-当前阶段：阶段 5，LangChain。
+当前阶段：阶段 5，LangChain，已完成并复盘。
 
-当前进度：已完成第 5.7 课，CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议。
+当前进度：CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议；下一阶段将引入 RAG 资料检索。
 
 ## 1. 当前功能
 

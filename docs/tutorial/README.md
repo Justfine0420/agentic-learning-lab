@@ -13,20 +13,20 @@
 3. 每完成一个阶段，阅读对应阶段复盘
 4. 需要回看代码时，使用对应 Git tag
 
-当前最新课程：
+当前最新复盘：
 
-- [第 5.7 课：FastAPI 接入 LangChain Agent](./lessons/stage-5/05-07-fastapi-agent-integration.md)
+- [阶段 5 复盘：LangChain Agent、工具调用与双入口](./reviews/stage-5-review.md)
 
 下一课：
 
-- 阶段 5 复盘：整理 LangChain Agent、工具、结构化输出与双入口
+- 第 6.1 课：RAG 是什么
 
 ## 2. 当前学习位置
 
-- 当前阶段：阶段 5 的实现课程已完成
-- 当前课程：第 5.7 课已生成并验证
+- 当前阶段：阶段 5 已完成并复盘
+- 当前课程：阶段 5 复盘已生成并验证
 - 真实代码项目：`ai-learning-assistant/`
-- 下一步建议：生成阶段 5 复盘，再进入阶段 6 的 RAG 学习路线
+- 下一步建议：进入第 6.1 课，理解 RAG 的文档、chunk、embedding 和 retriever
 
 ## 3. 课程索引
 
@@ -75,6 +75,7 @@
 | 2 | [阶段 2 复盘：Python 工程化与文件持久化](./reviews/stage-2-review.md) |
 | 3 | [阶段 3 复盘：FastAPI 基础与学习助手 API](./reviews/stage-3-review.md) |
 | 4 | [阶段 4 复盘：LLM 基础、结构化输出与 AI 建议入口](./reviews/stage-4-review.md) |
+| 5 | [阶段 5 复盘：LangChain Agent、工具调用与双入口](./reviews/stage-5-review.md) |
 
 ## 5. 补充学习资料
 
@@ -104,6 +105,7 @@ docs/tutorial/
     ├── stage-2-review.md
     ├── stage-3-review.md
     ├── stage-4-review.md
+    ├── stage-5-review.md
     └── ...
 ```
 
