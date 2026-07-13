@@ -1,6 +1,7 @@
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping, Sequence
 from typing import Any
 
+from langchain_core.tools import BaseTool
 from langchain.agents import create_agent
 from langchain.agents.structured_output import ToolStrategy
 from langchain.tools import tool
@@ -29,6 +30,25 @@ STRUCTURED_LEARNING_AGENT_SYSTEM_PROMPT = (
 )
 
 STRUCTURED_RESPONSE_TOOL_MESSAGE = "已生成结构化学习建议。"
+
+
+class VolcengineCompatibleChatOpenAI(ChatOpenAI):
+    """ChatOpenAI adapter for Ark coding endpoints that reject required tool choice."""
+
+    def bind_tools(
+        self,
+        tools: Sequence[dict[str, Any] | type | Callable[..., Any] | BaseTool],
+        *,
+        tool_choice: dict | str | bool | None = None,
+        **kwargs: Any,
+    ) -> Any:
+        if isinstance(tool_choice, str) and tool_choice in {"any", "required"}:
+            tool_choice = None
+        return super().bind_tools(tools, tool_choice=tool_choice, **kwargs)
+
+
+def should_relax_required_tool_choice(settings: LLMSettings) -> bool:
+    return settings.provider in {"volcengine_agent_plan", "volcengine_coding"}
 
 
 def format_student_profile_for_tool(student: Student, *, include_notes: bool = True) -> str:
@@ -126,8 +146,9 @@ def build_learning_agent_tools() -> list[Any]:
 
 def build_langchain_chat_model(settings: LLMSettings | None = None) -> ChatOpenAI:
     current_settings = require_llm_api_key(settings or get_llm_settings())
+    model_class = VolcengineCompatibleChatOpenAI if should_relax_required_tool_choice(current_settings) else ChatOpenAI
 
-    return ChatOpenAI(
+    return model_class(
         model=current_settings.model,
         api_key=current_settings.api_key,
         base_url=current_settings.base_url,

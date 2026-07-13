@@ -100,6 +100,7 @@ app/structured_llm_demo.py
 - 注册多个只读工具：`read_current_student_profile`、`read_recent_learning_notes`、`build_current_rule_based_suggestion`。
 - 工具可以读取 `data/student.json` 中的学员档案、最近学习笔记，并复用离线规则建议。
 - 使用 `ToolStrategy(StructuredLearningSuggestion)` 生成结构化 Agent 结果。
+- 对火山引擎 Ark coding / Agent Plan 路径放宽 LangChain 强制工具选择参数，兼容不支持 `tool_choice="required"` 的 OpenAI-compatible 端点。
 - CLI 第 4 项会调用 `run_structured_learning_agent()`，并把结果格式化为命令行文本。
 - `POST /chat` 接收学员问题后调用 `run_structured_learning_agent(question)`，返回结构化 Agent 建议。
 - 提供手动 demo 入口验证 Agent 调用。
