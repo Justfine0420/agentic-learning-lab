@@ -6,7 +6,7 @@
 
 当前阶段：阶段 6，RAG，进行中。
 
-当前进度：CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议；第 6.4 课已使用注入的 embedding 构建内存 vector store 并检索相关 chunk；后续课程才会基于资料生成回答。
+当前进度：CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议；第 6.5 课已能基于检索到的资料 chunk 生成带 `sources` 的结构化回答；后续课程会把资料问答暴露为 API。
 
 ## 1. 当前功能
 
@@ -123,7 +123,7 @@ py -3.13 -m app.langchain_agent_demo
 
 ### RAG 基础
 
-当前 RAG 已完成资料加载、文档切分和向量检索三层：
+当前 RAG 已完成资料加载、文档切分、向量检索和基于资料回答：
 
 - `load_local_materials()` 读取顶层 `materials/*.md`。
 - 每份资料返回一个 LangChain `Document`。
@@ -134,9 +134,12 @@ py -3.13 -m app.langchain_agent_demo
 - `build_material_vector_store()` 使用注入的 `Embeddings` 建立 `InMemoryVectorStore`。
 - `build_ollama_embeddings()` 使用本地 Ollama embedding 模型构造 `OllamaEmbeddings`。
 - `retrieve_material_chunks()` 按问题返回最相近的 chunk，并保留 `source` 元数据。
+- `MaterialAnswer` 定义资料回答结构，包含 `answer` 和 `sources`。
+- `generate_material_answer()` 将检索 chunk 交给聊天模型，并校验返回 JSON 与引用来源。
+- `answer_material_question()` 串联向量检索和资料回答生成。
 - `numpy` 用于内存向量库的相似度计算。
 
-当前还没有云端 embedding provider 配置、基于资料的回答或 RAG API。
+当前还没有云端 embedding provider 配置或 RAG API。
 
 可以在不配置 provider 的情况下手动检查加载结果：
 
@@ -248,6 +251,7 @@ py -3.13 -m pytest
 - provider 配置读取。
 - LLM 请求封装和结构化输出解析。
 - LangChain Agent、注解式工具与 middleware。
+- RAG 资料加载、切分、向量检索和基于资料回答。
 
 ## 6. 目录说明
 
@@ -263,7 +267,7 @@ app/
 ├── llm_demo.py                  普通文本模型调用 demo
 ├── main.py                      CLI 入口
 ├── models.py                    TypedDict / Pydantic 模型
-├── rag.py                       本地 Markdown 资料加载
+├── rag.py                       本地 Markdown 资料加载、检索和资料回答
 ├── storage.py                   JSON 存储
 ├── structured_llm_demo.py       结构化输出 demo
 ├── student_state.py             初始学习状态
@@ -282,7 +286,7 @@ tests/                           测试代码
 - `materials/stage-4.md`：LLM provider 配置、模型调用、结构化输出、CLI/API AI 建议入口。
 - `materials/stage-5.md`：LangChain Agent、工具调用、结构化 Agent 输出、CLI/API 双入口与错误边界。
 
-这些 Markdown 在 Stage 6.2 已能加载为带 `source` 元数据的 `Document`，在 Stage 6.3 切分为保留来源的 chunk，并可在 Stage 6.4 通过注入的 embedding 建立内存向量检索；基于资料的回答会在后续课程加入。
+这些 Markdown 在 Stage 6.2 已能加载为带 `source` 元数据的 `Document`，在 Stage 6.3 切分为保留来源的 chunk，在 Stage 6.4 通过注入的 embedding 建立内存向量检索，并在 Stage 6.5 生成带 `sources` 的资料回答。HTTP 资料问答接口会在后续课程加入。
 
 ## 8. 与课程的关系
 

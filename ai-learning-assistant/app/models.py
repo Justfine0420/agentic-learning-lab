@@ -70,3 +70,8 @@ class ChatRequest(BaseModel):
 class AgentChatResponse(BaseModel):
     source: str = "agent"
     suggestion: StructuredLearningSuggestion
+
+
+class MaterialAnswer(BaseModel):
+    answer: str = Field(min_length=1, description="基于学习资料生成的回答")
+    sources: list[str] = Field(default_factory=list, description="回答引用的资料来源路径")

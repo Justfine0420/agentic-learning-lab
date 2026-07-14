@@ -19,14 +19,14 @@
 
 下一课：
 
-- [第 6.4 课：向量检索](./lessons/stage-6/06-04-vector-retrieval.md)
+- [第 6.5 课：基于资料回答](./lessons/stage-6/06-05-grounded-material-answer.md)
 
 ## 2. 当前学习位置
 
 - 当前阶段：阶段 6，RAG，进行中
-- 当前课程：第 6.4 课，向量检索，已生成并验证
+- 当前课程：第 6.5 课，基于资料回答，已生成并验证
 - 真实代码项目：`ai-learning-assistant/`
-- 下一步建议：进入第 6.5 课，基于检索片段生成回答并返回来源
+- 下一步建议：进入第 6.6 课，将资料回答接入 `POST /ask-materials`
 
 ## 3. 课程索引
 
@@ -69,6 +69,7 @@
 | 6 | 6.2 | 本地资料加载 | `docs/tutorial/lessons/stage-6/06-02-local-material-loading.md` | 已生成 | 已验证 |
 | 6 | 6.3 | 文档切分 | `docs/tutorial/lessons/stage-6/06-03-document-splitting.md` | 已生成 | 已验证 |
 | 6 | 6.4 | 向量检索 | `docs/tutorial/lessons/stage-6/06-04-vector-retrieval.md` | 已生成 | 已验证 |
+| 6 | 6.5 | 基于资料回答 | `docs/tutorial/lessons/stage-6/06-05-grounded-material-answer.md` | 已生成 | 已验证 |
 
 ## 4. 阶段复盘
 
