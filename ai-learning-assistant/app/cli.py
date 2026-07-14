@@ -9,7 +9,7 @@ from app.suggestions import build_suggestion
 
 
 PROJECT_NAME = "AI Learning Assistant"
-COURSE_STAGE = "Stage 5"
+COURSE_STAGE = "Stage 6"
 
 
 def show_header() -> None:

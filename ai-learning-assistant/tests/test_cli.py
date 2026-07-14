@@ -12,6 +12,15 @@ def reset_cli_student() -> None:
     cli.replace_student(create_default_student())
 
 
+def test_show_header_displays_stage_6(capsys) -> None:
+    cli.show_header()
+
+    assert capsys.readouterr().out == (
+        "Project: AI Learning Assistant\n"
+        "Current stage: Stage 6\n"
+    )
+
+
 def test_format_agent_suggestion_returns_readable_lines() -> None:
     suggestion = StructuredLearningSuggestion(
         summary="今天练习 Agent 建议入口。",

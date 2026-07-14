@@ -64,9 +64,9 @@ AI 学习助教
 
 ## 5. 当前进度
 
-- 当前阶段：阶段 5，LangChain，已完成并复盘。
-- 当前课程：阶段 5 复盘，主题是 LangChain Agent、工具调用与双入口。
-- 下一步：第 6.1 课，RAG 是什么。
+- 当前阶段：阶段 6，RAG，进行中。
+- 当前课程：第 6.1 课，RAG 是什么。
+- 下一步：第 6.2 课，加载本地学习资料。
 - 已完成阶段复盘：阶段 0、阶段 1、阶段 2、阶段 3、阶段 4、阶段 5。
 
 课程索引见：[docs/tutorial/README.md](docs/tutorial/README.md)
@@ -141,6 +141,8 @@ http://127.0.0.1:8000/docs
 - [第 5.4 课：多工具调用](docs/tutorial/lessons/stage-5/05-04-multiple-tools.md)
 - [第 5.5 课：结构化 Agent 输出](docs/tutorial/lessons/stage-5/05-05-structured-agent-output.md)
 - [第 5.6 课：CLI 接入 LangChain Agent](docs/tutorial/lessons/stage-5/05-06-cli-agent-integration.md)
+- [第 5.7 课：FastAPI 接入 LangChain Agent](docs/tutorial/lessons/stage-5/05-07-fastapi-agent-integration.md)
+- [第 6.1 课：RAG 是什么](docs/tutorial/lessons/stage-6/06-01-rag-concepts.md)
 
 ## 9. 仓库结构
 

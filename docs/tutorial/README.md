@@ -19,14 +19,14 @@
 
 下一课：
 
-- 第 6.1 课：RAG 是什么
+- [第 6.1 课：RAG 是什么](./lessons/stage-6/06-01-rag-concepts.md)
 
 ## 2. 当前学习位置
 
-- 当前阶段：阶段 5 已完成并复盘
-- 当前课程：阶段 5 复盘已生成并验证
+- 当前阶段：阶段 6，RAG，进行中
+- 当前课程：第 6.1 课，RAG 是什么，已生成并验证
 - 真实代码项目：`ai-learning-assistant/`
-- 下一步建议：进入第 6.1 课，理解 RAG 的文档、chunk、embedding 和 retriever
+- 下一步建议：进入第 6.2 课，加载本地学习资料并保留来源元数据
 
 ## 3. 课程索引
 
@@ -65,6 +65,7 @@
 | 5 | 5.5 | 结构化 Agent 输出 | `docs/tutorial/lessons/stage-5/05-05-structured-agent-output.md` | 已生成 | 已验证 |
 | 5 | 5.6 | CLI 接入 LangChain Agent | `docs/tutorial/lessons/stage-5/05-06-cli-agent-integration.md` | 已生成 | 已验证 |
 | 5 | 5.7 | FastAPI 接入 LangChain Agent | `docs/tutorial/lessons/stage-5/05-07-fastapi-agent-integration.md` | 已生成 | 已验证 |
+| 6 | 6.1 | RAG 是什么 | `docs/tutorial/lessons/stage-6/06-01-rag-concepts.md` | 已生成 | 已验证 |
 
 ## 4. 阶段复盘
 
@@ -99,6 +100,7 @@ docs/tutorial/
 │   ├── stage-3/
 │   ├── stage-4/
 │   ├── stage-5/
+│   ├── stage-6/
 │   └── ...
 └── reviews/
     ├── stage-0-review.md
