@@ -8,7 +8,7 @@ from openai import OpenAIError
 from app import storage
 from app import api
 from app.api import app
-from app.models import StructuredLearningSuggestion
+from app.models import MaterialAnswer, StructuredLearningSuggestion
 
 
 client = TestClient(app)
@@ -532,6 +532,105 @@ def test_post_chat_returns_503_for_agent_errors(monkeypatch, agent_error, expect
     )
 
     response = client.post("/chat", json={"question": "请生成今天的建议。"})
+
+    assert response.status_code == 503
+    assert response.json() == {"detail": expected_detail}
+
+
+def test_post_ask_materials_returns_grounded_answer(monkeypatch) -> None:
+    def fake_answer_question_from_local_materials(question: str, *, k: int) -> MaterialAnswer:
+        assert question == "Python 类型标注有什么用？"
+        assert k == 2
+        return MaterialAnswer(
+            answer="类型标注能说明函数参数和返回值。",
+            sources=["materials/stage-2.md"],
+        )
+
+    monkeypatch.setattr(
+        api,
+        "answer_question_from_local_materials",
+        fake_answer_question_from_local_materials,
+    )
+
+    response = client.post(
+        "/ask-materials",
+        json={
+            "question": "  Python 类型标注有什么用？  ",
+            "k": 2,
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "answer": "类型标注能说明函数参数和返回值。",
+        "sources": ["materials/stage-2.md"],
+    }
+
+
+def test_post_ask_materials_rejects_empty_blank_question_and_invalid_k(monkeypatch) -> None:
+    def should_not_answer_materials(_question: str, *, k: int) -> MaterialAnswer:
+        raise AssertionError("invalid request should not invoke RAG")
+
+    monkeypatch.setattr(
+        api,
+        "answer_question_from_local_materials",
+        should_not_answer_materials,
+    )
+
+    missing_response = client.post("/ask-materials", json={})
+    empty_response = client.post("/ask-materials", json={"question": ""})
+    blank_response = client.post("/ask-materials", json={"question": "   "})
+    invalid_k_response = client.post(
+        "/ask-materials",
+        json={"question": "Python 类型标注有什么用？", "k": 0},
+    )
+
+    assert missing_response.status_code == 422
+    assert empty_response.status_code == 422
+    assert blank_response.status_code == 400
+    assert blank_response.json() == {"detail": "问题不能为空。"}
+    assert invalid_k_response.status_code == 422
+
+
+def test_post_ask_materials_declares_error_responses_in_openapi() -> None:
+    responses = app.openapi()["paths"]["/ask-materials"]["post"]["responses"]
+
+    assert {"200", "400", "422", "503"}.issubset(responses)
+
+
+@pytest.mark.parametrize(
+    ("rag_error", "expected_detail"),
+    [
+        (
+            RuntimeError("Missing required environment variable: DEEPSEEK_API_KEY."),
+            "Missing required environment variable: DEEPSEEK_API_KEY.",
+        ),
+        (
+            FileNotFoundError("Materials directory does not exist: missing-materials"),
+            "Materials directory does not exist: missing-materials",
+        ),
+        (httpx.ConnectError("network failed"), "AI provider request failed."),
+        (
+            ValueError("LLM response was not a valid material answer."),
+            "LLM response was not a valid material answer.",
+        ),
+    ],
+)
+def test_post_ask_materials_returns_503_for_rag_errors(
+    monkeypatch,
+    rag_error,
+    expected_detail,
+) -> None:
+    def fake_answer_question_from_local_materials(_question: str, *, k: int) -> MaterialAnswer:
+        raise rag_error
+
+    monkeypatch.setattr(
+        api,
+        "answer_question_from_local_materials",
+        fake_answer_question_from_local_materials,
+    )
+
+    response = client.post("/ask-materials", json={"question": "请根据资料回答。"})
 
     assert response.status_code == 503
     assert response.json() == {"detail": expected_detail}

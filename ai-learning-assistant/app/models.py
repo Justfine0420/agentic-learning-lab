@@ -72,6 +72,11 @@ class AgentChatResponse(BaseModel):
     suggestion: StructuredLearningSuggestion
 
 
+class AskMaterialsRequest(BaseModel):
+    question: str = Field(min_length=1, description="学员希望基于本地学习资料提出的问题")
+    k: int = Field(default=3, ge=1, le=10, description="用于回答的候选资料片段数量")
+
+
 class MaterialAnswer(BaseModel):
     answer: str = Field(min_length=1, description="基于学习资料生成的回答")
     sources: list[str] = Field(default_factory=list, description="回答引用的资料来源路径")

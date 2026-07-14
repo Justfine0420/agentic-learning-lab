@@ -6,7 +6,7 @@
 
 当前阶段：阶段 6，RAG，进行中。
 
-当前进度：CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议；第 6.5 课已能基于检索到的资料 chunk 生成带 `sources` 的结构化回答；后续课程会把资料问答暴露为 API。
+当前进度：CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议；第 6.6 课已通过 `POST /ask-materials` 暴露基于本地资料的 RAG 问答接口。
 
 ## 1. 当前功能
 
@@ -38,6 +38,7 @@ POST /notes
 GET  /suggestion
 POST /ai/suggestion
 POST /chat
+POST /ask-materials
 ```
 
 启动服务：
@@ -137,9 +138,11 @@ py -3.13 -m app.langchain_agent_demo
 - `MaterialAnswer` 定义资料回答结构，包含 `answer` 和 `sources`。
 - `generate_material_answer()` 将检索 chunk 交给聊天模型，并校验返回 JSON 与引用来源。
 - `answer_material_question()` 串联向量检索和资料回答生成。
+- `answer_question_from_local_materials()` 组合本地资料加载、切分、向量索引和资料回答。
+- `POST /ask-materials` 接收资料问题并返回 `answer + sources`。
 - `numpy` 用于内存向量库的相似度计算。
 
-当前还没有云端 embedding provider 配置或 RAG API。
+当前还没有云端 embedding provider 配置、RAG CLI 入口、持久化向量索引或 Agent RAG 工具。
 
 可以在不配置 provider 的情况下手动检查加载结果：
 
@@ -197,6 +200,7 @@ OLLAMA_EMBEDDING_MODEL=mxbai-embed-large
 - `GET /suggestion` 仍然可用。
 - `POST /ai/suggestion` 会返回 `503`。
 - `POST /chat` 会返回 `503`，不会静默改用规则建议。
+- `POST /ask-materials` 会返回 `503`，不会静默改用资料外答案。
 - 需要真实模型的 demo 会提示配置或连接问题。
 
 ## 4. 运行项目
@@ -251,7 +255,7 @@ py -3.13 -m pytest
 - provider 配置读取。
 - LLM 请求封装和结构化输出解析。
 - LangChain Agent、注解式工具与 middleware。
-- RAG 资料加载、切分、向量检索和基于资料回答。
+- RAG 资料加载、切分、向量检索、基于资料回答和资料问答 API。
 
 ## 6. 目录说明
 
@@ -286,7 +290,7 @@ tests/                           测试代码
 - `materials/stage-4.md`：LLM provider 配置、模型调用、结构化输出、CLI/API AI 建议入口。
 - `materials/stage-5.md`：LangChain Agent、工具调用、结构化 Agent 输出、CLI/API 双入口与错误边界。
 
-这些 Markdown 在 Stage 6.2 已能加载为带 `source` 元数据的 `Document`，在 Stage 6.3 切分为保留来源的 chunk，在 Stage 6.4 通过注入的 embedding 建立内存向量检索，并在 Stage 6.5 生成带 `sources` 的资料回答。HTTP 资料问答接口会在后续课程加入。
+这些 Markdown 在 Stage 6.2 已能加载为带 `source` 元数据的 `Document`，在 Stage 6.3 切分为保留来源的 chunk，在 Stage 6.4 通过注入的 embedding 建立内存向量检索，在 Stage 6.5 生成带 `sources` 的资料回答，并在 Stage 6.6 通过 `POST /ask-materials` 暴露为 HTTP 接口。
 
 ## 8. 与课程的关系
 

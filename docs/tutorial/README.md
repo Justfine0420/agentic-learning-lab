@@ -19,14 +19,14 @@
 
 下一课：
 
-- [第 6.5 课：基于资料回答](./lessons/stage-6/06-05-grounded-material-answer.md)
+- [第 6.6 课：RAG API](./lessons/stage-6/06-06-rag-api.md)
 
 ## 2. 当前学习位置
 
 - 当前阶段：阶段 6，RAG，进行中
-- 当前课程：第 6.5 课，基于资料回答，已生成并验证
+- 当前课程：第 6.6 课，RAG API，已生成并验证
 - 真实代码项目：`ai-learning-assistant/`
-- 下一步建议：进入第 6.6 课，将资料回答接入 `POST /ask-materials`
+- 下一步建议：生成阶段 6 复盘，然后进入第 7.1 课 LangGraph 核心模型
 
 ## 3. 课程索引
 
@@ -70,6 +70,7 @@
 | 6 | 6.3 | 文档切分 | `docs/tutorial/lessons/stage-6/06-03-document-splitting.md` | 已生成 | 已验证 |
 | 6 | 6.4 | 向量检索 | `docs/tutorial/lessons/stage-6/06-04-vector-retrieval.md` | 已生成 | 已验证 |
 | 6 | 6.5 | 基于资料回答 | `docs/tutorial/lessons/stage-6/06-05-grounded-material-answer.md` | 已生成 | 已验证 |
+| 6 | 6.6 | RAG API | `docs/tutorial/lessons/stage-6/06-06-rag-api.md` | 已生成 | 已验证 |
 
 ## 4. 阶段复盘
 

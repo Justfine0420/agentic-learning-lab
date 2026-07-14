@@ -1,5 +1,7 @@
 import httpx
 from fastapi import FastAPI, HTTPException
+from ollama import RequestError as OllamaRequestError
+from ollama import ResponseError as OllamaResponseError
 from openai import OpenAIError
 
 from app.langchain_agent import run_structured_learning_agent
@@ -7,7 +9,9 @@ from app.llm import generate_structured_learning_suggestion
 from app.models import (
     AISuggestionResponse,
     AgentChatResponse,
+    AskMaterialsRequest,
     ChatRequest,
+    MaterialAnswer,
     NoteCreate,
     NoteResponse,
     NotesResponse,
@@ -16,6 +20,7 @@ from app.models import (
     StudentProfileResponse,
     SuggestionResponse,
 )
+from app.rag import answer_question_from_local_materials
 from app.storage import load_student, save_student
 from app.suggestions import build_suggestion
 
@@ -152,3 +157,28 @@ def chat_with_learning_agent(chat: ChatRequest) -> AgentChatResponse:
         raise HTTPException(status_code=503, detail=str(error)) from error
 
     return AgentChatResponse(suggestion=suggestion)
+
+
+@app.post(
+    "/ask-materials",
+    response_model=MaterialAnswer,
+    responses={
+        400: {"description": "问题不能为空。"},
+        503: {"description": "RAG provider、向量检索或结构化资料回答不可用。"},
+    },
+)
+def ask_materials(request: AskMaterialsRequest) -> MaterialAnswer:
+    question = request.question.strip()
+    if question == "":
+        raise HTTPException(status_code=400, detail="问题不能为空。")
+
+    try:
+        return answer_question_from_local_materials(question, k=request.k)
+    except (FileNotFoundError, NotADirectoryError) as error:
+        raise HTTPException(status_code=503, detail=str(error)) from error
+    except RuntimeError as error:
+        raise HTTPException(status_code=503, detail=str(error)) from error
+    except (httpx.HTTPError, OpenAIError, OllamaRequestError, OllamaResponseError) as error:
+        raise HTTPException(status_code=503, detail="AI provider request failed.") from error
+    except ValueError as error:
+        raise HTTPException(status_code=503, detail=str(error)) from error

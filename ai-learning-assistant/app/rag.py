@@ -229,3 +229,33 @@ def answer_material_question(
 ) -> MaterialAnswer:
     chunks = retrieve_material_chunks(question, vector_store, k=k)
     return generate_material_answer(question, chunks, settings=settings, client=client)
+
+
+def answer_question_from_local_materials(
+    question: str,
+    *,
+    k: int = 3,
+    materials_dir: Path = MATERIALS_DIR,
+    embeddings: Embeddings | None = None,
+    settings: LLMSettings | None = None,
+    client: httpx.Client | None = None,
+) -> MaterialAnswer:
+    if question.strip() == "":
+        raise ValueError("question must not be empty")
+    if k < 1:
+        raise ValueError("k must be greater than 0")
+
+    documents = load_local_materials(materials_dir)
+    chunks = split_material_documents(documents)
+    if not chunks:
+        return generate_material_answer(question, [], settings=settings, client=client)
+
+    current_embeddings = embeddings or build_ollama_embeddings()
+    vector_store = build_material_vector_store(chunks, current_embeddings)
+    return answer_material_question(
+        question,
+        vector_store,
+        settings=settings,
+        client=client,
+        k=k,
+    )

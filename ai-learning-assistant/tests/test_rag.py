@@ -9,6 +9,7 @@ from app.config import LLMSettings, OllamaEmbeddingSettings
 from app.rag import (
     MATERIAL_ANSWER_UNAVAILABLE,
     answer_material_question,
+    answer_question_from_local_materials,
     build_material_answer_messages,
     build_ollama_embeddings,
     build_material_vector_store,
@@ -366,6 +367,71 @@ def test_answer_material_question_retrieves_chunks_before_generating_answer() ->
     user_message = client.request["json"]["messages"][1]["content"]
     assert "Python type annotations clarify function signatures." in user_message
     assert "FastAPI routes expose HTTP APIs." not in user_message
+
+
+def test_answer_question_from_local_materials_builds_pipeline_with_injected_embeddings(
+    tmp_path: Path,
+) -> None:
+    materials_dir = tmp_path / "materials"
+    materials_dir.mkdir()
+    (materials_dir / "python.md").write_text(
+        "Python type annotations clarify function signatures.",
+        encoding="utf-8",
+    )
+    (materials_dir / "fastapi.md").write_text(
+        "FastAPI routes expose HTTP APIs.",
+        encoding="utf-8",
+    )
+    client = FakeLLMClient(
+        {
+            "choices": [
+                {
+                    "message": {
+                        "content": (
+                            "{\"answer\":\"类型标注能说明函数签名。\","
+                            "\"sources\":[\"materials/python.md\"]}"
+                        )
+                    }
+                }
+            ]
+        }
+    )
+
+    result = answer_question_from_local_materials(
+        "How do Python type annotations work?",
+        materials_dir=materials_dir,
+        embeddings=KeywordEmbeddings(),
+        settings=make_settings(),
+        client=client,
+        k=1,
+    )
+
+    assert result.answer == "类型标注能说明函数签名。"
+    assert result.sources == ["materials/python.md"]
+    assert client.request is not None
+    user_message = client.request["json"]["messages"][1]["content"]
+    assert "Python type annotations clarify function signatures." in user_message
+    assert "FastAPI routes expose HTTP APIs." not in user_message
+
+
+def test_answer_question_from_local_materials_returns_unavailable_for_empty_materials(
+    tmp_path: Path,
+) -> None:
+    materials_dir = tmp_path / "materials"
+    materials_dir.mkdir()
+    client = FakeLLMClient({"choices": [{"message": {"content": "{}"}}]})
+
+    result = answer_question_from_local_materials(
+        "资料里有 LangGraph 吗？",
+        materials_dir=materials_dir,
+        embeddings=KeywordEmbeddings(),
+        settings=make_settings(),
+        client=client,
+    )
+
+    assert result.answer == MATERIAL_ANSWER_UNAVAILABLE
+    assert result.sources == []
+    assert client.request is None
 
 
 def test_retrieve_material_chunks_returns_empty_list_for_an_empty_store() -> None:
