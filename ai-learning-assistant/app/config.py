@@ -30,6 +30,16 @@ class LLMSettings:
     requires_api_key: bool
 
 
+@dataclass(frozen=True)
+class OllamaEmbeddingSettings:
+    base_url: str
+    model: str
+
+
+DEFAULT_OLLAMA_EMBEDDING_BASE_URL = "http://localhost:11434"
+DEFAULT_OLLAMA_EMBEDDING_MODEL = "mxbai-embed-large"
+
+
 VOLCENGINE_AGENT_PLAN_CONFIG = LLMProviderConfig(
     api_key_env="VOLCENGINE_AGENT_PLAN_API_KEY",
     base_url_env="VOLCENGINE_AGENT_PLAN_BASE_URL",
@@ -94,6 +104,28 @@ def get_llm_settings(
         base_url=get_env_value(provider_config.base_url_env, provider_config.default_base_url),
         model=get_env_value(provider_config.model_env, provider_config.default_model),
         requires_api_key=provider_config.requires_api_key,
+    )
+
+
+def normalize_ollama_embedding_base_url(base_url: str) -> str:
+    normalized = base_url.strip().rstrip("/")
+    if normalized.endswith("/v1"):
+        normalized = normalized[: -len("/v1")]
+    return normalized or DEFAULT_OLLAMA_EMBEDDING_BASE_URL
+
+
+def get_ollama_embedding_settings(
+    *,
+    load_dotenv_file: bool = True,
+) -> OllamaEmbeddingSettings:
+    if load_dotenv_file:
+        load_project_env()
+
+    return OllamaEmbeddingSettings(
+        base_url=normalize_ollama_embedding_base_url(
+            get_env_value("OLLAMA_EMBEDDING_BASE_URL", DEFAULT_OLLAMA_EMBEDDING_BASE_URL)
+        ),
+        model=get_env_value("OLLAMA_EMBEDDING_MODEL", DEFAULT_OLLAMA_EMBEDDING_MODEL),
     )
 
 

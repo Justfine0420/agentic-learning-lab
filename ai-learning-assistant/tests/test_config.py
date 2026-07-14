@@ -1,6 +1,12 @@
 import pytest
 
-from app.config import LLMSettings, get_llm_settings, require_llm_api_key
+from app.config import (
+    LLMSettings,
+    get_llm_settings,
+    get_ollama_embedding_settings,
+    normalize_ollama_embedding_base_url,
+    require_llm_api_key,
+)
 
 
 PROVIDER_ENV_NAMES = [
@@ -14,6 +20,8 @@ PROVIDER_ENV_NAMES = [
     "OLLAMA_API_KEY",
     "OLLAMA_BASE_URL",
     "OLLAMA_MODEL",
+    "OLLAMA_EMBEDDING_BASE_URL",
+    "OLLAMA_EMBEDDING_MODEL",
 ]
 
 
@@ -69,6 +77,36 @@ def test_ollama_provider_does_not_require_real_api_key(monkeypatch):
     assert settings.model == "qwen3:8b"
     assert settings.requires_api_key is False
     assert require_llm_api_key(settings) == settings
+
+
+def test_default_ollama_embedding_settings_use_local_ollama():
+    settings = get_ollama_embedding_settings(load_dotenv_file=False)
+
+    assert settings.base_url == "http://localhost:11434"
+    assert settings.model == "mxbai-embed-large"
+
+
+def test_reads_ollama_embedding_settings_from_environment(monkeypatch):
+    monkeypatch.setenv("OLLAMA_EMBEDDING_BASE_URL", "http://127.0.0.1:11434/v1/")
+    monkeypatch.setenv("OLLAMA_EMBEDDING_MODEL", "qwen3-embedding:latest")
+
+    settings = get_ollama_embedding_settings(load_dotenv_file=False)
+
+    assert settings.base_url == "http://127.0.0.1:11434"
+    assert settings.model == "qwen3-embedding:latest"
+
+
+@pytest.mark.parametrize(
+    ("base_url", "expected"),
+    [
+        ("http://localhost:11434", "http://localhost:11434"),
+        ("http://localhost:11434/", "http://localhost:11434"),
+        ("http://localhost:11434/v1", "http://localhost:11434"),
+        ("   ", "http://localhost:11434"),
+    ],
+)
+def test_normalize_ollama_embedding_base_url(base_url, expected):
+    assert normalize_ollama_embedding_base_url(base_url) == expected
 
 
 def test_rejects_unsupported_provider():

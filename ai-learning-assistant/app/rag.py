@@ -1,7 +1,16 @@
 from pathlib import Path
 
 from langchain_core.documents import Document
+from langchain_core.embeddings import Embeddings
+from langchain_core.vectorstores import InMemoryVectorStore
+from langchain_ollama import OllamaEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+from app.config import (
+    OllamaEmbeddingSettings,
+    get_ollama_embedding_settings,
+    normalize_ollama_embedding_base_url,
+)
 
 
 MATERIALS_DIR = Path(__file__).resolve().parent.parent / "materials"
@@ -53,3 +62,41 @@ def split_material_documents(
         chunk_overlap=chunk_overlap,
     )
     return splitter.split_documents(documents)
+
+
+def build_material_vector_store(
+    documents: list[Document],
+    embeddings: Embeddings,
+) -> InMemoryVectorStore:
+    vector_store = InMemoryVectorStore(embedding=embeddings)
+    if documents:
+        vector_store.add_documents(documents)
+    return vector_store
+
+
+def build_ollama_embeddings(
+    settings: OllamaEmbeddingSettings | None = None,
+) -> OllamaEmbeddings:
+    current_settings = settings or get_ollama_embedding_settings()
+    model = current_settings.model.strip()
+    if model == "":
+        raise ValueError("OLLAMA_EMBEDDING_MODEL must not be empty")
+
+    return OllamaEmbeddings(
+        model=model,
+        base_url=normalize_ollama_embedding_base_url(current_settings.base_url),
+    )
+
+
+def retrieve_material_chunks(
+    query: str,
+    vector_store: InMemoryVectorStore,
+    *,
+    k: int = 3,
+) -> list[Document]:
+    if query.strip() == "":
+        raise ValueError("query must not be empty")
+    if k < 1:
+        raise ValueError("k must be greater than 0")
+
+    return vector_store.similarity_search(query, k=k)
