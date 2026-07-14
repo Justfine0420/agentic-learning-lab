@@ -1,8 +1,9 @@
 from pathlib import Path
 
 import pytest
+from langchain_core.documents import Document
 
-from app.rag import load_local_materials
+from app.rag import load_local_materials, split_material_documents
 
 
 def test_load_local_materials_returns_sorted_documents_with_sources(tmp_path: Path) -> None:
@@ -46,3 +47,42 @@ def test_load_local_materials_rejects_file_path(tmp_path: Path) -> None:
 
     with pytest.raises(NotADirectoryError, match="Materials path is not a directory"):
         load_local_materials(material_file)
+
+
+def test_split_material_documents_preserves_metadata_and_overlap() -> None:
+    documents = [
+        Document(
+            page_content="abcdefghij",
+            metadata={"source": "materials/example.md", "topic": "testing"},
+        )
+    ]
+
+    chunks = split_material_documents(documents, chunk_size=4, chunk_overlap=1)
+
+    assert [chunk.page_content for chunk in chunks] == ["abcd", "defg", "ghij"]
+    assert [chunk.metadata for chunk in chunks] == [
+        {"source": "materials/example.md", "topic": "testing"},
+        {"source": "materials/example.md", "topic": "testing"},
+        {"source": "materials/example.md", "topic": "testing"},
+    ]
+
+
+def test_split_material_documents_returns_empty_list_for_no_documents() -> None:
+    assert split_material_documents([]) == []
+
+
+@pytest.mark.parametrize(
+    ("chunk_size", "chunk_overlap", "message"),
+    [
+        (0, 0, "chunk_size must be greater than 0"),
+        (4, -1, "chunk_overlap must be greater than or equal to 0"),
+        (4, 4, "chunk_overlap must be smaller than chunk_size"),
+    ],
+)
+def test_split_material_documents_rejects_invalid_sizes(
+    chunk_size: int,
+    chunk_overlap: int,
+    message: str,
+) -> None:
+    with pytest.raises(ValueError, match=message):
+        split_material_documents([], chunk_size=chunk_size, chunk_overlap=chunk_overlap)

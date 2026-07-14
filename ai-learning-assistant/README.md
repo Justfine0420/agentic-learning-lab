@@ -6,7 +6,7 @@
 
 当前阶段：阶段 6，RAG，进行中。
 
-当前进度：CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议；第 6.2 课已将顶层 `materials/*.md` 加载为带 `source` 元数据的 LangChain `Document`，后续课程才会切分、检索并基于资料回答。
+当前进度：CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议；第 6.3 课已将资料 `Document` 按 `chunk_size` 和 `chunk_overlap` 切分，并保留来源元数据；后续课程才会生成 embedding、检索并基于资料回答。
 
 ## 1. 当前功能
 
@@ -123,19 +123,27 @@ py -3.13 -m app.langchain_agent_demo
 
 ### RAG 基础
 
-当前 RAG 只完成资料加载层：
+当前 RAG 已完成资料加载与文档切分两层：
 
 - `load_local_materials()` 读取顶层 `materials/*.md`。
 - 每份资料返回一个 LangChain `Document`。
 - `Document.metadata["source"]` 使用稳定的相对路径，例如 `materials/stage-5.md`。
 - 文件按名称排序；非 Markdown 文件不会进入资料集合。
+- `split_material_documents()` 使用 `RecursiveCharacterTextSplitter` 将资料拆成可检索 chunk，并保留每个 chunk 的元数据。
+- 默认 `chunk_size=800`、`chunk_overlap=120`；非法大小组合会在切分前失败。
 
-当前还没有文档切分、embedding、向量检索、基于资料的回答或 RAG API。
+当前还没有 embedding、向量检索、基于资料的回答或 RAG API。
 
 可以在不配置 provider 的情况下手动检查加载结果：
 
 ```powershell
 py -3.13 -c "from app.rag import load_local_materials; print([document.metadata['source'] for document in load_local_materials()])"
+```
+
+查看默认 chunk 数量：
+
+```powershell
+py -3.13 -c "from app.rag import load_local_materials, split_material_documents; print(len(split_material_documents(load_local_materials())))"
 ```
 
 ## 2. 安装依赖
@@ -264,7 +272,7 @@ tests/                           测试代码
 - `materials/stage-4.md`：LLM provider 配置、模型调用、结构化输出、CLI/API AI 建议入口。
 - `materials/stage-5.md`：LangChain Agent、工具调用、结构化 Agent 输出、CLI/API 双入口与错误边界。
 
-这些 Markdown 在 Stage 6.2 已能加载为带 `source` 元数据的 `Document`；chunk、embedding 和检索会在后续课程加入。
+这些 Markdown 在 Stage 6.2 已能加载为带 `source` 元数据的 `Document`，并在 Stage 6.3 切分为保留来源的 chunk；embedding 和检索会在后续课程加入。
 
 ## 8. 与课程的关系
 
