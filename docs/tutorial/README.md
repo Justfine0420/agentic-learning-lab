@@ -19,14 +19,14 @@
 
 下一课：
 
-- [第 6.1 课：RAG 是什么](./lessons/stage-6/06-01-rag-concepts.md)
+- [第 6.2 课：本地资料加载](./lessons/stage-6/06-02-local-material-loading.md)
 
 ## 2. 当前学习位置
 
 - 当前阶段：阶段 6，RAG，进行中
-- 当前课程：第 6.1 课，RAG 是什么，已生成并验证
+- 当前课程：第 6.2 课，本地资料加载，已生成并验证
 - 真实代码项目：`ai-learning-assistant/`
-- 下一步建议：进入第 6.2 课，加载本地学习资料并保留来源元数据
+- 下一步建议：进入第 6.3 课，按 chunk size 和 overlap 切分文档
 
 ## 3. 课程索引
 
@@ -66,6 +66,7 @@
 | 5 | 5.6 | CLI 接入 LangChain Agent | `docs/tutorial/lessons/stage-5/05-06-cli-agent-integration.md` | 已生成 | 已验证 |
 | 5 | 5.7 | FastAPI 接入 LangChain Agent | `docs/tutorial/lessons/stage-5/05-07-fastapi-agent-integration.md` | 已生成 | 已验证 |
 | 6 | 6.1 | RAG 是什么 | `docs/tutorial/lessons/stage-6/06-01-rag-concepts.md` | 已生成 | 已验证 |
+| 6 | 6.2 | 本地资料加载 | `docs/tutorial/lessons/stage-6/06-02-local-material-loading.md` | 已生成 | 已验证 |
 
 ## 4. 阶段复盘
 

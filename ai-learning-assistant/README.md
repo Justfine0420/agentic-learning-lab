@@ -6,7 +6,7 @@
 
 当前阶段：阶段 6，RAG，进行中。
 
-当前进度：CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议；第 6.1 课已建立 RAG 的文档、chunk、embedding、retriever 与来源引用边界，后续课程才会实现本地资料检索。
+当前进度：CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议；第 6.2 课已将顶层 `materials/*.md` 加载为带 `source` 元数据的 LangChain `Document`，后续课程才会切分、检索并基于资料回答。
 
 ## 1. 当前功能
 
@@ -121,6 +121,23 @@ py -3.13 -m app.langchain_agent_demo
 
 这条命令需要 `.env` 中的 provider 配置可用，或者本地 Ollama 已启动。
 
+### RAG 基础
+
+当前 RAG 只完成资料加载层：
+
+- `load_local_materials()` 读取顶层 `materials/*.md`。
+- 每份资料返回一个 LangChain `Document`。
+- `Document.metadata["source"]` 使用稳定的相对路径，例如 `materials/stage-5.md`。
+- 文件按名称排序；非 Markdown 文件不会进入资料集合。
+
+当前还没有文档切分、embedding、向量检索、基于资料的回答或 RAG API。
+
+可以在不配置 provider 的情况下手动检查加载结果：
+
+```powershell
+py -3.13 -c "from app.rag import load_local_materials; print([document.metadata['source'] for document in load_local_materials()])"
+```
+
 ## 2. 安装依赖
 
 建议使用 Python 3.13。
@@ -228,6 +245,7 @@ app/
 ├── llm_demo.py                  普通文本模型调用 demo
 ├── main.py                      CLI 入口
 ├── models.py                    TypedDict / Pydantic 模型
+├── rag.py                       本地 Markdown 资料加载
 ├── storage.py                   JSON 存储
 ├── structured_llm_demo.py       结构化输出 demo
 ├── student_state.py             初始学习状态
@@ -245,6 +263,8 @@ tests/                           测试代码
 - `materials/stage-3.md`：FastAPI、Pydantic、状态码、`TestClient` 和 API 数据流。
 - `materials/stage-4.md`：LLM provider 配置、模型调用、结构化输出、CLI/API AI 建议入口。
 - `materials/stage-5.md`：LangChain Agent、工具调用、结构化 Agent 输出、CLI/API 双入口与错误边界。
+
+这些 Markdown 在 Stage 6.2 已能加载为带 `source` 元数据的 `Document`；chunk、embedding 和检索会在后续课程加入。
 
 ## 8. 与课程的关系
 
