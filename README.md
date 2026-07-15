@@ -64,9 +64,9 @@ AI 学习助教
 
 ## 5. 当前进度
 
-- 当前阶段：阶段 6，RAG，已复盘。
-- 当前课程：阶段 6 复盘。
-- 下一步：进入第 7.1 课 LangGraph 核心模型。
+- 当前阶段：阶段 7，LangGraph 基础，进行中。
+- 当前课程：第 7.1 课，LangGraph 核心模型。
+- 下一步：进入第 7.2 课，定义 LearningState。
 - 已完成阶段复盘：阶段 0、阶段 1、阶段 2、阶段 3、阶段 4、阶段 5、阶段 6。
 
 课程索引见：[docs/tutorial/README.md](docs/tutorial/README.md)
@@ -150,6 +150,7 @@ http://127.0.0.1:8000/docs
 - [第 6.4 课：向量检索](docs/tutorial/lessons/stage-6/06-04-vector-retrieval.md)
 - [第 6.5 课：基于资料回答](docs/tutorial/lessons/stage-6/06-05-grounded-material-answer.md)
 - [第 6.6 课：RAG API](docs/tutorial/lessons/stage-6/06-06-rag-api.md)
+- [第 7.1 课：LangGraph 核心模型](docs/tutorial/lessons/stage-7/07-01-langgraph-core-model.md)
 
 ## 9. 仓库结构
 

@@ -4,9 +4,9 @@
 
 它从一个普通 Python CLI 程序开始，逐步升级为具备 FastAPI、LLM 调用、LangChain 工具调用、RAG、LangGraph 和 Deep Agents 能力的 AI 应用。
 
-当前阶段：阶段 6，RAG，已复盘。
+当前阶段：阶段 7，LangGraph 基础，进行中。
 
-当前进度：CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议；阶段 6 已通过 `POST /ask-materials` 暴露基于本地资料的 RAG 问答接口并完成复盘。下一步进入 Stage 7，开始学习 LangGraph 核心模型。
+当前进度：CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议；阶段 6 已通过 `POST /ask-materials` 暴露基于本地资料的 RAG 问答接口；第 7.1 课已同步 Stage 7 阶段标识并建立 LangGraph 核心模型概念。当前还没有 `LearningState`、`StateGraph` 或学习流程图代码。
 
 ## 1. 当前功能
 

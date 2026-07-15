@@ -12,12 +12,12 @@ def reset_cli_student() -> None:
     cli.replace_student(create_default_student())
 
 
-def test_show_header_displays_stage_6(capsys) -> None:
+def test_show_header_displays_stage_7(capsys) -> None:
     cli.show_header()
 
     assert capsys.readouterr().out == (
         "Project: AI Learning Assistant\n"
-        "Current stage: Stage 6\n"
+        "Current stage: Stage 7\n"
     )
 
 

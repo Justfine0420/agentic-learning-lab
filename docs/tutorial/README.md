@@ -19,14 +19,14 @@
 
 下一课：
 
-- 第 7.1 课：LangGraph 核心模型（待生成）
+- 第 7.2 课：定义 LearningState（待生成）
 
 ## 2. 当前学习位置
 
-- 当前阶段：阶段 6，RAG，已复盘
-- 当前课程：阶段 6 复盘，已生成并验证
+- 当前阶段：阶段 7，LangGraph 基础，进行中
+- 当前课程：第 7.1 课，LangGraph 核心模型，已生成并验证
 - 真实代码项目：`ai-learning-assistant/`
-- 下一步建议：进入第 7.1 课 LangGraph 核心模型
+- 下一步建议：进入第 7.2 课，定义 LearningState
 
 ## 3. 课程索引
 
@@ -71,7 +71,8 @@
 | 6 | 6.4 | 向量检索 | `docs/tutorial/lessons/stage-6/06-04-vector-retrieval.md` | 已生成 | 已验证 |
 | 6 | 6.5 | 基于资料回答 | `docs/tutorial/lessons/stage-6/06-05-grounded-material-answer.md` | 已生成 | 已验证 |
 | 6 | 6.6 | RAG API | `docs/tutorial/lessons/stage-6/06-06-rag-api.md` | 已生成 | 已验证 |
-| 7 | 7.1 | LangGraph 核心模型 | `docs/tutorial/lessons/stage-7/07-01-langgraph-core-model.md` | 待生成 | 待验证 |
+| 7 | 7.1 | LangGraph 核心模型 | `docs/tutorial/lessons/stage-7/07-01-langgraph-core-model.md` | 已生成 | 已验证 |
+| 7 | 7.2 | 定义 LearningState | `docs/tutorial/lessons/stage-7/07-02-learning-state.md` | 待生成 | 待验证 |
 
 ## 4. 阶段复盘
 
@@ -109,6 +110,7 @@ docs/tutorial/
 │   ├── stage-4/
 │   ├── stage-5/
 │   ├── stage-6/
+│   ├── stage-7/
 │   └── ...
 └── reviews/
     ├── stage-0-review.md
