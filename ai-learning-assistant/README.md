@@ -6,7 +6,7 @@
 
 当前阶段：阶段 7，LangGraph 基础，进行中。
 
-当前进度：CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议；阶段 6 已通过 `POST /ask-materials` 暴露基于本地资料的 RAG 问答接口；第 7.1 课已同步 Stage 7 阶段标识并建立 LangGraph 核心模型概念。当前还没有 `LearningState`、`StateGraph` 或学习流程图代码。
+当前进度：CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议；阶段 6 已通过 `POST /ask-materials` 暴露基于本地资料的 RAG 问答接口；第 7.2 课已新增 `LearningState`、`LearningStateUpdate` 和初始状态构造函数。当前还没有 `StateGraph`、node、edge 或学习流程 API。
 
 ## 1. 当前功能
 
@@ -158,6 +158,24 @@ py -3.13 -c "from app.rag import load_local_materials, split_material_documents;
 
 实际检索需要调用方传入与资料语料兼容的 `Embeddings` 实例；项目支持通过本地 Ollama 构造 embedding，但不会把现有聊天 provider 自动当成 embedding provider。
 
+### LangGraph 基础
+
+当前 LangGraph 阶段已经开始，但还没有运行时图：
+
+- `LearningState` 定义学习流程的共享状态字段。
+- `LearningStateUpdate` 表达后续 node 可以返回的局部状态更新。
+- `create_initial_learning_state()` 可以从现有 `Student` 字典创建初始学习状态。
+- `completed_steps` 使用 `Annotated[list[str], add]` 标注累加语义，为后续 LangGraph reducer 做准备。
+
+相关模块：
+
+```text
+app/graph.py
+tests/test_graph.py
+```
+
+当前还没有 `StateGraph`、node、edge、checkpoint、streaming 或学习流程 API。后续课程会从第一个 node 开始逐步接入。
+
 ## 2. 安装依赖
 
 建议使用 Python 3.13。
@@ -256,6 +274,7 @@ py -3.13 -m pytest
 - LLM 请求封装和结构化输出解析。
 - LangChain Agent、注解式工具与 middleware。
 - RAG 资料加载、切分、向量检索、基于资料回答和资料问答 API。
+- LangGraph 学习流程状态 schema 和初始状态构造。
 
 ## 6. 目录说明
 
@@ -264,6 +283,7 @@ app/
 ├── api.py                       FastAPI 应用
 ├── cli.py                       CLI 交互
 ├── config.py                    LLM provider 配置
+├── graph.py                     LangGraph 学习流程状态 schema
 ├── langchain_agent.py           LangChain Agent 和工具
 ├── langchain_agent_demo.py      LangChain 手动 demo
 ├── langchain_structured_agent_demo.py 结构化 LangChain 手动 demo
