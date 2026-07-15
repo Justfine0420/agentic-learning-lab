@@ -19,14 +19,14 @@
 
 下一课：
 
-- 第 7.3 课：第一个节点（待生成）
+- 第 7.4 课：多节点流程（待生成）
 
 ## 2. 当前学习位置
 
 - 当前阶段：阶段 7，LangGraph 基础，进行中
-- 当前课程：第 7.2 课，定义 LearningState，已生成并验证
+- 当前课程：第 7.3 课，第一个节点，已生成并验证
 - 真实代码项目：`ai-learning-assistant/`
-- 下一步建议：进入第 7.3 课，实现第一个学习流程节点
+- 下一步建议：进入第 7.4 课，串联多节点流程
 
 ## 3. 课程索引
 
@@ -73,7 +73,8 @@
 | 6 | 6.6 | RAG API | `docs/tutorial/lessons/stage-6/06-06-rag-api.md` | 已生成 | 已验证 |
 | 7 | 7.1 | LangGraph 核心模型 | `docs/tutorial/lessons/stage-7/07-01-langgraph-core-model.md` | 已生成 | 已验证 |
 | 7 | 7.2 | 定义 LearningState | `docs/tutorial/lessons/stage-7/07-02-learning-state.md` | 已生成 | 已验证 |
-| 7 | 7.3 | 第一个节点 | `docs/tutorial/lessons/stage-7/07-03-first-node.md` | 待生成 | 待验证 |
+| 7 | 7.3 | 第一个节点 | `docs/tutorial/lessons/stage-7/07-03-first-node.md` | 已生成 | 已验证 |
+| 7 | 7.4 | 多节点流程 | `docs/tutorial/lessons/stage-7/07-04-multi-node-flow.md` | 待生成 | 待验证 |
 
 ## 4. 阶段复盘
 

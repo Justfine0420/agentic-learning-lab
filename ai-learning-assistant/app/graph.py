@@ -6,6 +6,20 @@ from app.models import Student
 
 PythonLevel = Literal["beginner", "basic", "intermediate"]
 VALID_PYTHON_LEVELS: tuple[PythonLevel, ...] = ("beginner", "basic", "intermediate")
+LEVEL_TOPIC_RECOMMENDATIONS: dict[PythonLevel, tuple[str, str]] = {
+    "beginner": (
+        "python_variables_and_io",
+        "你可以先从变量、输入输出和字符串练习开始，先把最小 Python 程序跑顺。",
+    ),
+    "basic": (
+        "python_functions_and_modules",
+        "你已经有基础，可以进入函数拆分、模块化和简单测试练习。",
+    ),
+    "intermediate": (
+        "rag_and_agent_integration",
+        "你可以开始复盘 RAG、LangChain Agent 和 API 入口如何组合。",
+    ),
+}
 
 
 class LearningState(TypedDict):
@@ -57,4 +71,15 @@ def create_initial_learning_state(
         "feedback": "",
         "material_sources": [],
         "completed_steps": [],
+    }
+
+
+def assess_level(state: LearningState) -> LearningStateUpdate:
+    python_level = _validate_python_level(state["python_level"])
+    current_topic, feedback = LEVEL_TOPIC_RECOMMENDATIONS[python_level]
+
+    return {
+        "current_topic": current_topic,
+        "feedback": feedback,
+        "completed_steps": ["assess_level"],
     }
