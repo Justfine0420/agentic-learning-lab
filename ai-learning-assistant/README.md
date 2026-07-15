@@ -6,7 +6,7 @@
 
 当前阶段：阶段 7，LangGraph 基础，进行中。
 
-当前进度：CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议；阶段 6 已通过 `POST /ask-materials` 暴露基于本地资料的 RAG 问答接口；第 7.3 课已新增第一个学习流程节点 `assess_level()`。当前还没有 `StateGraph`、edge 或学习流程 API。
+当前进度：CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议；阶段 6 已通过 `POST /ask-materials` 暴露基于本地资料的 RAG 问答接口；第 7.4 课已新增固定顺序 LangGraph 学习流程，包含 `assess_level()`、`teach_topic()`、`ask_question()`、`grade_answer()` 和 `create_basic_learning_graph()`。当前还没有条件分支、checkpoint、streaming 或学习流程 API。
 
 ## 1. 当前功能
 
@@ -160,13 +160,17 @@ py -3.13 -c "from app.rag import load_local_materials, split_material_documents;
 
 ### LangGraph 基础
 
-当前 LangGraph 阶段已经开始，但还没有运行时图：
+当前 LangGraph 阶段已经进入运行时图：
 
 - `LearningState` 定义学习流程的共享状态字段。
 - `LearningStateUpdate` 表达后续 node 可以返回的局部状态更新。
 - `create_initial_learning_state()` 可以从现有 `Student` 字典创建初始学习状态。
-- `completed_steps` 使用 `Annotated[list[str], add]` 标注累加语义，为后续 LangGraph reducer 做准备。
+- `completed_steps` 使用 `Annotated[list[str], add]` 标注累加语义，图运行时会累加节点轨迹。
 - `assess_level()` 根据 `python_level` 返回推荐 `current_topic`、反馈和 `completed_steps` 局部更新。
+- `teach_topic()` 根据当前主题返回讲解反馈。
+- `ask_question()` 根据当前主题写入 `lesson_question`。
+- `grade_answer()` 根据答案关键词返回 `is_correct` 和最终反馈。
+- `create_basic_learning_graph()` 使用 `StateGraph(LearningState)` 构建固定顺序图：`START -> assess_level -> teach_topic -> ask_question -> grade_answer -> END`。
 
 相关模块：
 
@@ -175,7 +179,7 @@ app/graph.py
 tests/test_graph.py
 ```
 
-当前还没有 `StateGraph`、edge、checkpoint、streaming 或学习流程 API。后续课程会从多节点流程开始逐步接入。
+当前还没有条件分支、checkpoint、streaming 或学习流程 API。后续课程会先根据 `is_correct` 增加条件边，再把图接入 FastAPI。
 
 ## 2. 安装依赖
 
@@ -275,7 +279,7 @@ py -3.13 -m pytest
 - LLM 请求封装和结构化输出解析。
 - LangChain Agent、注解式工具与 middleware。
 - RAG 资料加载、切分、向量检索、基于资料回答和资料问答 API。
-- LangGraph 学习流程状态 schema、初始状态构造和第一个节点。
+- LangGraph 学习流程状态 schema、初始状态构造、固定顺序多节点图和节点轨迹 reducer。
 
 ## 6. 目录说明
 
@@ -284,7 +288,7 @@ app/
 ├── api.py                       FastAPI 应用
 ├── cli.py                       CLI 交互
 ├── config.py                    LLM provider 配置
-├── graph.py                     LangGraph 学习流程状态 schema 和节点
+├── graph.py                     LangGraph 学习流程状态 schema、节点和固定顺序图
 ├── langchain_agent.py           LangChain Agent 和工具
 ├── langchain_agent_demo.py      LangChain 手动 demo
 ├── langchain_structured_agent_demo.py 结构化 LangChain 手动 demo

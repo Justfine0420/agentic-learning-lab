@@ -1,6 +1,8 @@
 from operator import add
 from typing import Annotated, Literal, TypedDict, cast
 
+from langgraph.graph import END, START, StateGraph
+
 from app.models import Student
 
 
@@ -19,6 +21,30 @@ LEVEL_TOPIC_RECOMMENDATIONS: dict[PythonLevel, tuple[str, str]] = {
         "rag_and_agent_integration",
         "你可以开始复盘 RAG、LangChain Agent 和 API 入口如何组合。",
     ),
+}
+TOPIC_LESSONS: dict[str, str] = {
+    "python_variables_and_io": (
+        "变量可以给数据起名字，输入输出让程序和使用者交换信息。"
+        "先把小程序的输入、保存和打印跑通，再进入更大的结构。"
+    ),
+    "python_functions_and_modules": (
+        "函数把一段可复用逻辑收进一个名字里，模块把相关函数放到独立文件。"
+        "这样代码更容易测试、复用和继续扩展。"
+    ),
+    "rag_and_agent_integration": (
+        "RAG 先检索资料，再把资料片段交给模型生成有来源的回答。"
+        "Agent 可以把资料读取、检索和回答组织成可调用工具。"
+    ),
+}
+TOPIC_QUESTIONS: dict[str, str] = {
+    "python_variables_and_io": "变量主要帮我们解决什么问题？",
+    "python_functions_and_modules": "函数为什么能让代码更容易维护？",
+    "rag_and_agent_integration": "RAG 回答为什么需要保留 sources？",
+}
+TOPIC_ANSWER_KEYWORDS: dict[str, tuple[str, ...]] = {
+    "python_variables_and_io": ("保存", "数据", "值", "名字"),
+    "python_functions_and_modules": ("复用", "拆分", "维护", "测试"),
+    "rag_and_agent_integration": ("来源", "证据", "追溯", "溯源", "资料", "source", "sources"),
 }
 
 
@@ -83,3 +109,62 @@ def assess_level(state: LearningState) -> LearningStateUpdate:
         "feedback": feedback,
         "completed_steps": ["assess_level"],
     }
+
+
+def _get_topic(state: LearningState) -> str:
+    topic = state["current_topic"].strip()
+    if topic not in TOPIC_LESSONS:
+        raise ValueError("current_topic is not supported")
+    return topic
+
+
+def teach_topic(state: LearningState) -> LearningStateUpdate:
+    topic = _get_topic(state)
+
+    return {
+        "feedback": TOPIC_LESSONS[topic],
+        "completed_steps": ["teach_topic"],
+    }
+
+
+def ask_question(state: LearningState) -> LearningStateUpdate:
+    topic = _get_topic(state)
+
+    return {
+        "lesson_question": TOPIC_QUESTIONS[topic],
+        "completed_steps": ["ask_question"],
+    }
+
+
+def grade_answer(state: LearningState) -> LearningStateUpdate:
+    topic = _get_topic(state)
+    answer = state["learner_answer"].strip().lower()
+    keywords = TOPIC_ANSWER_KEYWORDS[topic]
+    is_correct = answer != "" and any(keyword in answer for keyword in keywords)
+    if is_correct:
+        feedback = "回答抓住了关键点，可以进入下一步练习。"
+    else:
+        question = state["lesson_question"] or TOPIC_QUESTIONS[topic]
+        feedback = f"这次还没有命中关键点，可以围绕这个问题重答：{question}"
+
+    return {
+        "is_correct": is_correct,
+        "feedback": feedback,
+        "completed_steps": ["grade_answer"],
+    }
+
+
+def create_basic_learning_graph():
+    builder = StateGraph(LearningState)
+    builder.add_node("assess_level", assess_level)
+    builder.add_node("teach_topic", teach_topic)
+    builder.add_node("ask_question", ask_question)
+    builder.add_node("grade_answer", grade_answer)
+
+    builder.add_edge(START, "assess_level")
+    builder.add_edge("assess_level", "teach_topic")
+    builder.add_edge("teach_topic", "ask_question")
+    builder.add_edge("ask_question", "grade_answer")
+    builder.add_edge("grade_answer", END)
+
+    return builder.compile()
