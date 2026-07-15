@@ -9,8 +9,12 @@ from app.graph import (
     ask_question,
     assess_level,
     create_basic_learning_graph,
+    create_branching_learning_graph,
     create_initial_learning_state,
     grade_answer,
+    recommend_next_topic,
+    review_current_topic,
+    route_by_answer,
     teach_topic,
 )
 from app.storage import create_default_student
@@ -191,6 +195,65 @@ def test_grade_answer_accepts_sources_keyword_for_rag_topic() -> None:
     assert update["is_correct"] is True
 
 
+def test_route_by_answer_sends_correct_answer_to_next_topic() -> None:
+    student = create_default_student()
+    student["python_level"] = "basic"
+    state = create_initial_learning_state(student)
+    state["is_correct"] = True
+
+    route = route_by_answer(state)
+
+    assert route == "recommend_next_topic"
+
+
+def test_route_by_answer_sends_wrong_answer_to_review() -> None:
+    student = create_default_student()
+    student["python_level"] = "basic"
+    state = create_initial_learning_state(student)
+    state["is_correct"] = False
+
+    route = route_by_answer(state)
+
+    assert route == "review_current_topic"
+
+
+def test_route_by_answer_rejects_missing_grade_result() -> None:
+    student = create_default_student()
+    student["python_level"] = "basic"
+    state = create_initial_learning_state(student)
+
+    with pytest.raises(ValueError, match="is_correct must be set before routing"):
+        route_by_answer(state)
+
+
+def test_recommend_next_topic_returns_next_step_feedback() -> None:
+    student = create_default_student()
+    student["python_level"] = "basic"
+    state = create_initial_learning_state(
+        student,
+        current_topic="python_functions_and_modules",
+    )
+
+    update = recommend_next_topic(state)
+
+    assert "拆成函数" in update["feedback"]
+    assert update["completed_steps"] == ["recommend_next_topic"]
+
+
+def test_review_current_topic_returns_review_feedback() -> None:
+    student = create_default_student()
+    student["python_level"] = "intermediate"
+    state = create_initial_learning_state(
+        student,
+        current_topic="rag_and_agent_integration",
+    )
+
+    update = review_current_topic(state)
+
+    assert "sources" in update["feedback"]
+    assert update["completed_steps"] == ["review_current_topic"]
+
+
 def test_graph_runs_fixed_multi_node_flow() -> None:
     student = create_default_student()
     student["python_level"] = "basic"
@@ -208,6 +271,46 @@ def test_graph_runs_fixed_multi_node_flow() -> None:
         "teach_topic",
         "ask_question",
         "grade_answer",
+    ]
+
+
+def test_branching_graph_takes_correct_path() -> None:
+    student = create_default_student()
+    student["python_level"] = "basic"
+    state = create_initial_learning_state(student)
+    state["learner_answer"] = "函数可以复用逻辑，也能拆分代码。"
+
+    graph = create_branching_learning_graph()
+    result = graph.invoke(state)
+
+    assert result["is_correct"] is True
+    assert result["feedback"] == "下一步可以练习把重复逻辑拆成函数，并把函数放进独立模块。"
+    assert result["completed_steps"] == [
+        "assess_level",
+        "teach_topic",
+        "ask_question",
+        "grade_answer",
+        "recommend_next_topic",
+    ]
+
+
+def test_branching_graph_takes_incorrect_path() -> None:
+    student = create_default_student()
+    student["python_level"] = "intermediate"
+    state = create_initial_learning_state(student)
+    state["learner_answer"] = "因为这样比较好看。"
+
+    graph = create_branching_learning_graph()
+    result = graph.invoke(state)
+
+    assert result["is_correct"] is False
+    assert result["feedback"] == "先回看 sources 如何支撑证据追溯，再重新说明为什么不能丢来源。"
+    assert result["completed_steps"] == [
+        "assess_level",
+        "teach_topic",
+        "ask_question",
+        "grade_answer",
+        "review_current_topic",
     ]
 
 

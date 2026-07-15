@@ -7,6 +7,7 @@ from app.models import Student
 
 
 PythonLevel = Literal["beginner", "basic", "intermediate"]
+AnswerRoute = Literal["recommend_next_topic", "review_current_topic"]
 VALID_PYTHON_LEVELS: tuple[PythonLevel, ...] = ("beginner", "basic", "intermediate")
 LEVEL_TOPIC_RECOMMENDATIONS: dict[PythonLevel, tuple[str, str]] = {
     "beginner": (
@@ -45,6 +46,16 @@ TOPIC_ANSWER_KEYWORDS: dict[str, tuple[str, ...]] = {
     "python_variables_and_io": ("保存", "数据", "值", "名字"),
     "python_functions_and_modules": ("复用", "拆分", "维护", "测试"),
     "rag_and_agent_integration": ("来源", "证据", "追溯", "溯源", "资料", "source", "sources"),
+}
+NEXT_TOPIC_HINTS: dict[str, str] = {
+    "python_variables_and_io": "下一步可以练习把输入、变量和打印组合成一个小脚本。",
+    "python_functions_and_modules": "下一步可以练习把重复逻辑拆成函数，并把函数放进独立模块。",
+    "rag_and_agent_integration": "下一步可以练习把检索、引用 sources 和回答生成串成一个稳定流程。",
+}
+REVIEW_TOPIC_HINTS: dict[str, str] = {
+    "python_variables_and_io": "先回看变量如何给数据命名，再用自己的话解释变量保存了什么。",
+    "python_functions_and_modules": "先回看函数的复用、拆分和测试价值，再重新回答维护性问题。",
+    "rag_and_agent_integration": "先回看 sources 如何支撑证据追溯，再重新说明为什么不能丢来源。",
 }
 
 
@@ -154,6 +165,32 @@ def grade_answer(state: LearningState) -> LearningStateUpdate:
     }
 
 
+def route_by_answer(state: LearningState) -> AnswerRoute:
+    if state["is_correct"] is True:
+        return "recommend_next_topic"
+    if state["is_correct"] is False:
+        return "review_current_topic"
+    raise ValueError("is_correct must be set before routing")
+
+
+def recommend_next_topic(state: LearningState) -> LearningStateUpdate:
+    topic = _get_topic(state)
+
+    return {
+        "feedback": NEXT_TOPIC_HINTS[topic],
+        "completed_steps": ["recommend_next_topic"],
+    }
+
+
+def review_current_topic(state: LearningState) -> LearningStateUpdate:
+    topic = _get_topic(state)
+
+    return {
+        "feedback": REVIEW_TOPIC_HINTS[topic],
+        "completed_steps": ["review_current_topic"],
+    }
+
+
 def create_basic_learning_graph():
     builder = StateGraph(LearningState)
     builder.add_node("assess_level", assess_level)
@@ -166,5 +203,32 @@ def create_basic_learning_graph():
     builder.add_edge("teach_topic", "ask_question")
     builder.add_edge("ask_question", "grade_answer")
     builder.add_edge("grade_answer", END)
+
+    return builder.compile()
+
+
+def create_branching_learning_graph():
+    builder = StateGraph(LearningState)
+    builder.add_node("assess_level", assess_level)
+    builder.add_node("teach_topic", teach_topic)
+    builder.add_node("ask_question", ask_question)
+    builder.add_node("grade_answer", grade_answer)
+    builder.add_node("recommend_next_topic", recommend_next_topic)
+    builder.add_node("review_current_topic", review_current_topic)
+
+    builder.add_edge(START, "assess_level")
+    builder.add_edge("assess_level", "teach_topic")
+    builder.add_edge("teach_topic", "ask_question")
+    builder.add_edge("ask_question", "grade_answer")
+    builder.add_conditional_edges(
+        "grade_answer",
+        route_by_answer,
+        {
+            "recommend_next_topic": "recommend_next_topic",
+            "review_current_topic": "review_current_topic",
+        },
+    )
+    builder.add_edge("recommend_next_topic", END)
+    builder.add_edge("review_current_topic", END)
 
     return builder.compile()

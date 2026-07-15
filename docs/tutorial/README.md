@@ -19,14 +19,14 @@
 
 下一课：
 
-- 第 7.5 课：条件分支（待生成）
+- 第 7.6 课：FastAPI 调 Graph（待生成）
 
 ## 2. 当前学习位置
 
 - 当前阶段：阶段 7，LangGraph 基础，进行中
-- 当前课程：第 7.4 课，多节点流程，已生成并验证
+- 当前课程：第 7.5 课，条件分支，已生成并验证
 - 真实代码项目：`ai-learning-assistant/`
-- 下一步建议：进入第 7.5 课，根据答对/答错增加条件分支
+- 下一步建议：进入第 7.6 课，通过 FastAPI 触发 LangGraph 学习流程
 
 ## 3. 课程索引
 
@@ -75,7 +75,8 @@
 | 7 | 7.2 | 定义 LearningState | `docs/tutorial/lessons/stage-7/07-02-learning-state.md` | 已生成 | 已验证 |
 | 7 | 7.3 | 第一个节点 | `docs/tutorial/lessons/stage-7/07-03-first-node.md` | 已生成 | 已验证 |
 | 7 | 7.4 | 多节点流程 | `docs/tutorial/lessons/stage-7/07-04-multi-node-flow.md` | 已生成 | 已验证 |
-| 7 | 7.5 | 条件分支 | `docs/tutorial/lessons/stage-7/07-05-conditional-branch.md` | 待生成 | 待验证 |
+| 7 | 7.5 | 条件分支 | `docs/tutorial/lessons/stage-7/07-05-conditional-branch.md` | 已生成 | 已验证 |
+| 7 | 7.6 | FastAPI 调 Graph | `docs/tutorial/lessons/stage-7/07-06-fastapi-graph-api.md` | 待生成 | 待验证 |
 
 ## 4. 阶段复盘
 

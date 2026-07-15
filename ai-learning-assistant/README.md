@@ -6,7 +6,7 @@
 
 当前阶段：阶段 7，LangGraph 基础，进行中。
 
-当前进度：CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议；阶段 6 已通过 `POST /ask-materials` 暴露基于本地资料的 RAG 问答接口；第 7.4 课已新增固定顺序 LangGraph 学习流程，包含 `assess_level()`、`teach_topic()`、`ask_question()`、`grade_answer()` 和 `create_basic_learning_graph()`。当前还没有条件分支、checkpoint、streaming 或学习流程 API。
+当前进度：CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议；阶段 6 已通过 `POST /ask-materials` 暴露基于本地资料的 RAG 问答接口；第 7.5 课已在固定顺序 LangGraph 学习流程之上新增条件分支，包含 `route_by_answer()`、`recommend_next_topic()`、`review_current_topic()` 和 `create_branching_learning_graph()`。当前还没有 checkpoint、streaming 或学习流程 API。
 
 ## 1. 当前功能
 
@@ -171,6 +171,10 @@ py -3.13 -c "from app.rag import load_local_materials, split_material_documents;
 - `ask_question()` 根据当前主题写入 `lesson_question`。
 - `grade_answer()` 根据答案关键词返回 `is_correct` 和最终反馈。
 - `create_basic_learning_graph()` 使用 `StateGraph(LearningState)` 构建固定顺序图：`START -> assess_level -> teach_topic -> ask_question -> grade_answer -> END`。
+- `route_by_answer()` 根据 `is_correct` 选择答对或答错路径。
+- `recommend_next_topic()` 在答对后返回下一步练习建议。
+- `review_current_topic()` 在答错后返回复习提示。
+- `create_branching_learning_graph()` 使用 `add_conditional_edges()` 构建条件分支图：答对进入 `recommend_next_topic`，答错进入 `review_current_topic`。
 
 相关模块：
 
@@ -179,7 +183,7 @@ app/graph.py
 tests/test_graph.py
 ```
 
-当前还没有条件分支、checkpoint、streaming 或学习流程 API。后续课程会先根据 `is_correct` 增加条件边，再把图接入 FastAPI。
+当前还没有 checkpoint、streaming 或学习流程 API。后续课程会先把图接入 FastAPI，再继续处理可恢复和流式输出。
 
 ## 2. 安装依赖
 
@@ -279,7 +283,7 @@ py -3.13 -m pytest
 - LLM 请求封装和结构化输出解析。
 - LangChain Agent、注解式工具与 middleware。
 - RAG 资料加载、切分、向量检索、基于资料回答和资料问答 API。
-- LangGraph 学习流程状态 schema、初始状态构造、固定顺序多节点图和节点轨迹 reducer。
+- LangGraph 学习流程状态 schema、初始状态构造、固定顺序多节点图、条件分支图和节点轨迹 reducer。
 
 ## 6. 目录说明
 
@@ -288,7 +292,7 @@ app/
 ├── api.py                       FastAPI 应用
 ├── cli.py                       CLI 交互
 ├── config.py                    LLM provider 配置
-├── graph.py                     LangGraph 学习流程状态 schema、节点和固定顺序图
+├── graph.py                     LangGraph 学习流程状态 schema、节点、固定顺序图和条件分支图
 ├── langchain_agent.py           LangChain Agent 和工具
 ├── langchain_agent_demo.py      LangChain 手动 demo
 ├── langchain_structured_agent_demo.py 结构化 LangChain 手动 demo

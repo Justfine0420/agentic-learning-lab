@@ -65,8 +65,8 @@ AI 学习助教
 ## 5. 当前进度
 
 - 当前阶段：阶段 7，LangGraph 基础，进行中。
-- 当前课程：第 7.4 课，多节点流程。
-- 下一步：进入第 7.5 课，条件分支。
+- 当前课程：第 7.5 课，条件分支。
+- 下一步：进入第 7.6 课，FastAPI 调 Graph。
 - 已完成阶段复盘：阶段 0、阶段 1、阶段 2、阶段 3、阶段 4、阶段 5、阶段 6。
 
 课程索引见：[docs/tutorial/README.md](docs/tutorial/README.md)
@@ -154,6 +154,7 @@ http://127.0.0.1:8000/docs
 - [第 7.2 课：定义 LearningState](docs/tutorial/lessons/stage-7/07-02-learning-state.md)
 - [第 7.3 课：第一个节点](docs/tutorial/lessons/stage-7/07-03-first-node.md)
 - [第 7.4 课：多节点流程](docs/tutorial/lessons/stage-7/07-04-multi-node-flow.md)
+- [第 7.5 课：条件分支](docs/tutorial/lessons/stage-7/07-05-conditional-branch.md)
 
 ## 9. 仓库结构
 
