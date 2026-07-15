@@ -15,18 +15,18 @@
 
 当前最新复盘：
 
-- [阶段 5 复盘：LangChain Agent、工具调用与双入口](./reviews/stage-5-review.md)
+- [阶段 6 复盘：本地资料 RAG、向量检索与资料问答 API](./reviews/stage-6-review.md)
 
 下一课：
 
-- [第 6.6 课：RAG API](./lessons/stage-6/06-06-rag-api.md)
+- 第 7.1 课：LangGraph 核心模型（待生成）
 
 ## 2. 当前学习位置
 
-- 当前阶段：阶段 6，RAG，进行中
-- 当前课程：第 6.6 课，RAG API，已生成并验证
+- 当前阶段：阶段 6，RAG，已复盘
+- 当前课程：阶段 6 复盘，已生成并验证
 - 真实代码项目：`ai-learning-assistant/`
-- 下一步建议：生成阶段 6 复盘，然后进入第 7.1 课 LangGraph 核心模型
+- 下一步建议：进入第 7.1 课 LangGraph 核心模型
 
 ## 3. 课程索引
 
@@ -71,6 +71,7 @@
 | 6 | 6.4 | 向量检索 | `docs/tutorial/lessons/stage-6/06-04-vector-retrieval.md` | 已生成 | 已验证 |
 | 6 | 6.5 | 基于资料回答 | `docs/tutorial/lessons/stage-6/06-05-grounded-material-answer.md` | 已生成 | 已验证 |
 | 6 | 6.6 | RAG API | `docs/tutorial/lessons/stage-6/06-06-rag-api.md` | 已生成 | 已验证 |
+| 7 | 7.1 | LangGraph 核心模型 | `docs/tutorial/lessons/stage-7/07-01-langgraph-core-model.md` | 待生成 | 待验证 |
 
 ## 4. 阶段复盘
 
@@ -82,6 +83,7 @@
 | 3 | [阶段 3 复盘：FastAPI 基础与学习助手 API](./reviews/stage-3-review.md) |
 | 4 | [阶段 4 复盘：LLM 基础、结构化输出与 AI 建议入口](./reviews/stage-4-review.md) |
 | 5 | [阶段 5 复盘：LangChain Agent、工具调用与双入口](./reviews/stage-5-review.md) |
+| 6 | [阶段 6 复盘：本地资料 RAG、向量检索与资料问答 API](./reviews/stage-6-review.md) |
 
 ## 5. 补充学习资料
 
@@ -91,6 +93,7 @@
 | 3 | Stage 3 补充学习资料：FastAPI、Pydantic 与接口测试 | `ai-learning-assistant/materials/stage-3.md` | 回顾 FastAPI route、Pydantic 模型、状态码、`TestClient`、虚拟环境和 API 数据流 |
 | 4 | Stage 4 补充学习资料：LLM 调用、结构化输出与 AI 建议入口 | `ai-learning-assistant/materials/stage-4.md` | 回顾 provider 配置、模型调用、JSON Schema、结构化校验、CLI/API AI 建议入口和当前数据流 |
 | 5 | Stage 5 补充学习资料：LangChain Agent、注解式工具与双入口 | `ai-learning-assistant/materials/stage-5.md` | 回顾 `@tool`、`@dynamic_prompt`、`@wrap_tool_call`、结构化输出、provider 兼容、CLI/API 复用和错误边界 |
+| 6 | Stage 6 补充学习资料：基础 RAG 检索、回答与 API | `ai-learning-assistant/materials/stage-6.md` | 回顾 Document、chunk、embedding、内存向量检索、`MaterialAnswer`、`POST /ask-materials` 和当前 RAG 边界 |
 
 ## 6. 目录说明
 
@@ -114,6 +117,7 @@ docs/tutorial/
     ├── stage-3-review.md
     ├── stage-4-review.md
     ├── stage-5-review.md
+    ├── stage-6-review.md
     └── ...
 ```
 

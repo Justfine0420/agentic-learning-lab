@@ -64,10 +64,10 @@ AI 学习助教
 
 ## 5. 当前进度
 
-- 当前阶段：阶段 6，RAG，进行中。
-- 当前课程：第 6.6 课，RAG API。
-- 下一步：阶段 6 复盘，然后进入第 7.1 课 LangGraph 核心模型。
-- 已完成阶段复盘：阶段 0、阶段 1、阶段 2、阶段 3、阶段 4、阶段 5。
+- 当前阶段：阶段 6，RAG，已复盘。
+- 当前课程：阶段 6 复盘。
+- 下一步：进入第 7.1 课 LangGraph 核心模型。
+- 已完成阶段复盘：阶段 0、阶段 1、阶段 2、阶段 3、阶段 4、阶段 5、阶段 6。
 
 课程索引见：[docs/tutorial/README.md](docs/tutorial/README.md)
 
@@ -138,6 +138,8 @@ http://127.0.0.1:8000/docs
 - [阶段 2 复盘](docs/tutorial/reviews/stage-2-review.md)
 - [阶段 3 复盘](docs/tutorial/reviews/stage-3-review.md)
 - [阶段 4 复盘](docs/tutorial/reviews/stage-4-review.md)
+- [阶段 5 复盘](docs/tutorial/reviews/stage-5-review.md)
+- [阶段 6 复盘](docs/tutorial/reviews/stage-6-review.md)
 - [第 5.4 课：多工具调用](docs/tutorial/lessons/stage-5/05-04-multiple-tools.md)
 - [第 5.5 课：结构化 Agent 输出](docs/tutorial/lessons/stage-5/05-05-structured-agent-output.md)
 - [第 5.6 课：CLI 接入 LangChain Agent](docs/tutorial/lessons/stage-5/05-06-cli-agent-integration.md)

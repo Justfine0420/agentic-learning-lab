@@ -4,9 +4,9 @@
 
 它从一个普通 Python CLI 程序开始，逐步升级为具备 FastAPI、LLM 调用、LangChain 工具调用、RAG、LangGraph 和 Deep Agents 能力的 AI 应用。
 
-当前阶段：阶段 6，RAG，进行中。
+当前阶段：阶段 6，RAG，已复盘。
 
-当前进度：CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议；第 6.6 课已通过 `POST /ask-materials` 暴露基于本地资料的 RAG 问答接口。
+当前进度：CLI 和 FastAPI 都可以调用结构化 LangChain Agent 生成学习建议；阶段 6 已通过 `POST /ask-materials` 暴露基于本地资料的 RAG 问答接口并完成复盘。下一步进入 Stage 7，开始学习 LangGraph 核心模型。
 
 ## 1. 当前功能
 
@@ -289,6 +289,7 @@ tests/                           测试代码
 - `materials/stage-3.md`：FastAPI、Pydantic、状态码、`TestClient` 和 API 数据流。
 - `materials/stage-4.md`：LLM provider 配置、模型调用、结构化输出、CLI/API AI 建议入口。
 - `materials/stage-5.md`：LangChain Agent、工具调用、结构化 Agent 输出、CLI/API 双入口与错误边界。
+- `materials/stage-6.md`：基础 RAG 检索、Document source、chunk、embedding、资料回答与 `POST /ask-materials`。
 
 这些 Markdown 在 Stage 6.2 已能加载为带 `source` 元数据的 `Document`，在 Stage 6.3 切分为保留来源的 chunk，在 Stage 6.4 通过注入的 embedding 建立内存向量检索，在 Stage 6.5 生成带 `sources` 的资料回答，并在 Stage 6.6 通过 `POST /ask-materials` 暴露为 HTTP 接口。
 
